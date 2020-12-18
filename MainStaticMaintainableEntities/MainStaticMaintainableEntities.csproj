@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Visit\" />
-    <Folder Include="Patient\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Components\Components.csproj" />
   </ItemGroup>
 

@@ -4,10 +4,9 @@ namespace Components
 {
     public class BoolComponent : AbstractComponent
     {
-        public BoolComponent()
+        public BoolComponent(string label, string name) : base(label, name)
         {
             DefaultValue = true.ToString();
-            Label = string.Empty;
             SerializedValue = true.ToString();
         }
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MainStaticMaintainableEntities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace EDC2Reporting.WebAPI.Models
         }
 
         public DbSet<ModuleData> ModuleInfos { get; set; }
+        public DbSet<PersistantEntity> PersistantEntities { get; set; }
         public DbSet<Experiment> Experiments { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Models
 {
-    public class ModuleData : IPersistantEntity
+    public class ModuleData
     {
         [Key]
         public int Id { get; set; }

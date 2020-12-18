@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MainStaticMaintainableEntities.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Models
 {
-    public class Experiment : IPersistantEntity, IHasName
+    public class Experiment
     {
         [Key]
         public int Id { get; set; }
