@@ -7,7 +7,8 @@ namespace Components
         public int CategoryId { get; set; }
         public int SelectedValue { get; set; }
 
-        public SelectComponent(string label, string name, int _categoryId) : base(label, name)
+        public SelectComponent(string label, string name, int _categoryId, int defaultValue = 0 /*Not Selected*/)
+            : base(label, name)
         {
             CategoryId = _categoryId;
         }

@@ -4,6 +4,6 @@ namespace MainStaticMaintainableEntities.Visit
 {
     public class Visit : PersistantEntity
     {
-        public List<Module> MyProperty { get; set; }
+        public List<Module> Modules { get; set; }
     }
 }

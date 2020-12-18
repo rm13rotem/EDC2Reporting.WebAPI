@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Components;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MainStaticMaintainableEntities.Module
+namespace MainStaticMaintainableEntities.ModuleAssembly
 {
     public class Module : PersistantEntity
     {
-        public List<Component> Components { get; set; }
+        public List<AbstractComponent> Components { get; set; }
     }
 }

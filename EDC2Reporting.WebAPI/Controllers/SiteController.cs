@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MainStaticMaintainableEntities;
+using MainStaticMaintainableEntities.Site;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -13,7 +15,7 @@ namespace EDC2Reporting.WebAPI.Controllers
     {
         private static readonly string[] Summaries = new[]
         {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+            "Mount Sinai Hospital", "Hadassa Medical Center", "Sheba Medical Center", "Assuta"
         };
 
         private readonly ILogger<SiteController> _logger;
@@ -27,12 +29,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         public IEnumerable<PersistantEntity> Get()
         {
             var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new PersistantEntity
-            {
-                CreateDate = DateTime.Now.AddDays(index),
-                Id = rng.Next(-20, 55),
-                Name = Summaries[rng.Next(Summaries.Length)]
-            })
+            return Summaries.Select(x => new Site() { Name = x })
             .ToArray();
         }
     }
