@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MainStaticMaintainableEntities;
-using MainStaticMaintainableEntities.Site;
+using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
-    [ApiController]
     [Route("v1/[controller]")]
     public class SiteController : ControllerBase
     {

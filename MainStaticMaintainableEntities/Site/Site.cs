@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MainStaticMaintainableEntities.Site
+namespace MainStaticMaintainableEntities.SiteAssembly
 {
     public class Site : PersistantEntity
     {

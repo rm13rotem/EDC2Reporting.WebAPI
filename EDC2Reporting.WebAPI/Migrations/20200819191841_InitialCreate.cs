@@ -47,6 +47,23 @@ namespace EDC2Reporting.WebAPI.Migrations
                 {
                     table.PrimaryKey("PK_ModuleInfos", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "PersistantEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GuidId = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    EntityName = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    CreateDate = table.Column<string>(type: "datetime", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    JsonValue = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersistantEntities", x => x.Id);
+                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

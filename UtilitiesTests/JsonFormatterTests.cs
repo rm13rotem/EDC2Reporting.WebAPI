@@ -1,4 +1,4 @@
-﻿using MainStaticMaintainableEntities.Site;
+﻿using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Utilities.Tests
