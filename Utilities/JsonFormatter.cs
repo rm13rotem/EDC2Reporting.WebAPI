@@ -1,42 +1,69 @@
-﻿using System;
-using System.Text.Json;
+﻿using Newtonsoft.Json;
 
 namespace Utilities
 {
     public static class JsonFormatter
     {
-        public static  T Deserialize<T>(string jsonString)
-            where T : class
-        {
-            T t = default;
-            
-            try
-            {
-                t = JsonSerializer.Deserialize<T>(jsonString);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
 
-            return t;
-        }
 
-        public static string Serialize(object obj)
+        /// <summary>
+        /// Deserialize from json to object
+        /// </summary>
+        /// <typeparam name="T">Type for deserialization</typeparam>
+        /// <param name="json">json as string</param>
+        /// <returns>Deserialized object</returns>
+        public static T FromJson<T>(string json)
         {
-            var options = new JsonSerializerOptions()
+            JsonSerializerSettings settings = new JsonSerializerSettings
             {
-                WriteIndented = true, IgnoreNullValues = true
+                NullValueHandling = NullValueHandling.Ignore,
+                MissingMemberHandling = MissingMemberHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Objects
             };
-
-            try
-            {
-                return JsonSerializer.Serialize(obj, options);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return JsonConvert.DeserializeObject<T>(json, settings);
         }
+        /// <summary>
+        /// Serialize object to json
+        /// </summary>
+        /// <typeparam name="T">Type for serialization</typeparam>
+        /// <param name="obj">Object to serialize</param>
+        /// <returns>Json string</returns>
+        public static string ToJson<T>(T obj)
+        {
+            if (obj != null)
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    TypeNameHandling = TypeNameHandling.Objects
+                };
+                return JsonConvert.SerializeObject(obj, settings);
+            }
+            return string.Empty;
+        }
+        /// <summary>
+        /// Serialize to pretty json
+        /// </summary>
+        /// <typeparam name="T">Type for serialization</typeparam>
+        /// <param name="obj">Object to serialize</param>
+        /// <returns>Json string</returns>
+        public static string ToPrettyJson<T>(T obj)
+        {
+            if (obj != null)
+            {
+                JsonSerializerSettings settings = new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                    MissingMemberHandling = MissingMemberHandling.Ignore,
+                    TypeNameHandling = TypeNameHandling.None,
+                    Formatting = Formatting.Indented
+                };
+                return JsonConvert.SerializeObject(obj, settings);
+            }
+            return string.Empty;
+        }
+
     }
+
 }

@@ -12,7 +12,7 @@ namespace MainStaticMaintainableEntities
             where T : class
         {
             return list.Where(x => x.EntityName.ToLower() == typeof(T).ToString().ToLower())
-                .Select(x=>JsonFormatter.Deserialize<T>(x.JsonValue)).ToList();
+                .Select(x=>JsonFormatter.FromJson<T>(x.JsonValue)).ToList();
         }
     }
 }
