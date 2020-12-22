@@ -13,7 +13,7 @@ namespace Components
             SerializedValue = true.ToString();
         }
 
-        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var BaseErrors = base.Validate(validationContext);
             List<ValidationResult> errors;

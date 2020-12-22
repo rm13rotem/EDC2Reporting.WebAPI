@@ -10,7 +10,7 @@ namespace Components
         {
 
         }
-        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public override IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             return base.Validate(validationContext);
         }
