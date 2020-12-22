@@ -5,6 +5,8 @@ namespace Components
 {
     public class AbstractComponent : IValidatableObject
     {
+        ComponentType ComponentType { get; set; }
+
         public string Name { get; private set; }
         public string Label { get; private set; }
 

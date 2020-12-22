@@ -8,5 +8,6 @@ namespace MainStaticMaintainableEntities.PatientAssembley
     {
         public int SubjectIdInTrial { get; set; }
         public int ExperimentId { get; set; }
+        public string SubjectInitials { get; set; } // 3 letters
     }
 }
