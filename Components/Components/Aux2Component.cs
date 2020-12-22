@@ -8,6 +8,10 @@ namespace Components
         {
 
         }
+        public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            return base.Validate(validationContext);
+        }
     }
 
 }
