@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using MainStaticMaintainableEntities.SiteAssembly;
 using System.Linq;
+using MainStaticMaintainableEntities.ModuleAssembly;
 
 namespace MainStaticMaintainableEntities.Tests
 {
@@ -34,7 +35,7 @@ namespace MainStaticMaintainableEntities.Tests
             var myList = new List<PersistantEntity>() {
                 new Site() { Name ="abc"   },
                 new Doctor() {Name = "Jaun"},
-                new Module() {}
+                new Module() { Name = "Inclusion/Exclusion"}
             };
 
             //Act 

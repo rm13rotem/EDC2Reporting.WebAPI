@@ -8,36 +8,62 @@ namespace MainStaticMaintainableEntities
 {
     public class PersistantRepository
     {
-        public IEnumerable<T> GetAll<T>(List<PersistantEntity> list)
-            where T : class
+        public IEnumerable<T> GetAll<T>()
+            where T : PersistantEntity
         {
+            List<PersistantEntity> list = new List<PersistantEntity>();
             // TODO : try/catch and go to DB layer
+
+            // result
             return list.Where(x => x.EntityName.ToLower() == typeof(T).ToString().ToLower())
                 .Select(x=>JsonFormatter.FromJson<T>(x.JsonValue)).ToList();
         }
 
-        public bool Upsert(PersistantEntity entity)
-        {
-            entity.EntityName = entity.GetType().Name.ToLower();
-            string newJsonValue = JsonFormatter.ToJson(entity);
-            if (newJsonValue == entity.JsonValue)
-                return true; // nothing here to update;
-            if (string.IsNullOrEmpty(newJsonValue))
-                return false; // should never happen;
-            //else
-            // 1. Update Audit (if applicable and activated)
+        //public bool UpsertAll<T>(IEnumerable<T> entities)
+        //     where T : PersistantEntity
+        //{
+        //    List<PersistantEntity> list = new List<PersistantEntity>();
+        //    // TODO : try/catch and go to DB layer
 
-            // 2. Save to DB
-            entity.JsonValue = newJsonValue;
-            try
-            {
+        //    foreach (var item in entities.OrderBy(x=>x.id))
+        //    {
+        //        var exist = list.FirstOrDefault(entity => entity.Id == item.id && entity.EntityName = entity.GetType().Name.ToLower());
+        //        if (exist == null && item.id == 0)
+        //            item.id = list.Max(x => x.Id) + 1;
+        //        if (exist == null)
+        //        {
+        //            list.Add(item);
+        //        }
+        //        else
+        //        {
+        //            string newJsonValue = JsonFormatter.ToJson(item);
+        //            if (newJsonValue == item.JsonValue)
+        //                return true; // nothing here to update;
+        //            if (string.IsNullOrEmpty(newJsonValue))
+        //                return false; // should never happen;
+        //                              //else
+        //                              // 1. Update Audit (if applicable and activated)
+        //                              //if (ConfigurationManager.AppSettings["IsAuditActivated])
+        //                              // { .... }
 
-            }
-            catch (Exception ex)
-            {
-                // log exception;
-            }
-            return true;
-        }
+        //            // 2. Save to DB
+        //            item.JsonValue = newJsonValue;
+        //            try
+        //            {
+
+        //            }
+        //            catch (Exception)
+        //            {
+        //                // log exception;
+        //                throw;
+        //            }
+
+        //        }
+
+
+        //    }
+            
+        //    return true;
+        //}
     }
 }

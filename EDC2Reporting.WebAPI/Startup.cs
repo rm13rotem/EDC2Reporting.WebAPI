@@ -12,6 +12,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using MainStaticMaintainableEntities;
+using MainStaticMaintainableEntities.SiteAssembly;
+using MainStaticMaintainableEntities.Providers;
 
 namespace EDC2Reporting.WebAPI
 {
@@ -28,6 +31,7 @@ namespace EDC2Reporting.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             if (Configuration.GetValue<string>("Environment") == "DEV")
             {
                 services.AddDbContext<ClinicalDataContext>(options =>
@@ -53,6 +57,9 @@ namespace EDC2Reporting.WebAPI
                 services.AddDbContext<ClinicalDataContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             }
+
+            //services.AddTransient(IRepository<Site>, FromJsonRepository<Site>);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

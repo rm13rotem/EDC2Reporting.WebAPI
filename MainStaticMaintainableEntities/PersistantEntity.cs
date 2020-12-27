@@ -11,5 +11,6 @@ namespace MainStaticMaintainableEntities
         public virtual DateTime CreateDate { get; set; }
         public virtual string Name { get; set; }
         public virtual string JsonValue { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
