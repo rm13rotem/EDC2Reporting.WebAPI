@@ -53,9 +53,9 @@ namespace MainStaticMaintainableEntities.Providers
         }
 
 
-        public T Get(int Id, Guid GuidId)
+        public T GetById(int Id)
         {
-            return _myList.FirstOrDefault(x => x.Id == Id && x.GuidId == GuidId.ToString());
+            return _myList.FirstOrDefault(x => x.Id == Id);
         }
 
         public void Insert(T entity)

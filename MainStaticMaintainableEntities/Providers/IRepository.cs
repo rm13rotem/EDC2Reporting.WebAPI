@@ -7,7 +7,7 @@ namespace MainStaticMaintainableEntities.Providers
 {
     public interface IRepository<T> where T : PersistantEntity
     {
-        T Get(int Id, Guid GuidId);
+        T GetById(int Id);
         IEnumerable<T> GetAll();
         IEnumerable<T> GetByExpression(Expression<Func<T, bool>> expression);
         void Insert(T entity);

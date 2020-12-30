@@ -13,18 +13,25 @@ namespace EDC2Reporting.WebAPI
 {
     public class Program
     {
-        public static void Main(string[] args, int nErrors = 0)
+        public static void Main(string[] args)
         {
+            int nErrors = 0;
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
                 logger.Debug("let's start the App" + DateTime.UtcNow.ToLongDateString());
-                CreateHostBuilder(args).Build().Run();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Error - right on the start of the Program.cs");
-                throw;
+                for (int i = 0; i < 200; i++)
+                {
+                    nErrors++;
+                    try
+                    {
+                        CreateHostBuilder(args).Build().Run();
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.Error(ex, $"Error {nErrors} - CreateHostBuilder in Program.cs");
+                    }
+                }
             }
             finally
             {

@@ -2,8 +2,8 @@
 {
     public enum RepositoryType
     {
-        FromJsonRepository,
-        FromDbRepository,
-        BaseInMemoryRepository
+        FromJsonRepository = 1,
+        FromDbRepository = 2,
+        BaseInMemoryRepository = 3
     }
 }

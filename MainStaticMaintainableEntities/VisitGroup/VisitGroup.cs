@@ -23,7 +23,6 @@ namespace MainStaticMaintainableEntities.VisitGroup
                 _visitGroups = value;
             }
         }
-
         public List<Visit> Visits
         {
             get { return _visits; }
@@ -51,7 +50,7 @@ namespace MainStaticMaintainableEntities.VisitGroup
         {
             IRepositoryLocator<VisitGroup> visitGroupLocator = new RepositoryLocator<VisitGroup>();
             IRepository<VisitGroup> repository = visitGroupLocator.GetRepository(RepositoryType.FromJsonRepository, null);
-            VisitGroup toBeAdded = repository.GetByExpression(x => x.Id == visitGroupId).FirstOrDefault();
+            VisitGroup toBeAdded = repository.GetById(visitGroupId);
             if (VisitGroups == null)
                 VisitGroups = new List<VisitGroup>();
             VisitGroups.Add(toBeAdded);
@@ -61,12 +60,35 @@ namespace MainStaticMaintainableEntities.VisitGroup
         public bool AddVisitById(int visitId)
         {
             IRepositoryLocator<Visit> visitLocator = new RepositoryLocator<Visit>();
-            IRepository<Visit> repository = visitLocator.GetRepository(RepositoryType.FromJsonRepository, null);
-            Visit toBeAdded = repository.GetByExpression(x => x.Id == visitId).FirstOrDefault();
+            //ClinicalDataContext db = new ClinicalDataContext();
+            IRepository<Visit> repository = visitLocator.GetRepository(RepositoryType.FromJsonRepository, null); // db);
+            Visit toBeAdded = repository.GetById(visitId);
             if (Visits == null)
                 Visits = new List<Visit>();
             Visits.Add(toBeAdded);
             return true;
+        }
+
+        public int NumberMyVisitsInternally(int visitInternalId = 0)
+        {
+            visitInternalId++;
+
+            if (VisitGroups == null)
+            {
+                foreach (var v in Visits)
+                {
+                    v.InternalIndex = visitInternalId++;
+                }
+                return visitInternalId;
+            }
+            else
+            {
+                foreach (var visit_group in VisitGroups)
+                {
+                    visitInternalId = visit_group.NumberMyVisitsInternally(visitInternalId);
+                }
+                return visitInternalId;
+            }
         }
     }
 }

@@ -10,11 +10,11 @@ namespace MainStaticMaintainableEntities.Providers
     public abstract class FromDbRepository<T> : IRepository<T> 
         where T : PersistantEntity
     {
-        private readonly DbContext _dataContext;
+        private readonly ClinicalDataContext _dataContext;
         // Todo : Add Transaction by
         // https://gunnarpeipman.com/ef-core-repository-unit-of-work/
 
-        public FromDbRepository(DbContext dataContext)
+        public FromDbRepository(ClinicalDataContext dataContext)
         {
             _dataContext = dataContext;
         }
@@ -26,9 +26,9 @@ namespace MainStaticMaintainableEntities.Providers
             _dataContext.SaveChanges();
         }
 
-        public T Get(int Id, Guid id)
+        public T GetById(int Id)
         {
-            return _dataContext.Set<T>().FirstOrDefault(x=>x.Id == Id && x.GuidId == id.ToString());
+            return _dataContext.Set<T>().FirstOrDefault(x=>x.Id == Id);
         }
 
         public void Insert(T entity)

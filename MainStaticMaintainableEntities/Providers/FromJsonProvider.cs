@@ -117,9 +117,9 @@ namespace MainStaticMaintainableEntities.Providers
                 AlternateRepository.Update(entity);
         }
 
-        public T Get(int Id, Guid GuidId)
+        public T GetById(int Id)
         {
-            var exist = _myList.FirstOrDefault(x => x.Id == Id && x.GuidId == GuidId.ToString());
+            var exist = _myList.FirstOrDefault(x => x.Id == Id);
             Task.Run(Flush);
             return exist;
         }

@@ -23,7 +23,8 @@ namespace MainStaticMaintainableEntities.Tests
 
             //Act 
             PersistantRepository persistantRepository = new PersistantRepository();
-            var sites = persistantRepository.GetAll<Site>(myList);
+            //var sites = persistantRepository.GetAll<Site>(myList);
+            var sites = new List<Site>();
 
             Assert.IsTrue(sites.Count() == 1);
         }
@@ -40,7 +41,8 @@ namespace MainStaticMaintainableEntities.Tests
 
             //Act 
             PersistantRepository persistantRepository = new PersistantRepository();
-            var sites = persistantRepository.GetAll<Site>(myList);
+            // var sites = persistantRepository.GetAll<Site>(myList);
+            var sites = new List<Site>();
 
             Assert.IsTrue(sites.Count() == 1);
         }
