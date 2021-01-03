@@ -8,7 +8,7 @@ using Utilities;
 
 namespace MainStaticMaintainableEntities.Providers
 { 
-    public abstract class BaseInMemoryRepository<T> : IRepository<T> where T : PersistantEntity
+    public class BaseInMemoryRepository<T> : IRepository<T> where T : PersistantEntity
     {
         private IRepository<T> repository;
         private readonly List<T> _myList;
@@ -23,7 +23,8 @@ namespace MainStaticMaintainableEntities.Providers
 
         public BaseInMemoryRepository(List<T> list)
         {
-
+            _myList = repository.GetAll().ToList();
+            _myOriginalList = repository.GetAll().ToList();
         }
 
         private void SaveAll() 

@@ -1,4 +1,7 @@
 using MainStaticMaintainableEntities;
+using MainStaticMaintainableEntities.ModuleAssembly;
+using MainStaticMaintainableEntities.Providers;
+using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -48,7 +51,6 @@ namespace EDC2Reporting.WebAPI
                     options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             }
 
-            //services.AddTransient(IRepository<Site>, FromJsonRepository<Site>);
 
         }
 
