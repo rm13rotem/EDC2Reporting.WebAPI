@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataServices.Interfaces;
 using MainStaticMaintainableEntities.ModuleAssembly;
-using MainStaticMaintainableEntities.Providers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

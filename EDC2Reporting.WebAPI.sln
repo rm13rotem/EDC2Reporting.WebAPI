@@ -5,15 +5,19 @@ VisualStudioVersion = 16.0.30330.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EDC2Reporting.WebAPI", "EDC2Reporting.WebAPI\EDC2Reporting.WebAPI.csproj", "{52A5AF2B-EBE9-43BC-8EC9-E3F830AEC879}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainStaticMaintainableEntities", "MainStaticMaintainableEntities\MainStaticMaintainableEntities.csproj", "{16B2A8AF-3B0B-4901-B09F-721234D362A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainStaticMaintainableEntities", "MainStaticMaintainableEntities\MainStaticMaintainableEntities.csproj", "{16B2A8AF-3B0B-4901-B09F-721234D362A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{7B3EE21D-755C-4301-8C1A-F48F73E86456}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{7B3EE21D-755C-4301-8C1A-F48F73E86456}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "Components\Components.csproj", "{58B2695A-6D25-4F63-93D2-EDCF8FF04A54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Components", "Components\Components.csproj", "{58B2695A-6D25-4F63-93D2-EDCF8FF04A54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilitiesTests", "UtilitiesTests\UtilitiesTests.csproj", "{B466840A-9E0F-4427-9A07-B05417B3631C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesTests", "UtilitiesTests\UtilitiesTests.csproj", "{B466840A-9E0F-4427-9A07-B05417B3631C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MainStaticMaintainableEntitiesTests", "MainStaticMaintainableEntitiesTests\MainStaticMaintainableEntitiesTests.csproj", "{492D6E67-1904-4268-9D18-D59C8DE5B3C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MainStaticMaintainableEntitiesTests", "MainStaticMaintainableEntitiesTests\MainStaticMaintainableEntitiesTests.csproj", "{492D6E67-1904-4268-9D18-D59C8DE5B3C8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMq", "RabbitMq\RabbitMq.csproj", "{91E8AA50-78A9-4B5F-A5A6-F8A99E96C16E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataServices", "DataServices\DataServices.csproj", "{C4DD9591-FFAC-4040-B957-E94AD58ED3CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{492D6E67-1904-4268-9D18-D59C8DE5B3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{492D6E67-1904-4268-9D18-D59C8DE5B3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{492D6E67-1904-4268-9D18-D59C8DE5B3C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91E8AA50-78A9-4B5F-A5A6-F8A99E96C16E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91E8AA50-78A9-4B5F-A5A6-F8A99E96C16E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91E8AA50-78A9-4B5F-A5A6-F8A99E96C16E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91E8AA50-78A9-4B5F-A5A6-F8A99E96C16E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4DD9591-FFAC-4040-B957-E94AD58ED3CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4DD9591-FFAC-4040-B957-E94AD58ED3CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4DD9591-FFAC-4040-B957-E94AD58ED3CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4DD9591-FFAC-4040-B957-E94AD58ED3CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

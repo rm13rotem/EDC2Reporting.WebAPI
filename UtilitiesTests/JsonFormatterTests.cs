@@ -1,4 +1,5 @@
-﻿using MainStaticMaintainableEntities.SiteAssembly;
+﻿using DataServices.SqlServerRepository.Models;
+using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Utilities.Tests
@@ -22,7 +23,7 @@ namespace Utilities.Tests
         public void SerializeTest_ValidDbEntity_ReturnsExpectedString()
         {
             // Arrange 
-            var obj = new Site() { EntityName = "site", GuidId = "a"    };
+            var obj = new Site() { GuidId = "a"    };
 
             // Act
             string myJson = JsonFormatter.ToJson<Site>(obj);
@@ -37,14 +38,14 @@ namespace Utilities.Tests
         public void SerializeTest_ValidDbEntity_FlipAndBackReturnsExpectedObject()
         {
             // Arrange 
-            var obj = new Site() { EntityName = "site", GuidId = "a" };
+            var obj = new Site() { Name = "site", GuidId = "a" };
 
             // Act
             string myJson = JsonFormatter.ToJson<Site>(obj);
             var exp = JsonFormatter.FromJson<Site>(myJson);
 
             // Assert
-            Assert.IsTrue(obj.EntityName == exp.EntityName);
+            Assert.IsTrue(obj.Name == exp.Name);
             Assert.IsTrue(obj.GuidId == exp.GuidId);
         }
 
@@ -53,15 +54,15 @@ namespace Utilities.Tests
         public void DeserializeTest_ValidDbEntity_ReturnsExpectedString()
         {
             // Arrange 
-            string exp = "{\r\n  \"Id\": 0,\r\n  \"GuidId\": \"a\",\r\n  \"EntityName\": \"site\",\r\n  \"CreateDate\": \"0001-01-01T00:00:00\"\r\n}";
+            string exp = "{\r\n  \"Id\": 0,\r\n  \"GuidId\": \"a\",\r\n  \"Name\": \"site\",\r\n  \"CreateDate\": \"0001-01-01T00:00:00\"\r\n}";
             
             // Act
             var mySite = JsonFormatter.FromJson<Site>(exp);
-            var obj = new Site() { EntityName = "site", GuidId = "a" };
+            var obj = new Site() { Name = "site", GuidId = "a" };
 
             // Assert
             Assert.IsTrue(mySite.GuidId == obj.GuidId);
-            Assert.IsTrue(mySite.EntityName == obj.EntityName);
+            Assert.IsTrue(mySite.Name == obj.Name);
             Assert.IsTrue(mySite.Id == 0);
         }
     }

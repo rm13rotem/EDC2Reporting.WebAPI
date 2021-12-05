@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MainStaticMaintainableEntities.Interfaces
 {
-    public interface IPersistantEntity
+    public interface IPersistentEntity
     {
         // a persistant entity is one that is stored in the DB, or in memory, or on a json file, or on an XML file
         // classic examples are a Site, a Doctor, a Patient, a Visit, a VisitGroup, a City, a Country. Typically these are small and never

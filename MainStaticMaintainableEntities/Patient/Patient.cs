@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MainStaticMaintainableEntities.PatientAssembley
 {
-    public class Patient : PersistantEntity
+    public class Patient : PersistentEntity
     {
         public int SubjectIdInTrial { get; set; }
         public int ExperimentId { get; set; }

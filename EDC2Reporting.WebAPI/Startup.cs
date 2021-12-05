@@ -1,17 +1,10 @@
 using MainStaticMaintainableEntities;
-using MainStaticMaintainableEntities.ModuleAssembly;
-using MainStaticMaintainableEntities.Providers;
-using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using JavaScriptEngineSwitcher.V8;
-using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using React.AspNet;
 
 namespace EDC2Reporting.WebAPI
 {
@@ -24,14 +17,16 @@ namespace EDC2Reporting.WebAPI
 
         public IConfiguration Configuration { get; }
 
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddReact();
-            // Make sure a JS engine is registered, or you will get an error!
-            services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
-              .AddV8();
+
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddReact();
+            //// Make sure a JS engine is registered, or you will get an error!
+            //services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
+            //  .AddV8();
 
             services.AddControllersWithViews();
 
@@ -73,8 +68,8 @@ namespace EDC2Reporting.WebAPI
             }
 
             // Initialise ReactJS.NET. Must be before static files.
-            app.UseReact(config =>
-            {
+            //app.UseReact(config =>
+            //{
                 // If you want to use server-side rendering of React components,
                 // add all the necessary JavaScript files here. This includes
                 // your components as well as all of their dependencies.
@@ -90,7 +85,7 @@ namespace EDC2Reporting.WebAPI
                 //config
                 //  .SetLoadBabel(false)
                 //  .AddScriptWithoutTransform("~/js/bundle.server.js");
-            });
+            //});
 
             app.UseStaticFiles();
 
@@ -102,7 +97,9 @@ namespace EDC2Reporting.WebAPI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                   name: "default",
+                   pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

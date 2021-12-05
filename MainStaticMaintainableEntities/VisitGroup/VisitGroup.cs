@@ -1,17 +1,20 @@
-﻿using MainStaticMaintainableEntities.Providers;
+﻿using DataServices.Interfaces;
+using DataServices.Providers;
 using MainStaticMaintainableEntities.VisitAssembly;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Utilities;
 
 namespace MainStaticMaintainableEntities.VisitGroup
 {
-    public class VisitGroup : PersistantEntity
+    public class VisitGroup : IPersistentEntity
     {
         private List<VisitGroup> _visitGroups;
         private List<Visit> _visits;
+        public int Id { get; set; }
+        public string GuidId { get; set; }
+        public bool IsDeleted { get; set; }
+        public string JsonValue { get; set; }
+        public string Name { get; set; }
 
         public List<VisitGroup> VisitGroups
         {
@@ -34,12 +37,8 @@ namespace MainStaticMaintainableEntities.VisitGroup
             }
         }
 
-        public PersistantEntity ToPersistantEntity()
-        {
-            JsonValue = JsonFormatter.ToJson<VisitGroup>(this);
-            return this;
-        }
-        public void LoadFromPersistantEntity()
+    
+        public void LoadFromPersistentEntity()
         {
             var loaded = JsonFormatter.FromJson<VisitGroup>(this.JsonValue);
             if (loaded.VisitGroups != null) this.VisitGroups = loaded.VisitGroups;
