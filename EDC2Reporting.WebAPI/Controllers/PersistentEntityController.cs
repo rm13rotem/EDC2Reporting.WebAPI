@@ -1,4 +1,5 @@
 ﻿using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -25,22 +26,25 @@ namespace EDC2Reporting.WebAPI.Controllers
         // GET: PersistentEntityController/Details/5
         public ActionResult Details(int id)
         {
+            var item = db.PersistentEntity.Find(id);
             return View();
         }
 
         // GET: PersistentEntityController/Create
         public ActionResult Create()
         {
+            var item = new PersistentEntity();
             return View();
         }
 
         // POST: PersistentEntityController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(PersistentEntity model)
         {
             try
             {
+                if (true)
                 return RedirectToAction(nameof(Index));
             }
             catch

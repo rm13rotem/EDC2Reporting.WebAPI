@@ -63,3 +63,8 @@
 2021-12-09 11:59:13.5442 Info Adding target FileTarget(Name=alldata)
 2021-12-09 11:59:13.5951 Info Adding target FileTarget(Name=otherFile-web)
 2021-12-09 11:59:13.7398 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\Users\rm13r\source\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\netcoreapp3.1\nlog.config
+2021-12-09 12:57:24.0997 Info Message Template Auto Format enabled
+2021-12-09 12:57:24.3323 Info Loading assembly: NLog.Web.AspNetCore
+2021-12-09 12:57:25.1770 Info Adding target FileTarget(Name=alldata)
+2021-12-09 12:57:25.4165 Info Adding target FileTarget(Name=otherFile-web)
+2021-12-09 12:57:25.7121 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\Users\rm13r\source\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\netcoreapp3.1\nlog.config
