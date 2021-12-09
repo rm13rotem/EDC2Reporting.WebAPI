@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
-    [Route("v1/api/[controller]")]
+    [Route("v1/api/Site")]
     [ApiController]
     public class SiteApiController : ControllerBase
     {
@@ -19,7 +19,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             _logger = logger;
             siteDbRepository = new FromDbRepository<Site>(db);
-            siteJsonRepository = new FromJsonRepository<Site>("site.json");
+            siteJsonRepository = new FromJsonRepository<Site>("S ite.json");
             inMemoryRepository = new BaseInMemoryRepository<Site>(siteJsonRepository);
         }
 
