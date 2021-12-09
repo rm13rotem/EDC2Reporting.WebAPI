@@ -21,7 +21,8 @@ namespace DataServices.SqlServerRepository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(ConnectionString);
+            if (!string.IsNullOrWhiteSpace(ConnectionString))
+                optionsBuilder.UseSqlServer(ConnectionString);
         }
 
         public virtual DbSet<Experiments> Experiments { get; set; }

@@ -80,9 +80,10 @@ namespace DataServices.Providers
                 AlternateRepository.Delete(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(bool isForceReload = false)
         {
-            Task.Run(Flush);
+            if (isForceReload) 
+                Task.Run(Flush);
             return _myList;
         }
 

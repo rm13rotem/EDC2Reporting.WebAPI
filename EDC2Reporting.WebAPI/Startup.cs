@@ -1,3 +1,4 @@
+using DataServices.SqlServerRepository;
 using MainStaticMaintainableEntities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,29 +31,30 @@ namespace EDC2Reporting.WebAPI
 
             services.AddControllersWithViews();
 
-            if (Configuration.GetValue<string>("Environment") == "DEV")
+            var _environment = Configuration.GetValue<string>("Environment");
+            if (_environment == "DEV")
             {
-                services.AddDbContext<ClinicalDataContext>(options =>
+                services.AddDbContext<EdcDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             }
-            else if (Configuration.GetValue<string>("Environment") == "TEST")
+            else if (_environment == "TEST")
             {
-                services.AddDbContext<ClinicalDataContext>(options =>
+                services.AddDbContext<EdcDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("TestConnection")));
             }
-            else if (Configuration.GetValue<string>("Environment") == "PREPROD")
+            else if (_environment == "PREPROD")
             {
-                services.AddDbContext<ClinicalDataContext>(options =>
+                services.AddDbContext<EdcDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("PreProdConnection")));
             }
-            else if (Configuration.GetValue<string>("Environment") == "PROD")
+            else if (_environment == "PROD")
             {
-                services.AddDbContext<ClinicalDataContext>(options =>
+                services.AddDbContext<EdcDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ProdConnection")));
             }
             else
             {
-                services.AddDbContext<ClinicalDataContext>(options =>
+                services.AddDbContext<EdcDbContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             }
 

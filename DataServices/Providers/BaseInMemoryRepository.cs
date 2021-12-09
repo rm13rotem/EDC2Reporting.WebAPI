@@ -12,8 +12,8 @@ namespace DataServices.Providers
     public class BaseInMemoryRepository<T> : IRepository<T> where T : IPersistentEntity
     {
         private IRepository<T> repository;
-        private readonly List<T> _myList;
-        private readonly List<T> _myOriginalList;
+        private List<T> _myList;
+        private List<T> _myOriginalList;
 
         public BaseInMemoryRepository(IRepository<T> _repository)
         {
@@ -73,8 +73,15 @@ namespace DataServices.Providers
             Save(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(bool isForceReload = false)
         {
+            if (!isForceReload)
+                return _myList;
+            else
+            {
+                _myOriginalList = repository.GetAll().ToList();
+                _myList = repository.GetAll().ToList();
+            }
             return _myList;
         }
 

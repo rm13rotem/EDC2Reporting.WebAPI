@@ -12,7 +12,7 @@ using System.Text;
 namespace DataServices.Providers
 {
     public class FromDbRepository<T> : IRepository<T>
-        where T : IPersistentEntity
+        where T : IPersistentEntity, new()
     {
         private readonly EdcDbContext _dataContext;
         Dictionary<PersistentEntity, T> dictionary = new Dictionary<PersistentEntity, T>();
@@ -22,7 +22,20 @@ namespace DataServices.Providers
             _dataContext = dataContext;
         }
 
-        private PersistentEntity GetPersistentEntity(T entity)
+        public FromDbRepository(IEnumerable<PersistentEntity> source)
+        {
+            foreach (var item in source)
+            {
+                T t = default(T);
+                if (item.EntityName == typeof(T).Name)
+                {
+                    t = JsonConvert.DeserializeObject<T>(item.JsonValue);
+                    dictionary.Add(item, t);
+                }
+            }
+        }
+
+        private PersistentEntity GetPersistentEntityFromDictionary(T entity)
         {
             var dbEntity = dictionary.First(x => x.Value.Id == entity.Id).Key;
             dbEntity.JsonValue = JsonConvert.SerializeObject(entity);
@@ -32,7 +45,7 @@ namespace DataServices.Providers
         public void Delete(T entity)
         {
             entity.IsDeleted = true;
-            PersistentEntity dbEntity = GetPersistentEntity(entity);
+            PersistentEntity dbEntity = GetPersistentEntityFromDictionary(entity);
             dbEntity.IsDeleted = true;
 
             _dataContext.PersistentEntity.Attach(dbEntity);
@@ -52,7 +65,7 @@ namespace DataServices.Providers
         {
             entity.Id = GetNewId();
 
-            var dbEntity = GetPersistentEntity(entity);
+            var dbEntity = GetPersistentEntityFromDictionary(entity);
             dbEntity.Id = _dataContext.Set<PersistentEntity>().Max(x => x.Id) + 1; //EF will override anyway;
             dbEntity.IsDeleted = false;
             dbEntity.GuidId = Guid.NewGuid().ToString();
@@ -76,8 +89,11 @@ namespace DataServices.Providers
             else return 1;
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(bool isForceRefresh = false)
         {
+            if (!isForceRefresh && dictionary.Count > 0)
+                return dictionary.Values.ToList();
+            // else
             List<T> result = new List<T>();
             List<PersistentEntity> myEntities = _dataContext.Set<PersistentEntity>().
                 Where(x => x.EntityName == typeof(T).Name).ToList(); // e.g. Sites only!
@@ -90,10 +106,23 @@ namespace DataServices.Providers
                     {
                         dictionary.Add(item, deserializedItem);
                         result.Add(deserializedItem);
-                   }
+                    }
                 }
                 catch (Exception)
                 {
+                    if (!item.JsonValue.Contains("{"))
+                    {
+                        T t = new T();
+                        if (result.Count == 0) t.Id = 1;
+                        else t.Id = result.Max(x => x.Id);
+                        t.Name = item.JsonValue;
+                        t.GuidId = Guid.NewGuid().ToString();
+                        t.IsDeleted = item.IsDeleted;
+                        item.JsonValue = JsonConvert.SerializeObject(t);
+                        dictionary.Add(item, t);
+                        result.Add(t);
+                        _dataContext.SaveChanges();
+                    }
                     continue;
                 }
 

@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DataServices.SqlServerRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MainStaticMaintainableEntities;
+using System.Linq;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
     public class PersistentEntityController : Controller
     {
-        private readonly ClinicalDataContext db = new ClinicalDataContext();
+        private readonly EdcDbContext db;
+
+        public PersistentEntityController(EdcDbContext _db)
+        {
+            db = _db;
+        }
+       
 
         // GET: PersistentEntityController
         public ActionResult Index()

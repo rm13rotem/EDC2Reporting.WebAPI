@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MainStaticMaintainableEntities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MainStaticMaintainableEntities.SiteAssembly;
-using System.Linq;
-using MainStaticMaintainableEntities.ModuleAssembly;
-using DataServices.Interfaces;
+﻿using DataServices.Interfaces;
 using DataServices.Providers;
 using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models;
+using MainStaticMaintainableEntities.ModuleAssembly;
+using MainStaticMaintainableEntities.SiteAssembly;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MainStaticMaintainableEntities.Tests
 {
@@ -19,13 +18,16 @@ namespace MainStaticMaintainableEntities.Tests
         public void GetAllTest_GetsValidList_ReturnsAListOfSites()
         {
             // Arrange
-            var myList = new List<IPersistentEntity>() {
-                new Site() { Id = 1, Name ="abc"   },
-                new Doctor() {Id = 2, Name = "Jaun"}
+            var myList = new List<PersistentEntity>() {
+                new PersistentEntity() { Id = 1, Name ="abc"  , EntityName="Site", 
+                    JsonValue=JsonConvert.SerializeObject(new Site() { Id=2,  Name="HYMC" }) },
+                new PersistentEntity() { Id = 2, Name ="abc"  , EntityName="Doctor",
+                    JsonValue=JsonConvert.SerializeObject(new Doctor() {Id = 2, Name = "Jaun"}) }
             };
 
             //Act 
-            FromDbRepository<Site> persistantRepository = new FromDbRepository<Site>(new EdcDbContext());
+            IEnumerable<PersistentEntity> iList = myList;
+            FromDbRepository<Site> persistantRepository = new FromDbRepository<Site>(iList);
             var sites = persistantRepository.GetAll();
             
             Assert.IsTrue(sites.Count() == 1);
