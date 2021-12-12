@@ -10,7 +10,7 @@ namespace DataServices.Interfaces
     {
         T GetById(int Id);
         IEnumerable<T> GetAll(bool isForceReload = false);
-        void Insert(T entity);
+        void InsertUpdateOrUndelete(T entity);
         void Update(T entity);
         void Delete(T entity);
     }

@@ -42,7 +42,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         [HttpPost]
         public void Post([FromBody] Module module)
         {
-            repository.Insert(module);
+            repository.InsertUpdateOrUndelete(module);
         }
 
         // PUT api/<ModuleApiController>/5

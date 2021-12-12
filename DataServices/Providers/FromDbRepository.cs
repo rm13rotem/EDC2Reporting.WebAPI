@@ -24,20 +24,21 @@ namespace DataServices.Providers
 
         public FromDbRepository(IEnumerable<PersistentEntity> source)
         {
-            foreach (var item in source)
+            foreach (var persistentEntity in source)
             {
                 T t = default(T);
-                if (item.EntityName == typeof(T).Name)
+                if (persistentEntity.EntityName == typeof(T).Name)
                 {
-                    t = JsonConvert.DeserializeObject<T>(item.JsonValue);
-                    dictionary.Add(item, t);
+                    t = JsonConvert.DeserializeObject<T>(persistentEntity.JsonValue);
+                    dictionary.Add(persistentEntity, t);
                 }
             }
         }
 
-        private PersistentEntity GetPersistentEntityFromDictionary(T entity)
+        private PersistentEntity UpdateJsonValueInPersistentEntity(T entity)
         {
-            var dbEntity = dictionary.First(x => x.Value.Id == entity.Id).Key;
+            var dbEntity = dictionary.FirstOrDefault(x => x.Value.Id == entity.Id).Key;
+            if (dbEntity == null) dbEntity = new PersistentEntity();
             dbEntity.JsonValue = JsonConvert.SerializeObject(entity);
             return dbEntity;
         }
@@ -45,7 +46,7 @@ namespace DataServices.Providers
         public void Delete(T entity)
         {
             entity.IsDeleted = true;
-            PersistentEntity dbEntity = GetPersistentEntityFromDictionary(entity);
+            PersistentEntity dbEntity = UpdateJsonValueInPersistentEntity(entity);
             dbEntity.IsDeleted = true;
 
             _dataContext.PersistentEntity.Attach(dbEntity);
@@ -61,21 +62,33 @@ namespace DataServices.Providers
             return result;
         }
 
-        public void Insert(T entity)
+        public void InsertUpdateOrUndelete(T entity)
         {
             entity.Id = GetNewId();
 
-            var dbEntity = GetPersistentEntityFromDictionary(entity);
-            dbEntity.Id = _dataContext.Set<PersistentEntity>().Max(x => x.Id) + 1; //EF will override anyway;
-            dbEntity.IsDeleted = false;
-            dbEntity.GuidId = Guid.NewGuid().ToString();
-            dbEntity.CreateDate = DateTime.UtcNow;
-            dbEntity.EntityName = typeof(T).Name;
-            dbEntity.Name = entity.Name;
+            var dbEntity = UpdateJsonValueInPersistentEntity(entity);
+            if (dbEntity.Id == 0)
+            {
+                dbEntity.Id = _dataContext.Set<PersistentEntity>().Max(x => x.Id) + 1; //EF will override anyway;
+                dbEntity.IsDeleted = false;
+                dbEntity.GuidId = Guid.NewGuid().ToString();
+                dbEntity.CreateDate = DateTime.UtcNow;
+                dbEntity.EntityName = typeof(T).Name;
+                dbEntity.Name = entity.Name;
 
-            _dataContext.Set<PersistentEntity>().Add(dbEntity);
-            _dataContext.SaveChanges();
-            dictionary.Add(dbEntity, entity);
+                _dataContext.Set<PersistentEntity>().Add(dbEntity);
+                _dataContext.SaveChanges();
+                dictionary.Add(dbEntity, entity);
+            }
+            else
+            {
+                _dataContext.Attach<PersistentEntity>(dbEntity);
+                dbEntity.IsDeleted = false;
+                _dataContext.Entry<PersistentEntity>(dbEntity).State = EntityState.Modified;
+                _dataContext.SaveChanges();
+            }
+
+
         }
 
         private int GetNewId()
@@ -97,29 +110,28 @@ namespace DataServices.Providers
             List<T> result = new List<T>();
             List<PersistentEntity> myEntities = _dataContext.Set<PersistentEntity>().
                 Where(x => x.EntityName == typeof(T).Name).ToList(); // e.g. Sites only!
-            foreach (PersistentEntity item in myEntities)
+            foreach (PersistentEntity persistentEntity in myEntities)
             {
                 try
                 {
-                    T deserializedItem = JsonConvert.DeserializeObject<T>(item.JsonValue);
+                    T deserializedItem = JsonConvert.DeserializeObject<T>(persistentEntity.JsonValue);
                     if (deserializedItem != null)
                     {
-                        dictionary.Add(item, deserializedItem);
+                        dictionary.Add(persistentEntity, deserializedItem);
                         result.Add(deserializedItem);
                     }
                 }
                 catch (Exception)
                 {
-                    if (!item.JsonValue.Contains("{"))
+                    if (!persistentEntity.JsonValue.Contains("{"))
                     {
                         T t = new T();
-                        if (result.Count == 0) t.Id = 1;
-                        else t.Id = result.Max(x => x.Id);
-                        t.Name = item.JsonValue;
+                        t.Id = GetNewId();
+                        t.Name = persistentEntity.JsonValue;
                         t.GuidId = Guid.NewGuid().ToString();
-                        t.IsDeleted = item.IsDeleted;
-                        item.JsonValue = JsonConvert.SerializeObject(t);
-                        dictionary.Add(item, t);
+                        t.IsDeleted = persistentEntity.IsDeleted;
+                        persistentEntity.JsonValue = JsonConvert.SerializeObject(t);
+                        dictionary.Add(persistentEntity, t);
                         result.Add(t);
                         _dataContext.SaveChanges();
                     }
@@ -142,7 +154,6 @@ namespace DataServices.Providers
             pair.Key.JsonValue = newValue;
 
             _dataContext.Attach(pair.Key);
-            _dataContext.Entry<PersistentEntity>(pair.Key).State = EntityState.Modified;
             _dataContext.SaveChanges();
         }
     }

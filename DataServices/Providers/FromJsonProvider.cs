@@ -94,21 +94,21 @@ namespace DataServices.Providers
             return _myList.Where(x => func(x));
         }
 
-        public void Insert(T entity)
+        public void InsertUpdateOrUndelete(T entity)
         {
             var exist = _myList.FirstOrDefault(x => x.Id == entity.Id);
             if (exist == null)
                 _myList.Add(entity);
             Task.Run(Flush);
             if (AlternateRepository != null)
-                AlternateRepository.Insert(entity);
+                AlternateRepository.InsertUpdateOrUndelete(entity);
         }
 
         public void Update(T entity)
         {
             var exist = _myList.FirstOrDefault(x => x.Id == entity.Id);
             if (exist == null)
-                Insert(entity);
+                InsertUpdateOrUndelete(entity);
             else
             {
                 _myList.Remove(exist);

@@ -43,7 +43,7 @@ namespace DataServices.Providers
             
                 var exist = _myOriginalList.FirstOrDefault(x => x.Id == item.Id && x.GuidId == item.GuidId.ToString());
                 if (exist == null)
-                    repository.Insert(item);
+                    repository.InsertUpdateOrUndelete(item);
                 else if (JsonFormatter.ToJson<T>(item) != JsonFormatter.ToJson<T>(exist))
                     repository.Update(item);            
         }
@@ -60,7 +60,7 @@ namespace DataServices.Providers
             return _myList.FirstOrDefault(x => x.Id == Id);
         }
 
-        public void Insert(T entity)
+        public void InsertUpdateOrUndelete(T entity)
         {
             var exist = _myList.FirstOrDefault(x => x.Id == entity.Id && x.GuidId == entity.GuidId.ToString());
             if (exist == null)
