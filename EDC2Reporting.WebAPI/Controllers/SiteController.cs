@@ -2,23 +2,43 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataServices.Interfaces;
+using DataServices.Providers;
+using DataServices.SqlServerRepository;
+using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
     public class SiteController : Controller
     {
+        private readonly ILogger<SiteController> _logger;
+        private IRepository<Site> repository;
+        private readonly RepositoryOptions repoOptions;
+
+        public SiteController(ILogger<SiteController> logger, EdcDbContext db, IOptionsSnapshot<RepositoryOptions> options)
+        {
+            _logger = logger;
+            repoOptions = options.Value;
+            RepositoryLocator<Site> repositoryLocator = new RepositoryLocator<Site>();
+            repository = repositoryLocator.GetRepository(repoOptions.RepositoryType, db);
+        }
+
         // GET: SiteController
         public ActionResult Index()
         {
-            return View();
+            List<Site> list = repository.GetAll().ToList();
+            return View(list);
         }
 
         // GET: SiteController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var model = repository.GetById(id);
+            return View(model);
         }
 
         // GET: SiteController/Create
@@ -30,58 +50,50 @@ namespace EDC2Reporting.WebAPI.Controllers
         // POST: SiteController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Site site)
         {
             try
             {
+                repository.InsertUpdateOrUndelete(site);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(site);
             }
         }
 
         // GET: SiteController/Edit/5
         public ActionResult Edit(int id)
         {
+            var model = repository.GetById(id);
             return View();
         }
 
         // POST: SiteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Site site)
         {
             try
             {
+                repository.Update(site);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+
+                return View(site);
             }
         }
 
         // GET: SiteController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            var model = repository.GetById(id);
+            repository.Delete(model);
+            return View("Index");
         }
-
-        // POST: SiteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
     }
 }

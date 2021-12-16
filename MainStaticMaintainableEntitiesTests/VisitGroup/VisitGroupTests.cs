@@ -3,6 +3,7 @@ using MainStaticMaintainableEntities.VisitGroup;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using MainStaticMaintainableEntities.VisitAssembly;
 
 namespace MainStaticMaintainableEntities.VisitGroup.Tests
 {
@@ -16,7 +17,7 @@ namespace MainStaticMaintainableEntities.VisitGroup.Tests
             VisitGroup vg = new VisitGroup();
             
             // Act
-            vg.AddVisitById(1);
+            vg.Visits.Add(new Visit());
 
             Assert.IsTrue(vg.Visits.Count > 0); // TODO : add
         }
