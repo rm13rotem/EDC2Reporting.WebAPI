@@ -29,7 +29,7 @@ namespace EDC2Reporting.WebAPI
             //services.AddJsEngineSwitcher(options => options.DefaultEngineName = V8JsEngine.EngineName)
             //  .AddV8();
 
-            services.AddSingleton<IConfiguration>(Configuration);
+            //services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddControllersWithViews();
 
@@ -60,7 +60,7 @@ namespace EDC2Reporting.WebAPI
                     options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             }
 
-
+            services.Configure<RepositoryOptions>(Configuration.GetSection(RepositoryOptions.RepositorySettings));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +69,11 @@ namespace EDC2Reporting.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
             // Initialise ReactJS.NET. Must be before static files.
@@ -91,9 +96,9 @@ namespace EDC2Reporting.WebAPI
             //  .AddScriptWithoutTransform("~/js/bundle.server.js");
             //});
 
-            app.UseStaticFiles();
-
+            
             app.UseHttpsRedirection();
+app.UseStaticFiles();
 
             app.UseRouting();
 
@@ -101,6 +106,10 @@ namespace EDC2Reporting.WebAPI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(name: "site",
+                pattern: "v1/api/site",
+                defaults: new { controller = "SiteApi", action = "Index" });
+
                 endpoints.MapControllerRoute(
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{id?}");
