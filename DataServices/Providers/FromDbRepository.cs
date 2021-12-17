@@ -49,7 +49,7 @@ namespace DataServices.Providers
             PersistentEntity dbEntity = UpdateJsonValueInPersistentEntity(entity);
             dbEntity.IsDeleted = true;
 
-            _dataContext.PersistentEntity.Attach(dbEntity);
+            _dataContext.PersistentEntities.Attach(dbEntity);
             _dataContext.Entry<PersistentEntity>(dbEntity).State = EntityState.Modified;
             _dataContext.SaveChanges();
         }

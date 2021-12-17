@@ -1,32 +1,31 @@
-﻿using DataServices.SqlServerRepository;
-using DataServices.SqlServerRepository.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
-    public class PersistentEntityController : Controller
+    public class ModuleInfoController : Controller
     {
-        private readonly EdcDbContext db;
+        private readonly EdcDbContext _context;
 
-        public PersistentEntityController(EdcDbContext _db)
+        public ModuleInfoController(EdcDbContext context)
         {
-            db = _db;
+            _context = context;
         }
-       
 
-        // GET: PersistentEntityController
+        // GET: ModuleInfo
         public async Task<IActionResult> Index()
         {
-            var list = await db.PersistentEntities.ToListAsync();
-            return View(list);
+            return View(await _context.ModuleInfos.ToListAsync());
         }
 
-
-        // GET: PersistentEntity/Details/5
+        // GET: ModuleInfo/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,39 +33,39 @@ namespace EDC2Reporting.WebAPI.Controllers
                 return NotFound();
             }
 
-            var persistentEntity = await db.PersistentEntities
+            var moduleInfo = await _context.ModuleInfos
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (persistentEntity == null)
+            if (moduleInfo == null)
             {
                 return NotFound();
             }
 
-            return View(persistentEntity);
+            return View(moduleInfo);
         }
 
-        // GET: PersistentEntity/Create
+        // GET: ModuleInfo/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: PersistentEntity/Create
+        // POST: ModuleInfo/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GuidId,EntityName,CreateDate,Name,JsonValue,IsDeleted")] PersistentEntity persistentEntity)
+        public async Task<IActionResult> Create([Bind("Id,ExperimentId,VisitGroupId,VisitId,DoctorId,PatientId,ModuleId,DataInJson,CurrentDataInJson,LastUpdator,CreatedDateTime,LastUpdatedDateTime,CurrentLastUpdateDateTime")] ModuleInfo moduleInfo)
         {
             if (ModelState.IsValid)
             {
-                db.Add(persistentEntity);
-                await db.SaveChangesAsync();
+                _context.Add(moduleInfo);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(persistentEntity);
+            return View(moduleInfo);
         }
 
-        // GET: PersistentEntity/Edit/5
+        // GET: ModuleInfo/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,22 +73,22 @@ namespace EDC2Reporting.WebAPI.Controllers
                 return NotFound();
             }
 
-            var persistentEntity = await db.PersistentEntities.FindAsync(id);
-            if (persistentEntity == null)
+            var moduleInfo = await _context.ModuleInfos.FindAsync(id);
+            if (moduleInfo == null)
             {
                 return NotFound();
             }
-            return View(persistentEntity);
+            return View(moduleInfo);
         }
 
-        // POST: PersistentEntity/Edit/5
+        // POST: ModuleInfo/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GuidId,EntityName,CreateDate,Name,JsonValue,IsDeleted")] PersistentEntity persistentEntity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ExperimentId,VisitGroupId,VisitId,DoctorId,PatientId,ModuleId,DataInJson,CurrentDataInJson,LastUpdator,CreatedDateTime,LastUpdatedDateTime,CurrentLastUpdateDateTime")] ModuleInfo moduleInfo)
         {
-            if (id != persistentEntity.Id)
+            if (id != moduleInfo.Id)
             {
                 return NotFound();
             }
@@ -98,12 +97,12 @@ namespace EDC2Reporting.WebAPI.Controllers
             {
                 try
                 {
-                    db.Update(persistentEntity);
-                    await db.SaveChangesAsync();
+                    _context.Update(moduleInfo);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersistentEntityExists(persistentEntity.Id))
+                    if (!ModuleInfoExists(moduleInfo.Id))
                     {
                         return NotFound();
                     }
@@ -114,10 +113,10 @@ namespace EDC2Reporting.WebAPI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(persistentEntity);
+            return View(moduleInfo);
         }
 
-        // GET: PersistentEntity/Delete/5
+        // GET: ModuleInfo/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,30 +124,30 @@ namespace EDC2Reporting.WebAPI.Controllers
                 return NotFound();
             }
 
-            var persistentEntity = await db.PersistentEntities
+            var moduleInfo = await _context.ModuleInfos
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (persistentEntity == null)
+            if (moduleInfo == null)
             {
                 return NotFound();
             }
 
-            return View(persistentEntity);
+            return View(moduleInfo);
         }
 
-        // POST: PersistentEntity/Delete/5
+        // POST: ModuleInfo/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var persistentEntity = await db.PersistentEntities.FindAsync(id);
-            db.PersistentEntities.Remove(persistentEntity);
-            await db.SaveChangesAsync();
+            var moduleInfo = await _context.ModuleInfos.FindAsync(id);
+            _context.ModuleInfos.Remove(moduleInfo);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PersistentEntityExists(int id)
+        private bool ModuleInfoExists(int id)
         {
-            return db.PersistentEntities.Any(e => e.Id == id);
+            return _context.ModuleInfos.Any(e => e.Id == id);
         }
     }
 }

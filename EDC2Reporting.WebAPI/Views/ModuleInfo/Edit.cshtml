@@ -1,0 +1,89 @@
+﻿@model ScaffoldingMockSolution.Models.ModuleInfo
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ModuleInfo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="ExperimentId" class="control-label"></label>
+                <input asp-for="ExperimentId" class="form-control" />
+                <span asp-validation-for="ExperimentId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VisitGroupId" class="control-label"></label>
+                <input asp-for="VisitGroupId" class="form-control" />
+                <span asp-validation-for="VisitGroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="VisitId" class="control-label"></label>
+                <input asp-for="VisitId" class="form-control" />
+                <span asp-validation-for="VisitId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DoctorId" class="control-label"></label>
+                <input asp-for="DoctorId" class="form-control" />
+                <span asp-validation-for="DoctorId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PatientId" class="control-label"></label>
+                <input asp-for="PatientId" class="form-control" />
+                <span asp-validation-for="PatientId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ModuleId" class="control-label"></label>
+                <input asp-for="ModuleId" class="form-control" />
+                <span asp-validation-for="ModuleId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DataInJson" class="control-label"></label>
+                <input asp-for="DataInJson" class="form-control" />
+                <span asp-validation-for="DataInJson" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentDataInJson" class="control-label"></label>
+                <input asp-for="CurrentDataInJson" class="form-control" />
+                <span asp-validation-for="CurrentDataInJson" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastUpdator" class="control-label"></label>
+                <input asp-for="LastUpdator" class="form-control" />
+                <span asp-validation-for="LastUpdator" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDateTime" class="control-label"></label>
+                <input asp-for="CreatedDateTime" class="form-control" />
+                <span asp-validation-for="CreatedDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastUpdatedDateTime" class="control-label"></label>
+                <input asp-for="LastUpdatedDateTime" class="form-control" />
+                <span asp-validation-for="LastUpdatedDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CurrentLastUpdateDateTime" class="control-label"></label>
+                <input asp-for="CurrentLastUpdateDateTime" class="form-control" />
+                <span asp-validation-for="CurrentLastUpdateDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

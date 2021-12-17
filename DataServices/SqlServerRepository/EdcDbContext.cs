@@ -21,13 +21,19 @@ namespace DataServices.SqlServerRepository
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!string.IsNullOrWhiteSpace(ConnectionString))
-                optionsBuilder.UseSqlServer(ConnectionString);
+            if (!optionsBuilder.IsConfigured)
+            {
+                if (!string.IsNullOrWhiteSpace(ConnectionString))
+                    optionsBuilder.UseSqlServer(ConnectionString);
+                else
+                optionsBuilder.UseSqlServer("Server=LAPTOP-6ORP7UKE\\SQLEXPRESS;Initial Catalog=EDC_Dev;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+            }
+            
         }
 
-        public virtual DbSet<Experiments> Experiments { get; set; }
-        public virtual DbSet<ModuleInfos> ModuleInfos { get; set; }
-        public virtual DbSet<PersistentEntity> PersistentEntity { get; set; }
+        public virtual DbSet<Experiment> Experiments { get; set; }
+        public virtual DbSet<ModuleInfo> ModuleInfos { get; set; }
+        public virtual DbSet<PersistentEntity> PersistentEntities { get; set; }
         public string ConnectionString { get; private set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

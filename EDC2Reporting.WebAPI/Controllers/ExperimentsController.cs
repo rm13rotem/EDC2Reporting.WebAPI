@@ -1,32 +1,31 @@
-﻿using DataServices.SqlServerRepository;
-using DataServices.SqlServerRepository.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
-    public class PersistentEntityController : Controller
+    public class ExperimentsController : Controller
     {
-        private readonly EdcDbContext db;
+        private readonly EdcDbContext _context;
 
-        public PersistentEntityController(EdcDbContext _db)
+        public ExperimentsController(EdcDbContext context)
         {
-            db = _db;
+            _context = context;
         }
-       
 
-        // GET: PersistentEntityController
+        // GET: Experiments
         public async Task<IActionResult> Index()
         {
-            var list = await db.PersistentEntities.ToListAsync();
-            return View(list);
+            return View(await _context.Experiments.ToListAsync());
         }
 
-
-        // GET: PersistentEntity/Details/5
+        // GET: Experiments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -34,39 +33,39 @@ namespace EDC2Reporting.WebAPI.Controllers
                 return NotFound();
             }
 
-            var persistentEntity = await db.PersistentEntities
+            var experiment = await _context.Experiments
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (persistentEntity == null)
+            if (experiment == null)
             {
                 return NotFound();
             }
 
-            return View(persistentEntity);
+            return View(experiment);
         }
 
-        // GET: PersistentEntity/Create
+        // GET: Experiments/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: PersistentEntity/Create
+        // POST: Experiments/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GuidId,EntityName,CreateDate,Name,JsonValue,IsDeleted")] PersistentEntity persistentEntity)
+        public async Task<IActionResult> Create([Bind("Id,UniqueIdentifier,HelsinkiApprovalNumber,CompanyName,CompanyId,Name")] Experiment experiment)
         {
             if (ModelState.IsValid)
             {
-                db.Add(persistentEntity);
-                await db.SaveChangesAsync();
+                _context.Add(experiment);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(persistentEntity);
+            return View(experiment);
         }
 
-        // GET: PersistentEntity/Edit/5
+        // GET: Experiments/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,22 +73,22 @@ namespace EDC2Reporting.WebAPI.Controllers
                 return NotFound();
             }
 
-            var persistentEntity = await db.PersistentEntities.FindAsync(id);
-            if (persistentEntity == null)
+            var experiment = await _context.Experiments.FindAsync(id);
+            if (experiment == null)
             {
                 return NotFound();
             }
-            return View(persistentEntity);
+            return View(experiment);
         }
 
-        // POST: PersistentEntity/Edit/5
+        // POST: Experiments/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,GuidId,EntityName,CreateDate,Name,JsonValue,IsDeleted")] PersistentEntity persistentEntity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,UniqueIdentifier,HelsinkiApprovalNumber,CompanyName,CompanyId,Name")] Experiment experiment)
         {
-            if (id != persistentEntity.Id)
+            if (id != experiment.Id)
             {
                 return NotFound();
             }
@@ -98,12 +97,12 @@ namespace EDC2Reporting.WebAPI.Controllers
             {
                 try
                 {
-                    db.Update(persistentEntity);
-                    await db.SaveChangesAsync();
+                    _context.Update(experiment);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PersistentEntityExists(persistentEntity.Id))
+                    if (!ExperimentExists(experiment.Id))
                     {
                         return NotFound();
                     }
@@ -114,10 +113,10 @@ namespace EDC2Reporting.WebAPI.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(persistentEntity);
+            return View(experiment);
         }
 
-        // GET: PersistentEntity/Delete/5
+        // GET: Experiments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -125,30 +124,30 @@ namespace EDC2Reporting.WebAPI.Controllers
                 return NotFound();
             }
 
-            var persistentEntity = await db.PersistentEntities
+            var experiment = await _context.Experiments
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (persistentEntity == null)
+            if (experiment == null)
             {
                 return NotFound();
             }
 
-            return View(persistentEntity);
+            return View(experiment);
         }
 
-        // POST: PersistentEntity/Delete/5
+        // POST: Experiments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var persistentEntity = await db.PersistentEntities.FindAsync(id);
-            db.PersistentEntities.Remove(persistentEntity);
-            await db.SaveChangesAsync();
+            var experiment = await _context.Experiments.FindAsync(id);
+            _context.Experiments.Remove(experiment);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PersistentEntityExists(int id)
+        private bool ExperimentExists(int id)
         {
-            return db.PersistentEntities.Any(e => e.Id == id);
+            return _context.Experiments.Any(e => e.Id == id);
         }
     }
 }

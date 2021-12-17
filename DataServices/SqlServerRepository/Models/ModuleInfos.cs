@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataServices.SqlServerRepository.Models
 {
-    public partial class ModuleInfos
+    public partial class ModuleInfo
     {
         [Key]
         public int Id { get; set; }
