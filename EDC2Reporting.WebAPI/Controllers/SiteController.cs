@@ -64,7 +64,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         public ActionResult Edit(int id)
         {
             var model = repository.GetById(id);
-            return View();
+            return View(model);
         }
 
         // POST: SiteController/Edit/5

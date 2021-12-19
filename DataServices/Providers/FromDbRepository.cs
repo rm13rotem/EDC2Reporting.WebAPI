@@ -163,7 +163,7 @@ namespace DataServices.Providers
         {
             if (dictionary == null || dictionary.Count == 0)
                 GetAll();
-            var pair = dictionary.Single(x => x.Value.Id == entity.Id);
+            var pair = dictionary.Single(x => x.Value.GuidId == entity.GuidId && x.Value.Id == entity.Id);
             var newValue = JsonConvert.SerializeObject(entity);
             if (pair.Key.JsonValue == newValue)
                 return; // nothing here to update;

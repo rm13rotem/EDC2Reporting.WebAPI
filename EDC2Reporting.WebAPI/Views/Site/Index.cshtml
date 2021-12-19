@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DataServices.SqlServerRepository.Models.ModuleInfo>
+﻿@model IEnumerable<MainStaticMaintainableEntities.SiteAssembly.Site>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,40 +13,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ExperimentId)
+                @Html.DisplayNameFor(model => model.Id)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VisitGroupId)
+                @Html.DisplayNameFor(model => model.GuidId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VisitId)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DoctorId)
+                @Html.DisplayNameFor(model => model.SiteManager)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PatientId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ModuleId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DataInJson)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentDataInJson)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastUpdator)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedDateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LastUpdatedDateTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentLastUpdateDateTime)
+                @Html.DisplayNameFor(model => model.IsDeleted)
             </th>
             <th></th>
         </tr>
@@ -55,41 +34,19 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ExperimentId)
+                @Html.DisplayFor(modelItem => item.Id)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.VisitGroupId)
+                @Html.DisplayFor(modelItem => item.GuidId)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.VisitId)
+                @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DoctorId)
+                @Html.DisplayFor(modelItem => item.SiteManager)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PatientId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ModuleId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DataInJson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CurrentDataInJson)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastUpdator)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastUpdatedDateTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CurrentLastUpdateDateTime)
-            </td>
+                @Html.DisplayFor(modelItem => item.IsDeleted)
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |

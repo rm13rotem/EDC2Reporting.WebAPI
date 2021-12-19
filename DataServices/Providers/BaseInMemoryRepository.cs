@@ -28,7 +28,7 @@ namespace DataServices.Providers
             _myOriginalList = repository.GetAll().ToList();
         }
 
-        private void SaveAll() 
+        private void SaveAll()
         {
             // Run this maybe once an day;
             foreach (var item in _myList.AsParallel())
@@ -40,12 +40,12 @@ namespace DataServices.Providers
 
         private void Save(T item)
         {
-            
-                var exist = _myOriginalList.FirstOrDefault(x => x.Id == item.Id && x.GuidId == item.GuidId.ToString());
-                if (exist == null)
-                    repository.InsertUpdateOrUndelete(item);
-                else if (JsonFormatter.ToJson<T>(item) != JsonFormatter.ToJson<T>(exist))
-                    repository.Update(item);            
+
+            var exist = _myOriginalList.FirstOrDefault(x => x.Id == item.Id && x.GuidId == item.GuidId.ToString());
+            if (exist == null)
+                repository.InsertUpdateOrUndelete(item);
+            else if (JsonFormatter.ToJson<T>(item) != JsonFormatter.ToJson<T>(exist))
+                repository.Update(item);
         }
 
         public void Delete(T entity)
@@ -87,16 +87,20 @@ namespace DataServices.Providers
 
         public IEnumerable<T> GetByExpression(Expression<Func<T, bool>> expression)
         {
-            return _myList.Where(x=> expression.Compile()(x)).ToList();
+            return _myList.Where(x => expression.Compile()(x)).ToList();
         }
 
         public void Update(T entity)
         {
-            var exist = _myList.FirstOrDefault(x => x.Id == entity.Id && x.GuidId == entity.GuidId.ToString());
-            if (exist != null)
+            var exist = _myList.FirstOrDefault(x => x.Id == entity.Id || x.GuidId == entity.GuidId.ToString());
+            if (exist != null && repository != null)
+                repository.Update(entity); // saves
+            else
+            {
                 _myList.Remove(exist);
-            _myList.Add(entity);
-            Save(entity);
+                _myList.Add(entity);
+                Save(entity);
+            }
         }
     }
 }

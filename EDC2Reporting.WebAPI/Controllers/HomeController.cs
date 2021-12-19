@@ -18,6 +18,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             _logger = logger;
         }
 
+        [ResponseCache(Duration=1000, Location = ResponseCacheLocation.Any)]
         public IActionResult Index()
         {
             return View();
