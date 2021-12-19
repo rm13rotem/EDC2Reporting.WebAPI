@@ -21,7 +21,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         // GET: PersistentEntityController
         public async Task<IActionResult> Index()
         {
-            var list = await db.PersistentEntities.ToListAsync();
+            var list = db.PersistentEntities.ToList();
             return View(list);
         }
 

@@ -38,13 +38,50 @@ namespace DataServices.SqlServerRepository
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
+
+            modelBuilder.Entity<Experiment>(entity =>
+            {
+                entity.Property(e => e.CompanyName).HasMaxLength(1000);
+
+                entity.Property(e => e.HelsinkiApprovalNumber).HasMaxLength(1000);
+
+                entity.Property(e => e.UniqueIdentifier).HasMaxLength(1000);
+            });
+
+            modelBuilder.Entity<ModuleInfo>(entity =>
+            {
+                entity.Property(e => e.CurrentLastUpdateDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.DataInJson).IsRequired();
+            });
+
             modelBuilder.Entity<PersistentEntity>(entity =>
             {
-                entity.Property(e => e.CreateDate).HasDefaultValueSql("(getdate())");
+                entity.ToTable("PersistentEntity");
+
+                entity.Property(e => e.CreateDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.EntityName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.GuidId)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.JsonValue).IsRequired();
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
             });
 
             OnModelCreatingPartial(modelBuilder);
         }
+    
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

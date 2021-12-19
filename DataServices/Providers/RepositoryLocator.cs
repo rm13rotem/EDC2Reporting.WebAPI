@@ -8,7 +8,8 @@ namespace DataServices.Providers
     {
         RepositoryType cachedRepositoryType;
         IRepository<T> cachedRepository;
-        public IRepository<T> GetRepository(RepositoryType repositoryType, EdcDbContext dbContext, bool isForceRefresh = false)
+
+        public IRepository<T> GetRepository(RepositoryType repositoryType, bool isForceRefresh = false)
         {
             if (cachedRepositoryType == repositoryType && cachedRepository != null && !isForceRefresh)
                 return cachedRepository;
@@ -21,7 +22,8 @@ namespace DataServices.Providers
 
             if (repositoryType == RepositoryType.FromDbRepository)
             {
-                cachedRepository = new FromDbRepository<T>(dbContext);
+                DbRepositoryLocator<T> repositoryLocator = new DbRepositoryLocator<T>();
+                cachedRepository = repositoryLocator.GetRepository();
                 cachedRepository = new BaseInMemoryRepository<T>(cachedRepository);
             }
 

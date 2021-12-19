@@ -8,6 +8,7 @@ namespace MainStaticMaintainableEntities
     {
         public DateTime DateOfBirth { get; set; }
         public int DoctorNumber { get; set; }
+        public int SiteId { get; set; } // FK to SiteRepository
 
         public virtual Site Site { get; set; }
 

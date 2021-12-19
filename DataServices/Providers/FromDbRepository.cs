@@ -15,14 +15,23 @@ namespace DataServices.Providers
         where T : IPersistentEntity, new()
     {
         private readonly EdcDbContext _dataContext;
+        private static IEnumerable<PersistentEntity> persistentEntities;
         Dictionary<PersistentEntity, T> dictionary = new Dictionary<PersistentEntity, T>();
 
         public FromDbRepository(EdcDbContext dataContext)
         {
             _dataContext = dataContext;
+            persistentEntities = dataContext.PersistentEntities.ToList();
+            LoadEntitiesToDictionaryFromSource(persistentEntities);
         }
 
         public FromDbRepository(IEnumerable<PersistentEntity> source)
+        {
+            persistentEntities = source;
+            LoadEntitiesToDictionaryFromSource(source);
+        }
+
+        private void LoadEntitiesToDictionaryFromSource(IEnumerable<PersistentEntity> source)
         {
             foreach (var persistentEntity in source)
             {
@@ -30,23 +39,46 @@ namespace DataServices.Providers
                 if (persistentEntity.EntityName == typeof(T).Name)
                 {
                     t = JsonConvert.DeserializeObject<T>(persistentEntity.JsonValue);
-                    dictionary.Add(persistentEntity, t);
+                    if (t != null)
+                        dictionary.Add(persistentEntity, t);
                 }
             }
         }
 
-        private PersistentEntity UpdateJsonValueInPersistentEntity(T entity)
+        private PersistentEntity GetDbEntityOrDefault(T entity)
         {
+            if (dictionary == null || dictionary.Count == 0)
+                GetAll();
+
             var dbEntity = dictionary.FirstOrDefault(x => x.Value.Id == entity.Id).Key;
-            if (dbEntity == null) dbEntity = new PersistentEntity();
-            dbEntity.JsonValue = JsonConvert.SerializeObject(entity);
+
+            if (dbEntity != null)
+                return dbEntity;
+            //else 
+            dbEntity = new PersistentEntity()
+            {
+                CreateDate = DateTime.UtcNow,
+                EntityName = typeof(T).Name,
+                GuidId = Guid.NewGuid().ToString(),
+                IsDeleted = false,
+                Name = entity.Name
+            }
+            ;
+            if (_dataContext != null)
+            {
+                dbEntity.Id = _dataContext.PersistentEntities.Max(x => x.Id) + 1;
+                dictionary.Add(dbEntity, entity);
+                _dataContext.PersistentEntities.Add(dbEntity);
+                _dataContext.SaveChanges();
+            }
             return dbEntity;
         }
 
         public void Delete(T entity)
         {
             entity.IsDeleted = true;
-            PersistentEntity dbEntity = UpdateJsonValueInPersistentEntity(entity);
+            PersistentEntity dbEntity = GetDbEntityOrDefault(entity);
+            dbEntity.JsonValue = JsonConvert.SerializeObject(entity);
             dbEntity.IsDeleted = true;
 
             _dataContext.PersistentEntities.Attach(dbEntity);
@@ -56,39 +88,23 @@ namespace DataServices.Providers
 
         public T GetById(int Id)
         {
+            T result = default(T);
             if (dictionary == null || dictionary.Count == 0)
-                GetAll(); // from db;
-            T result = dictionary.FirstOrDefault(x => x.Value.Id == Id).Value;
+                result = dictionary.FirstOrDefault(x => x.Value.Id == Id).Value;
             return result;
         }
 
         public void InsertUpdateOrUndelete(T entity)
         {
+            if (entity.Id == 0)
             entity.Id = GetNewId();
 
-            var dbEntity = UpdateJsonValueInPersistentEntity(entity);
-            if (dbEntity.Id == 0)
-            {
-                dbEntity.Id = _dataContext.Set<PersistentEntity>().Max(x => x.Id) + 1; //EF will override anyway;
-                dbEntity.IsDeleted = false;
-                dbEntity.GuidId = Guid.NewGuid().ToString();
-                dbEntity.CreateDate = DateTime.UtcNow;
-                dbEntity.EntityName = typeof(T).Name;
-                dbEntity.Name = entity.Name;
-
-                _dataContext.Set<PersistentEntity>().Add(dbEntity);
-                _dataContext.SaveChanges();
-                dictionary.Add(dbEntity, entity);
-            }
-            else
-            {
+            var dbEntity = GetDbEntityOrDefault(entity);
+            
                 _dataContext.Attach<PersistentEntity>(dbEntity);
                 dbEntity.IsDeleted = false;
                 _dataContext.Entry<PersistentEntity>(dbEntity).State = EntityState.Modified;
-                _dataContext.SaveChanges();
-            }
-
-
+                _dataContext.SaveChanges();         
         }
 
         private int GetNewId()
@@ -104,12 +120,12 @@ namespace DataServices.Providers
 
         public IEnumerable<T> GetAll(bool isForceRefresh = false)
         {
-            if (!isForceRefresh && dictionary.Count > 0)
+            if (!isForceRefresh && dictionary != null && dictionary.Count > 0)
                 return dictionary.Values.ToList();
             // else
             List<T> result = new List<T>();
-            List<PersistentEntity> myEntities = _dataContext.Set<PersistentEntity>().
-                Where(x => x.EntityName == typeof(T).Name).ToList(); // e.g. Sites only!
+            List<PersistentEntity> myEntities = _dataContext.PersistentEntities
+                .Where(x => x.EntityName.ToLower() == typeof(T).Name.ToLower()).ToList(); // e.g. Sites only!
             foreach (PersistentEntity persistentEntity in myEntities)
             {
                 try

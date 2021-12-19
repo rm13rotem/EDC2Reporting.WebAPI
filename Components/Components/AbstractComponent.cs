@@ -1,14 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using DataServices.Interfaces;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Components
 {
-    public class AbstractComponent : IValidatableObject
+    public class AbstractComponent : IValidatableObject, IPersistentEntity
     {
         ComponentType ComponentType { get; set; }
 
-        public string Name { get; private set; }
-        public string Label { get; private set; }
+        public int Id { get; set; }
+        public string GuidId { get; set; }
+        public bool IsDeleted { get; set; }
+
+        public string Name { get; set; }
+        public string Label { get; set; }
+
+        public AbstractComponent()
+        {
+
+        }
 
         public AbstractComponent(string label, string name)
         {
@@ -19,8 +29,7 @@ namespace Components
         public int OrderId { get; set; } // seriale order inside a module/form 1,2,3...
         public virtual string SerializedValue { get; set; }
         public virtual string DefaultValue { get; set; }
-
-
+        
         public virtual IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrWhiteSpace(Label))

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EDC2Reporting.WebAPI
+namespace DataServices.Providers
 {
     public class RepositoryOptions
     {

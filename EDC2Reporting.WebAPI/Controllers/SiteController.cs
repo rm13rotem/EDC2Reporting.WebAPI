@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DataServices.Interfaces;
+﻿using DataServices.Interfaces;
 using DataServices.Providers;
 using DataServices.SqlServerRepository;
 using MainStaticMaintainableEntities.SiteAssembly;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
@@ -19,12 +16,12 @@ namespace EDC2Reporting.WebAPI.Controllers
         private IRepository<Site> repository;
         private readonly RepositoryOptions repoOptions;
 
-        public SiteController(ILogger<SiteController> logger, EdcDbContext db, IOptionsSnapshot<RepositoryOptions> options)
+        public SiteController(ILogger<SiteController> logger, IOptionsSnapshot<RepositoryOptions> options)
         {
             _logger = logger;
             repoOptions = options.Value;
             RepositoryLocator<Site> repositoryLocator = new RepositoryLocator<Site>();
-            repository = repositoryLocator.GetRepository(repoOptions.RepositoryType, db);
+            repository = repositoryLocator.GetRepository(repoOptions.RepositoryType);
         }
 
         // GET: SiteController
