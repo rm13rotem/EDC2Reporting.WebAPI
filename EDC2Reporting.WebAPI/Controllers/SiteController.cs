@@ -1,6 +1,5 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
-using DataServices.SqlServerRepository;
 using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -74,6 +73,8 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             try
             {
+                SiteFactory siteFactory = new SiteFactory(repoOptions);
+                site.SiteManager = siteFactory.LoadDoctorById(site.SiteManagerId);
                 repository.Update(site);
                 return RedirectToAction(nameof(Index));
             }
@@ -89,7 +90,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             var model = repository.GetById(id);
             repository.Delete(model);
-            return View("Index");
+            return RedirectToAction(nameof(Index));
         }
         
     }

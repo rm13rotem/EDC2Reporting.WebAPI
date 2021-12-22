@@ -13,11 +13,8 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="GuidId" class="control-label"></label>
-                <input asp-for="GuidId" class="form-control" />
-                <span asp-validation-for="GuidId" class="text-danger"></span>
-            </div>
+            <input type="hidden" asp-for="GuidId" />
+            
             <div class="form-group">
                 <label asp-for="EntityName" class="control-label"></label>
                 <input asp-for="EntityName" class="form-control" />

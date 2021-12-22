@@ -22,7 +22,10 @@
                 @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SiteManager)
+                @Html.DisplayNameFor(model => model.SiteManager) (id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SiteManager) (name)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.IsDeleted)
@@ -43,7 +46,10 @@
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SiteManager)
+                @Html.DisplayFor(modelItem => item.SiteManagerId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SiteManager.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.IsDeleted)

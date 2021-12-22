@@ -90,21 +90,23 @@ namespace DataServices.Providers
         {
             T result = default(T);
             if (dictionary == null || dictionary.Count == 0)
-                result = dictionary.FirstOrDefault(x => x.Value.Id == Id).Value;
+                return result;
+
+            result = dictionary.FirstOrDefault(x => x.Value.Id == Id).Value;
             return result;
         }
 
         public void InsertUpdateOrUndelete(T entity)
         {
             if (entity.Id == 0)
-            entity.Id = GetNewId();
+                entity.Id = GetNewId();
 
             var dbEntity = GetDbEntityOrDefault(entity);
-            
-                _dataContext.Attach<PersistentEntity>(dbEntity);
-                dbEntity.IsDeleted = false;
-                _dataContext.Entry<PersistentEntity>(dbEntity).State = EntityState.Modified;
-                _dataContext.SaveChanges();         
+
+            _dataContext.Attach<PersistentEntity>(dbEntity);
+            dbEntity.IsDeleted = false;
+            _dataContext.Entry<PersistentEntity>(dbEntity).State = EntityState.Modified;
+            _dataContext.SaveChanges();
         }
 
         private int GetNewId()
@@ -163,7 +165,9 @@ namespace DataServices.Providers
         {
             if (dictionary == null || dictionary.Count == 0)
                 GetAll();
-            var pair = dictionary.Single(x => x.Value.GuidId == entity.GuidId && x.Value.Id == entity.Id);
+            var pair = dictionary.FirstOrDefault(x => x.Value.GuidId == entity.GuidId || x.Value.Id == entity.Id);
+            if (pair.Key == null)
+                return;
             var newValue = JsonConvert.SerializeObject(entity);
             if (pair.Key.JsonValue == newValue)
                 return; // nothing here to update;

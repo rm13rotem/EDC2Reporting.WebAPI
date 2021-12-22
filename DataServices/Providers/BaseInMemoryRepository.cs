@@ -1,5 +1,6 @@
 ﻿using DataServices.Interfaces;
 using DataServices.SqlServerRepository.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,13 +20,19 @@ namespace DataServices.Providers
         {
             repository = _repository;
             _myList = repository.GetAll().ToList();
-            _myOriginalList = repository.GetAll().ToList();
+            CloneListToOriginal();
+        }
+
+        private void CloneListToOriginal()
+        {
+            string myListInString = JsonConvert.SerializeObject(_myList);
+            _myOriginalList = JsonConvert.DeserializeObject<List<T>>(myListInString);
         }
 
         public BaseInMemoryRepository(List<T> list)
         {
             _myList = repository.GetAll().ToList();
-            _myOriginalList = repository.GetAll().ToList();
+            CloneListToOriginal();
         }
 
         private void SaveAll()

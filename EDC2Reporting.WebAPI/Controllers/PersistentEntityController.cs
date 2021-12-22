@@ -55,7 +55,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,GuidId,EntityName,CreateDate,Name,JsonValue,IsDeleted")] PersistentEntity persistentEntity)
+        public async Task<IActionResult> Create(PersistentEntity persistentEntity)
         {
             if (ModelState.IsValid)
             {
