@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataServices.Interfaces;
+using DataServices.Providers;
 using MainStaticMaintainableEntities.ModuleAssembly;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -17,18 +19,22 @@ namespace EDC2Reporting.WebAPI.Controllers
     {
         private ILogger<ModuleApiController> logger;
         IRepository<Module> repository;
+        RepositoryOptions repositorySettings;
 
-        public ModuleApiController(ILogger<ModuleApiController> _logger, IRepository<Module> repo)
+        public ModuleApiController(ILogger<ModuleApiController> _logger, 
+            IOptionsSnapshot<RepositoryOptions> options)
         {
             logger = _logger;
-            repository = repo;
+            repositorySettings = options.Value;
+            var locator = new RepositoryLocator<Module>();
+            repository = locator.GetRepository(repositorySettings.RepositoryType);
         }
 
         // GET: api/<ModuleApiController>
         [HttpGet]
         public IEnumerable<Module> Get()
         {
-            return repository.GetAll();
+            return repository.GetAll().Where(x => x.IsDeleted == false).ToList();
         }
 
         // GET api/<ModuleApiController>/5
@@ -42,19 +48,23 @@ namespace EDC2Reporting.WebAPI.Controllers
         [HttpPost]
         public void Post([FromBody] Module module)
         {
-            repository.InsertUpdateOrUndelete(module);
+            repository.UpsertActivation(module);
         }
 
         // PUT api/<ModuleApiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Module m)
         {
+            repository.Update(m);
         }
 
         // DELETE api/<ModuleApiController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            var entity = repository.GetById(id);
+            if (entity != null)
+            repository.Delete(entity);
         }
     }
 }

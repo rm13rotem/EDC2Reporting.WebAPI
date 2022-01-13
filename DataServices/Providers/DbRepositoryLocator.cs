@@ -8,7 +8,7 @@ namespace DataServices.Providers
         where T : IPersistentEntity, new()
     {    
 
-        internal IRepository<T> GetRepository()
+        public IRepository<T> GetRepository()
         {
             EdcDbContext dbContext = new EdcDbContext();
             return  new FromDbRepository<T>(dbContext);

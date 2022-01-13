@@ -50,7 +50,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             try
             {
-                repository.InsertUpdateOrUndelete(site);
+                repository.UpsertActivation(site);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -74,7 +74,6 @@ namespace EDC2Reporting.WebAPI.Controllers
             try
             {
                 SiteFactory siteFactory = new SiteFactory(repoOptions);
-                site.SiteManager = siteFactory.LoadDoctorById(site.SiteManagerId);
                 repository.Update(site);
                 return RedirectToAction(nameof(Index));
             }

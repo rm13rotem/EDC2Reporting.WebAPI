@@ -1,5 +1,6 @@
 using DataServices.Providers;
 using DataServices.SqlServerRepository;
+using MailClientLayer;
 using MainStaticMaintainableEntities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RabbitMq;
 
 namespace EDC2Reporting.WebAPI
 {
@@ -62,6 +64,8 @@ namespace EDC2Reporting.WebAPI
             }
 
             services.Configure<RepositoryOptions>(Configuration.GetSection(RepositoryOptions.RepositorySettings));
+            services.Configure<MailClientOptions>(Configuration.GetSection(MailClientOptions.MailClientSettings));
+            services.Configure<RabbitMqOptions>(Configuration.GetSection(RabbitMqOptions.RabbitMqSettings));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

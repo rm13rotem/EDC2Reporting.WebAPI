@@ -96,7 +96,7 @@ namespace DataServices.Providers
             return result;
         }
 
-        public void InsertUpdateOrUndelete(T entity)
+        public void UpsertActivation(T entity)
         {
             if (entity.Id == 0)
                 entity.Id = GetNewId();

@@ -10,6 +10,8 @@ using System.Collections.Generic;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
+    [Route("v1/api/[controller]")]
+    [ApiController]
     public class SiteApiController : ControllerBase
     {
         private readonly ILogger<SiteApiController> _logger;
@@ -26,7 +28,7 @@ namespace EDC2Reporting.WebAPI.Controllers
 
         public IActionResult Index()
         {
-            _logger.LogInformation($"{nameof(SiteApiController)}.Index method called!!!");
+            _logger.LogInformation($"{nameof(SiteApiController)}.{nameof(Index)} method called!!!");
             RepositoryType _repositoryType = repoOptions.RepositoryType;
             IEnumerable<Site> sites;
 
@@ -67,7 +69,7 @@ namespace EDC2Reporting.WebAPI.Controllers
                 var _dbRepo = new FromDbRepository<Site>(_dbContext);
                 foreach (var site in repository.GetAll())
                 {
-                    _dbRepo.InsertUpdateOrUndelete(site);
+                    _dbRepo.UpsertActivation(site);
                 }
                 return new JsonResult(new { IsSuccess = true });
             }

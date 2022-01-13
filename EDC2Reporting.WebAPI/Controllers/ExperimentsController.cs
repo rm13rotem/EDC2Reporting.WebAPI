@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DataServices.SqlServerRepository;
+﻿using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
@@ -58,6 +55,11 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             if (ModelState.IsValid)
             {
+                // HtmlSanitizer sanitizer = new HtmlSanitizer();
+                // experiment.HelsinkiApprovalNumber = sanitizer.Sanitize(experiment.HelsinkiApprovalNumber);
+                // experiment.Name = sanitizer.Sanitize(experiment.Name);
+                // TODO - continue. or find somebody else to sanitize;
+
                 _context.Add(experiment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
