@@ -17,5 +17,6 @@ namespace DataServices.SqlServerRepository.Models
         public string CompanyName { get; set; }
         public int? CompanyId { get; set; }
         public string Name { get; set; }
+        public int? MainVisitGroupId { get; set; }
     }
 }
