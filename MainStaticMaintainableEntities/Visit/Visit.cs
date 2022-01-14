@@ -15,7 +15,7 @@ namespace MainStaticMaintainableEntities.VisitAssembly
     public class Visit : IPersistentEntity, IVisit
     {
         [JsonIgnore]
-        public List<Module> Modules { get; set; }
+        public List<ModuleAssembly.Module> Modules { get; set; }
         [JsonIgnore]
         public int InternalIndex { get; set; }
 
@@ -50,9 +50,9 @@ namespace MainStaticMaintainableEntities.VisitAssembly
             if (moduleIds == null)
                 return; // almost - throw exception;
 
-            IRepositoryLocator<Module> repositoryLocator = new RepositoryLocator<Module>();
+            IRepositoryLocator<ModuleAssembly.Module> repositoryLocator = new RepositoryLocator<ModuleAssembly.Module>();
             var module_repository = repositoryLocator.GetRepository(RepositoryType.FromDbRepository);
-            Modules = new List<Module>();
+            Modules = new List<ModuleAssembly.Module>();
             foreach (int ModuleId in moduleIds)
             {
                 var m = module_repository.GetById(ModuleId);

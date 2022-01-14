@@ -10,7 +10,7 @@ namespace MainStaticMaintainableEntities.VisitAssembly
         int InternalIndex { get; set; }
         bool IsDeleted { get; set; }
         string JsonValue { get; set; }
-        List<Module> Modules { get; set; }
+        List<ModuleAssembly.Module> Modules { get; set; }
         string Name { get; set; }
     }
 }

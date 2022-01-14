@@ -2,8 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Web.Mvc;
 
-namespace MainStaticMaintainableEntities.Site
+namespace MainStaticMaintainableEntities.SiteAssembly
 {
     public class Country : IPersistentEntity
     {
@@ -14,5 +15,10 @@ namespace MainStaticMaintainableEntities.Site
 
         public string NameShort { get; set; }
         public string Languages { get; set; }
+
+        public static SelectList GetCountrySelectList(IRepository<Country> countryRepository, int CountryId)
+        {
+            return new SelectList(countryRepository.GetAll(), "Id", "Name", CountryId);
+        }
     }
 }

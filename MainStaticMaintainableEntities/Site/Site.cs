@@ -1,7 +1,8 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
-using MainStaticMaintainableEntities.Site;
 using Newtonsoft.Json;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace MainStaticMaintainableEntities.SiteAssembly
 {
@@ -53,5 +54,13 @@ namespace MainStaticMaintainableEntities.SiteAssembly
         public string GuidId { get; set; }
         public bool IsDeleted { get; set; }
         public string Name { get; set; }
+
+        public static SelectList GetCitySelectList(IRepository<Site> siteRepository, 
+            int CountryId, int CityId, int SiteId)
+        {
+            return new SelectList(siteRepository.GetAll().Where(x => x.CountryId == CountryId &&
+            x.CityId == CityId).ToList(),
+                "Id", "Name", SiteId);
+        }
     }
 }

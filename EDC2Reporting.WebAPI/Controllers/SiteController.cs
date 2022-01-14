@@ -13,15 +13,58 @@ namespace EDC2Reporting.WebAPI.Controllers
     {
         private readonly ILogger<SiteController> _logger;
         private IRepository<Site> repository;
+        private IRepository<Country> countryRepository;
+        private IRepository<City> cityRepository;
         private readonly RepositoryOptions repoOptions;
 
         public SiteController(ILogger<SiteController> logger, IOptionsSnapshot<RepositoryOptions> options)
         {
             _logger = logger;
             repoOptions = options.Value;
+            RepositoryLocator<Country> country_repositoryLocator = new RepositoryLocator<Country>();
+            countryRepository = country_repositoryLocator.GetRepository(repoOptions.RepositoryType);
+            RepositoryLocator<City> city_repositoryLocator = new RepositoryLocator<City>();
+            cityRepository = city_repositoryLocator.GetRepository(repoOptions.RepositoryType);
             RepositoryLocator<Site> repositoryLocator = new RepositoryLocator<Site>();
             repository = repositoryLocator.GetRepository(repoOptions.RepositoryType);
         }
+
+        public ActionResult SelectSitePartialView(int? SiteId = 0)
+        {
+            var Site = new Site();
+            if (SiteId > 0)
+                Site = repository.GetById((int)SiteId);
+
+            if (Site != null)
+            {
+                ViewBag["CountryId"] = Country.GetCountrySelectList(countryRepository,Site.CountryId);
+                ViewBag["CityId"] = City.GetCitySelectList(cityRepository, Site.CountryId, Site.CityId);
+                ViewBag["SiteId"] = Site.GetCitySelectList(repository, Site.CountryId, Site.CityId, Site.Id);
+            }
+            else
+            {
+                ViewBag["CountryId"] = Country.GetCountrySelectList(countryRepository, 0);
+                ViewBag["CityId"] = City.GetCitySelectList(cityRepository, 0,0);
+                ViewBag["SiteId"] = Site.GetCitySelectList(repository, 0,0,0);
+            }
+
+            return View(Site);
+        }
+
+        
+
+        public ActionResult SelectCityPartialView(int CountryId = 0)
+        {
+            ViewBag["CityId"] = City.GetCitySelectList( cityRepository, CountryId, 0);
+            return View();
+        }
+
+        public ActionResult SelectSpecificSitePartialView(int CountryId = 0, int CityId = 0, int SiteId = 0)
+        {
+            ViewBag["SiteId"] = Site.GetCitySelectList(repository, CountryId, CityId, SiteId);
+            return View();
+        }
+
 
         // GET: SiteController
         public ActionResult Index()
