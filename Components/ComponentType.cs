@@ -12,9 +12,9 @@ namespace Components
         RangeComponent = 4,
         SelectComponent = 5, 
         TextComponent = 6,
-        Aux1Component = 7,
-        Aux2Component = 8,
-        Aux3Component = 9,
-        Aux4Component = 10
+        MedicalHistoryTermComponent = 7,
+        AdverseEventTermComponent = 8,
+        LabResultComponent = 9,
+        MedicineNameComponent = 10
     }
 }

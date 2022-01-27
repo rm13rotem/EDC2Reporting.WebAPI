@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Components
 {
-    public class Aux1Component : AbstractComponent, IValidatableObject
+    public class AdverseEventTermComponent : AbstractComponent, IValidatableObject
     {
-        public Aux1Component(string label, string name) : base(label, name)
+        public AdverseEventTermComponent(string label, string name) : base(label, name)
         {
 
         }
@@ -16,4 +16,5 @@ namespace Components
             return base.Validate(validationContext);
         }
     }
+
 }
