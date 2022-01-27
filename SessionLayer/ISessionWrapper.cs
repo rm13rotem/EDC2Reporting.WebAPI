@@ -1,0 +1,21 @@
+﻿using DataServices.SqlServerRepository.Models;
+using MainStaticMaintainableEntities;
+using MainStaticMaintainableEntities.ModuleAssembly;
+using MainStaticMaintainableEntities.PatientAssembley;
+using MainStaticMaintainableEntities.VisitAssembly;
+using MainStaticMaintainableEntities.VisitGroup;
+
+namespace SessionLayer
+{
+    public interface ISessionWrapper
+    {
+        Doctor CurrentDoctor { get; }
+        Experiment CurrentExperiment { get; }
+        Module CurrentModuleInVisitBeingHandled { get; }
+        Patient CurrentPatientDetails { get; }
+        ModuleInfo CurrentResult { get; }
+        int CurrentResultId { get; set; }
+        Visit CurrentVisit { get; }
+        VisitGroup MainVisitGroupOfExperiment { get; }
+    }
+}
