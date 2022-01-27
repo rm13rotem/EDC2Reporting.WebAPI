@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMq;
+using System;
 
 namespace EDC2Reporting.WebAPI
 {
@@ -25,6 +26,13 @@ namespace EDC2Reporting.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddReact();
@@ -35,6 +43,7 @@ namespace EDC2Reporting.WebAPI
             //services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddControllersWithViews();
+            services.AddHttpContextAccessor();
 
             var _environment = Configuration.GetValue<string>("Environment");
             if (_environment == "DEV")
@@ -101,9 +110,11 @@ namespace EDC2Reporting.WebAPI
             //  .AddScriptWithoutTransform("~/js/bundle.server.js");
             //});
 
-            
+
             app.UseHttpsRedirection();
-app.UseStaticFiles();
+            app.UseStaticFiles();
+
+            app.UseSession();
 
             app.UseRouting();
 
