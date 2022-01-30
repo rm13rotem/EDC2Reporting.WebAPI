@@ -6,7 +6,7 @@ namespace Components
 {
     public class AbstractComponent : IValidatableObject, IPersistentEntity
     {
-        ComponentType ComponentType { get; set; }
+        public ComponentType ComponentType { get; set; }
 
         public int Id { get; set; }
         public string GuidId { get; set; }

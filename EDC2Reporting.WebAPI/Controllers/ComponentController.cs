@@ -20,7 +20,7 @@ namespace EDC2Reporting.WebAPI.Controllers
 
         [ResponseCache(Duration = 300, VaryByQueryKeys = new string[] { "*" },
             Location = ResponseCacheLocation.Any)]
-        public IActionResult BoolPartialView(BoolComponent boolComponent)
+        public IActionResult BoolPartialView(ComponentFilter boolComponent)
         {
             usageLog.ControllerUsage.LogUsage(nameof(ComponentController), nameof(BoolPartialView));
             return View(boolComponent);

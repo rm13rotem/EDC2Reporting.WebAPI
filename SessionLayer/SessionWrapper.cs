@@ -9,6 +9,7 @@ using MainStaticMaintainableEntities.VisitAssembly;
 using MainStaticMaintainableEntities.VisitGroup;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Session;
+using Microsoft.Extensions.Options;
 using System;
 using System.IO;
 using System.Linq;
@@ -20,16 +21,14 @@ namespace SessionLayer
     {
         private readonly RepositoryOptions _repositoryOptions;
         private readonly string CurrentResultKey = "CurrentResultKey";
+        private readonly string CurrentSessionStartDateTime = "CurrentSessionStartDateTime";
+
         private IHttpContextAccessor _httpContextAccessor;
 
-        public SessionWrapper(IHttpContextAccessor httpContextAccessor)
+        public SessionWrapper(IHttpContextAccessor httpContextAccessor, IOptionsSnapshot<RepositoryOptions> options)
         {
             _httpContextAccessor = httpContextAccessor;
-        }
-
-        public SessionWrapper(RepositoryOptions repositoryOptions)
-        {
-            _repositoryOptions = repositoryOptions;
+            _repositoryOptions = options.Value;
         }
         // Internal Session Data - alter only in LoginController
         // (these are internal to CurrentResult;
@@ -43,29 +42,38 @@ namespace SessionLayer
         // Data Collected in ModuleDisplayController - 1 action per CRF page / Module
         public int CurrentResultId
         {
-            get
-            {
-                
-                var httpContext = _httpContextAccessor.HttpContext;
-                byte[] byteArray;
-                if (httpContext.Session.TryGetValue(CurrentResultKey, out byteArray))
-                {
-                    BinaryFormatter formatter = new BinaryFormatter();
-                    MemoryStream stream = new MemoryStream(byteArray);
-                    int result = (int) formatter.Deserialize(stream);
-                    return result;
-                }
-                return 0;
-            }
+            get { return GetValue<int>(CurrentResultKey); }
 
-            set
+            set { SetValue<int>(CurrentResultKey, value); }
+        }
+        public DateTime StartDateTime
+        {
+            get { return GetValue<DateTime>(CurrentSessionStartDateTime); }
+
+            set { SetValue<DateTime>(CurrentSessionStartDateTime, value); }
+        }
+
+        private void SetValue<T>(string key, T value)
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            MemoryStream memStream = new MemoryStream();
+            object o = value;
+            formatter.Serialize(memStream, o);
+            _httpContextAccessor.HttpContext.Session.Set(key, memStream.ToArray());
+        }
+
+        private T GetValue<T>(string key)
+        {
+            var httpContext = _httpContextAccessor.HttpContext;
+            byte[] byteArray;
+            if (httpContext.Session.TryGetValue(key, out byteArray))
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                MemoryStream memStream = new MemoryStream();
-                object o = value;
-                formatter.Serialize(memStream, o);
-                _httpContextAccessor.HttpContext.Session.Set(CurrentResultKey, memStream.ToArray());
+                MemoryStream stream = new MemoryStream(byteArray);
+                T result = (T)formatter.Deserialize(stream);
+                return result;
             }
+            return default(T);
         }
 
         public ModuleInfo CurrentResult

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EDC2Reporting.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
     public class RegisterController : Controller
     {
-        public IActionResult InviteAdministrator()
+        public IActionResult InviteAdministrator(RegisterViewModel registerViewModel)
         {
             // If not administrator - goto home/error
             // notify by alert email all existing administrators

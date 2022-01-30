@@ -30,6 +30,7 @@
     <ProjectReference Include="..\MailClientLayer\MailClientLayer.csproj" />
     <ProjectReference Include="..\MainStaticMaintainableEntities\MainStaticMaintainableEntities.csproj" />
     <ProjectReference Include="..\RabbitMq\RabbitMq.csproj" />
+    <ProjectReference Include="..\SessionLayer\SessionLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>
