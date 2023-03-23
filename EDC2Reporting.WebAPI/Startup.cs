@@ -26,6 +26,7 @@ namespace EDC2Reporting.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
@@ -45,6 +46,7 @@ namespace EDC2Reporting.WebAPI
             services.AddControllersWithViews();
             services.AddHttpContextAccessor();
 
+            
             var _environment = Configuration.GetValue<string>("Environment");
             if (_environment == "DEV")
             {
@@ -130,6 +132,6 @@ namespace EDC2Reporting.WebAPI
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-        }
+        } 
     }
 }

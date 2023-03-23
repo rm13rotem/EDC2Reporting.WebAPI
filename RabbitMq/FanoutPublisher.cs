@@ -1,21 +1,25 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RabbitMq;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleApp1
+namespace RabbitMq 
 {
     public class FanoutPublisher : IFanoutPublisher
     {
-        private ChannelFactory channelFactory;
-        private IModel channel;
-        private RabbitMqOptions options;
-        public FanoutPublisher(IOptionsSnapshot<RabbitMqOptions> optionsRabbitMq)
+        private readonly ChannelFactory channelFactory;
+        private readonly IModel channel;
+        private readonly ILogger<FanoutPublisher> logger;
+        private readonly RabbitMqOptions options;
+        public FanoutPublisher(IOptionsSnapshot<RabbitMqOptions> optionsRabbitMq, ILogger<FanoutPublisher> _logger)
         {
             options = optionsRabbitMq.Value;
             channelFactory = new ChannelFactory(options);
+            channel = channelFactory.CreateChannel();
+            logger = _logger;
         }
 
         public bool TryDeclareExchange(string exchangeName)
@@ -31,7 +35,7 @@ namespace ConsoleApp1
             }
             catch (Exception e)
             {
-                //Logger.log(e);
+                logger.LogError(e, e.Message, null);
                 return false;
             }
 
@@ -53,7 +57,7 @@ namespace ConsoleApp1
             }
             catch (Exception e)
             {
-                //Logger.Log(e.Message);
+                logger.LogError(e, e.Message,null);
                 return false;
             }
         }

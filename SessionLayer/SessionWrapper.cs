@@ -8,28 +8,29 @@ using MainStaticMaintainableEntities.PatientAssembley;
 using MainStaticMaintainableEntities.VisitAssembly;
 using MainStaticMaintainableEntities.VisitGroup;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Session;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
 using System;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SessionLayer
 {
     public class SessionWrapper : ISessionWrapper
     {
         private readonly RepositoryOptions _repositoryOptions;
+        private readonly ISession _session;
+
         private readonly string CurrentResultKey = "CurrentResultKey";
+        private readonly string CurrentLoginKey = "CurrentLoginKey";
         private readonly string CurrentSessionStartDateTime = "CurrentSessionStartDateTime";
 
-        private IHttpContextAccessor _httpContextAccessor;
-
-        public SessionWrapper(IHttpContextAccessor httpContextAccessor, IOptionsSnapshot<RepositoryOptions> options)
+        public SessionWrapper(IHttpContextAccessor httpContextAccessor,
+            IOptionsSnapshot<RepositoryOptions> options)
         {
-            _httpContextAccessor = httpContextAccessor;
+            _session = httpContextAccessor.HttpContext.Session;
             _repositoryOptions = options.Value;
         }
+
         // Internal Session Data - alter only in LoginController
         // (these are internal to CurrentResult;
 
@@ -42,77 +43,97 @@ namespace SessionLayer
         // Data Collected in ModuleDisplayController - 1 action per CRF page / Module
         public int CurrentResultId
         {
-            get { return GetValue<int>(CurrentResultKey); }
+            get
+            {
+                int? v = _session.GetInt32(CurrentResultKey);
+                if (v.HasValue)
+                    return v.Value;
+                else
+                    return 0;
+            }
 
-            set { SetValue<int>(CurrentResultKey, value); }
+            set { _session.SetInt32(CurrentResultKey, value); }
+        }
+        public int CurrentLoginId
+        {
+            get
+            {
+                int? v = _session.GetInt32(CurrentLoginKey);
+                if (v.HasValue)
+                    return v.Value;
+                else
+                    return 0;
+            }
+
+            set { _session.SetInt32(CurrentLoginKey, value); }
         }
         public DateTime StartDateTime
         {
-            get { return GetValue<DateTime>(CurrentSessionStartDateTime); }
-
-            set { SetValue<DateTime>(CurrentSessionStartDateTime, value); }
-        }
-
-        private void SetValue<T>(string key, T value)
-        {
-            BinaryFormatter formatter = new BinaryFormatter();
-            MemoryStream memStream = new MemoryStream();
-            object o = value;
-            formatter.Serialize(memStream, o);
-            _httpContextAccessor.HttpContext.Session.Set(key, memStream.ToArray());
-        }
-
-        private T GetValue<T>(string key)
-        {
-            var httpContext = _httpContextAccessor.HttpContext;
-            byte[] byteArray;
-            if (httpContext.Session.TryGetValue(key, out byteArray))
+            get
             {
-                BinaryFormatter formatter = new BinaryFormatter();
-                MemoryStream stream = new MemoryStream(byteArray);
-                T result = (T)formatter.Deserialize(stream);
-                return result;
+                var result = _session.GetString(CurrentSessionStartDateTime);
+                if (string.IsNullOrWhiteSpace(result))
+                {
+                    StartDateTime = DateTime.UtcNow;
+                    return DateTime.UtcNow;
+                }
+                return DateTime.Parse(result);
             }
-            return default(T);
+
+            set
+            {
+                _session.SetString(CurrentSessionStartDateTime,
+                value.ToUniversalTime().ToString("ddMMMyyyy HH:mm"));
+            }
         }
+
+        //private void SetValue<T>(string key, T value)
+        //{
+        //    BinaryFormatter formatter = new BinaryFormatter();
+        //    MemoryStream memStream = new MemoryStream();
+        //    object o = value;
+        //    formatter.Serialize(memStream, o);
+        //    _session.Set(key, memStream.ToArray());
+        //}
+
+        //private T GetValue<T>(string key)
+        //{
+        //    var httpContext = _httpContextAccessor.HttpContext;
+        //    byte[] byteArray;
+        //    if (httpContext.Session.TryGetValue(key, out byteArray))
+        //    {
+        //        BinaryFormatter formatter = new BinaryFormatter();
+        //        MemoryStream stream = new MemoryStream(byteArray);
+        //        T result = (T)formatter.Deserialize(stream);
+        //        return result;
+        //    }
+        //    return default(T);
+        //}
 
         public ModuleInfo CurrentResult
         {
 
             get
             {
-                ModuleInfo result;
+                SessionService SessionServiceInstance = SessionService.Instance;
+                ModuleInfo result =
+                    SessionServiceInstance.GetModuleInfoFrom(CurrentResultId, CurrentUser.ExperimentId, CurrentLoginId);
+                return result;
+            }
+        }
 
-                using (EdcDbContext db = new EdcDbContext())
-                {
-                    if (CurrentResultId > 0)
-                    {
-                        result = db.ModuleInfos.FirstOrDefault(x => x.Id == CurrentResultId);
-                        result = new ModuleInfo();
-                        return result;
-                    }
-                    else
-                    {
-                        result = new ModuleInfo();
-                        db.ModuleInfos.Add(result);
-                        db.SaveChanges();
-                        CurrentResultId = result.Id; // new Id;
-                        return result; //And work on it and save it.
-                    }
-                }
-            }
-        }
-        public Experiment CurrentExperiment
+        private T GetPersistentEntity<T>()
+            where T : IPersistentEntity, new()
         {
-            get
-            {
-                using (EdcDbContext db = new EdcDbContext())
-                {
-                    var result = db.Experiments.FirstOrDefault(x => x.Id == CurrentResult.ExperimentId);
-                    return result;
-                }
-            }
+            if (CurrentResult == null)
+                return default; // TODO : throw exception? Log?
+
+            var locator = new RepositoryLocator<T>();
+            var repo = locator.GetRepository(_repositoryOptions.RepositoryType);
+
+            return repo.GetById(GetId(typeof(T).Name)); //from Session
         }
+
 
         public VisitGroup MainVisitGroupOfExperiment
         {
@@ -130,19 +151,7 @@ namespace SessionLayer
             }
         }
 
-        private T GetPersistentEntity<T>()
-            where T : IPersistentEntity, new()
-        {
-            if (CurrentResult == null)
-                return default(T); // TODO : throw exception? Log?
-
-            var locator = new RepositoryLocator<T>();
-            var repo = locator.GetRepository(_repositoryOptions.RepositoryType);
-
-            return repo.GetById(GetId(typeof(T).Name)); //from Session
-        }
-
-
+        
         public Visit CurrentVisit
         {
             get { return GetPersistentEntity<Visit>(); }
@@ -155,6 +164,9 @@ namespace SessionLayer
         {
             get { return GetPersistentEntity<Module>(); }
         }
+
+        public EdcUser CurrentUser { get; set; } // string?
+
         private int GetId(string typeName)
         {
             typeName = typeName.Split('.').Last(); // e.g. AssemblySite.Site --> Site

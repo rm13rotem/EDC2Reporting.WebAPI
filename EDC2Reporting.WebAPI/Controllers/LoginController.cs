@@ -20,9 +20,16 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             // hardest - the URL with Id, GuidId, existingRole, DefaultPassword 1234
             // assigns user the quicklookId
-            
+
             //if (roleProvider.IsValid(model)) ...
             // CreateSession....
+            if (model == null)
+                model = new FullLogin()
+                {
+                    ExistingPassword1 = "12345",
+                    ExistingRole = "User",
+                    Id = _sessionWrapper?.CurrentUser?.Id ?? 0
+                };
             return View(model);
         }
 
@@ -43,7 +50,7 @@ namespace EDC2Reporting.WebAPI.Controllers
 
             //if (roleProvider.IsValid(model))
             //    Continue Session until a maximum of 3 days.
-            return View();
+            return View(model);
         }
     }
 }

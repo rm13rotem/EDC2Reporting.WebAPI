@@ -10,12 +10,12 @@ namespace SessionLayer
     public interface ISessionWrapper
     {
         Doctor CurrentDoctor { get; }
-        Experiment CurrentExperiment { get; }
         Module CurrentModuleInVisitBeingHandled { get; }
         Patient CurrentPatientDetails { get; }
         ModuleInfo CurrentResult { get; }
         int CurrentResultId { get; set; }
         Visit CurrentVisit { get; }
         VisitGroup MainVisitGroupOfExperiment { get; }
+        EdcUser CurrentUser { get; set; }
     }
 }
