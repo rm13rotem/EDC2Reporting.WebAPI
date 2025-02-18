@@ -18,11 +18,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Areas\Authorization\Controllers\" />
+    <Folder Include="Areas\Authorization\Data\" />
+    <Folder Include="Areas\Authorization\Models\" />
+    <Folder Include="Areas\Authorization\Views\" />
     <Folder Include="Areas\ClinicalTrialLeaders\Controllers\" />
     <Folder Include="Areas\ClinicalTrialLeaders\Data\" />
     <Folder Include="Areas\ClinicalTrialLeaders\Models\" />
     <Folder Include="Areas\ClinicalTrialLeaders\Views\" />
     <Folder Include="Areas\CrfPages\Data\" />
+    <Folder Include="Areas\PersistentEntities\Controllers\" />
+    <Folder Include="Areas\PersistentEntities\Data\" />
+    <Folder Include="Areas\PersistentEntities\Views\" />
+    <Folder Include="Areas\SiteManagement\Controllers\" />
+    <Folder Include="Areas\SiteManagement\Data\" />
+    <Folder Include="Areas\SiteManagement\Models\" />
+    <Folder Include="Areas\SiteManagement\Views\" />
+    <Folder Include="Areas\StudyManagement\Controllers\" />
+    <Folder Include="Areas\StudyManagement\Data\" />
+    <Folder Include="Areas\StudyManagement\Models\" />
+    <Folder Include="Areas\StudyManagement\Views\" />
+    <Folder Include="Areas\SubjectManagement\Controllers\" />
+    <Folder Include="Areas\SubjectManagement\Data\" />
+    <Folder Include="Areas\SubjectManagement\Models\" />
+    <Folder Include="Areas\SubjectManagement\Views\" />
   </ItemGroup>
 
 </Project>

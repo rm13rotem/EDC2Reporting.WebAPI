@@ -27,6 +27,7 @@ namespace Edc2Reporting.AuthenticationStartup
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -60,11 +61,12 @@ namespace Edc2Reporting.AuthenticationStartup
                 options.ExpireTimeSpan = TimeSpan.FromDays(1); // 24 hours login
 
                 options.LoginPath = "/Identity/Account/Login";
-                options.AccessDeniedPath = "Identity/Account/AccessDenied";
+                options.AccessDeniedPath = @"/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
 
             services.AddRazorPages();
+            services.AddMvc(o => o.EnableEndpointRouting = false);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

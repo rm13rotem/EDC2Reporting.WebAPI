@@ -17,6 +17,10 @@ namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Controllers
         [HttpPost("contact")]
         public IActionResult Contact(ContactModel model)
         {
+            ViewBag.Title = "Contact Us";
+
+            throw new InvalidOperationException("Bad things happen to good people");
+
             return View(model);
         }
     }
