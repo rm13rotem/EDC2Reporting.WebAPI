@@ -1,11 +1,12 @@
-﻿namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models
-{
-    public class CrfOption
-    {
-        public int CRFOptionId { get; set; }
-        public int CrfQuestionId { get; set; }  // Foreign key to CRFQuestion
-        public string OptionText { get; set; }
+﻿using Edc2Reporting.AuthenticationStartup.Areas.PersistentEntities.Models;
 
-        public int CRFQuestionId { get; set; }
+namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models
+{
+    public class CrfOption : IPersistantEntity
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public bool IsDeleted { get; set ; }
+        public int CrfQuestionId { get; set; }  // Foreign key to CRFQuestion
     }
 }
