@@ -32,8 +32,8 @@ namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models
         /// </summary>       
         public int StudyId { get; set; }
         public QuestionType AnswerType { get; set; }
-        public string AnswerInText { get; set; } = ""  // For all answers
-        public string AnswerText { get; set; } = ""  // For text answers
+        public string AnswerInText { get; set; } = "";  // For all answers
+        public string AnswerText { get; set; } = "";  // For text answers
         public int? OptionId { get; set; }  // For multiple-choice answers (nullable)
         public DateTime? AnswerDate { get; set; }  // For date questions
         public double? AnswerNumeric { get; set; }  // For numeric answerpublic bool?

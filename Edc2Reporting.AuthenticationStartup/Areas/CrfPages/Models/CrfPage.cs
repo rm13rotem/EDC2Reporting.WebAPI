@@ -12,6 +12,7 @@ namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsLockedForChanges { get; set; }
 
         // Navigation property to Questions
         public ICollection<CrfPageComponent> Questions { get; set; }
