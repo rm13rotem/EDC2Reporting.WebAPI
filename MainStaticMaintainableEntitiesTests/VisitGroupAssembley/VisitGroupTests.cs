@@ -1,11 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MainStaticMaintainableEntities.VisitGroup;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using MainStaticMaintainableEntities.VisitAssembly;
+﻿using MainStaticMaintainableEntities.VisitAssembly;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MainStaticMaintainableEntities.VisitGroupAssembley;
 
-namespace MainStaticMaintainableEntities.VisitGroup.Tests
+namespace MainStaticMaintainableEntities.VisitGroupAssembley1.Tests
 {
     [TestClass()]
     public class VisitGroupTests

@@ -1,64 +1,39 @@
-﻿using System;
-using System.Net;
-using System.Net.Http;
-using System.Security.Principal;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Http;
+using System;
 using System.Text;
-using System.Threading;
-using System.Web.Http.Controllers;
-using System.Web.Http.Filters;
+using System.Threading.Tasks;
 
-namespace EDC2Reporting.WebAPI.AuthAttribute
+public class BasicAuthenticationAttribute : Attribute, IAsyncAuthorizationFilter
 {
-    public class BasicAuthenticationAttribute : AuthorizationFilterAttribute
+    public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-        public override void OnAuthorization(HttpActionContext actionContext)
+        var authHeader = context.HttpContext.Request.Headers["Authorization"];
+
+        if (string.IsNullOrWhiteSpace(authHeader))
         {
-            var identity = DecodeAuthHeader(actionContext);
-
-            if (identity == null)
-            {
-                actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "Unauthorized request");
-            }
-            else
-            {
-
-                if (OnAuthorizeUser(identity.Name, identity.Password, actionContext))
-                {
-                    var principal = new GenericPrincipal(identity, null);
-                    Thread.CurrentPrincipal = principal;
-                }
-                else
-                {
-                    actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "Unauthorized request");
-                }
-            }
+            context.HttpContext.Response.StatusCode = 401;
+            await context.HttpContext.Response.WriteAsync("Authorization header missing");
+            return;
         }
 
-        protected virtual bool OnAuthorizeUser(string username, string password, HttpActionContext actionContext)
-        {
-            if (username == "freecode" && password == "freecodespot")
-                return true;
+        // Basic authentication parsing
+        var encodedCredentials = authHeader.ToString().Replace("Basic ", "", StringComparison.OrdinalIgnoreCase);
+        var decodedBytes = Convert.FromBase64String(encodedCredentials);
+        var decodedCredentials = Encoding.UTF8.GetString(decodedBytes);
+        var parts = decodedCredentials.Split(':');
 
-            return false;
+        var username = parts[0];
+        var password = parts[1];
+
+        // Replace with your real user validation
+        if (username != "admin" || password != "password")
+        {
+            context.HttpContext.Response.StatusCode = 401;
+            await context.HttpContext.Response.WriteAsync("Invalid username or password");
+            return;
         }
 
-        protected virtual AuthIdentity DecodeAuthHeader(HttpActionContext actionContext)
-        {
-            string authHeader = null;
-            var auth = actionContext.Request.Headers.Authorization;
-            if (auth != null && auth.Scheme == "Basic")
-                authHeader = auth.Parameter;
-
-            if (string.IsNullOrEmpty(authHeader))
-                return null;
-
-            authHeader = Encoding.Default.GetString(Convert.FromBase64String(authHeader));
-
-            var tokens = authHeader.Split(':');
-            if (tokens.Length < 2)
-                return null;
-
-            return new AuthIdentity(tokens[0], tokens[1]);
-        }
+        // If you want to set claims, do it here
     }
 }

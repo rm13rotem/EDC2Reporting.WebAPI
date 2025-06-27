@@ -28,8 +28,7 @@ namespace Utilities.Tests
             // Act
             string myJson = JsonFormatter.ToJson<Site>(obj);
             string exp =
-            "{\"$type\":\"MainStaticMaintainableEntities.SiteAssembly.Site, MainStaticMaintainableEntities\",\"Id\":0,\"GuidId\":\"a\",\"IsDeleted\":false}";
-
+            "{\"$type\":\"MainStaticMaintainableEntities.SiteAssembly.Site, MainStaticMaintainableEntities\",\"CountryId\":0,\"CityId\":0,\"SiteManagerId\":0,\"Id\":0,\"GuidId\":\"a\",\"IsDeleted\":false}";
             // Assert
             Assert.IsTrue(myJson == exp);
         }

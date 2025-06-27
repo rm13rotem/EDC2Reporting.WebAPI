@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Utilities;
 
-namespace MainStaticMaintainableEntities.VisitGroup
+namespace MainStaticMaintainableEntities.VisitGroupAssembley
 {
     public class VisitGroup : IPersistentEntity, ILoadableByVisityGroupIds
     {

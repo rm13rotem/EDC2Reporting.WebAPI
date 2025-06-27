@@ -3,7 +3,7 @@ using MainStaticMaintainableEntities;
 using MainStaticMaintainableEntities.ModuleAssembly;
 using MainStaticMaintainableEntities.PatientAssembley;
 using MainStaticMaintainableEntities.VisitAssembly;
-using MainStaticMaintainableEntities.VisitGroup;
+using MainStaticMaintainableEntities.VisitGroupAssembley;
 
 namespace SessionLayer
 {

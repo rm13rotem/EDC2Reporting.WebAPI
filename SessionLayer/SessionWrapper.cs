@@ -6,7 +6,7 @@ using MainStaticMaintainableEntities;
 using MainStaticMaintainableEntities.ModuleAssembly;
 using MainStaticMaintainableEntities.PatientAssembley;
 using MainStaticMaintainableEntities.VisitAssembly;
-using MainStaticMaintainableEntities.VisitGroup;
+using MainStaticMaintainableEntities.VisitGroupAssembley;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
