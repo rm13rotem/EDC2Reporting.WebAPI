@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Models.RegisterModels
 {
-    public class RegisterViewModel : QuickLookIdSetupRegister, IDoctor
+    public class RegisterViewModel : QuickLookIdSetupRegister, IInvestigator
     {
         public DateTime DateOfBirth { get; set; }
         public int DoctorNumber { get; set; }

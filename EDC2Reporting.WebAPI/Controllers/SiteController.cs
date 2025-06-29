@@ -1,11 +1,14 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
+using DataServices.SqlServerRepository.Models;
 using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
 using System.Linq;
+using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
@@ -29,7 +32,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             repository = repositoryLocator.GetRepository(repoOptions.RepositoryType);
         }
 
-        public ActionResult SelectSitePartialView(int? SiteId = 0)
+        public IViewComponentResult SelectSitePartialView(int? SiteId = 0)
         {
             var Site = new Site();
             if (SiteId > 0)
@@ -48,23 +51,8 @@ namespace EDC2Reporting.WebAPI.Controllers
                 ViewBag["SiteId"] = Site.GetCitySelectList(repository, 0,0,0);
             }
 
-            return View(Site);
+            return View(Site) as IViewComponentResult;
         }
-
-        
-
-        public ActionResult SelectCityPartialView(int CountryId = 0)
-        {
-            ViewBag["CityId"] = City.GetCitySelectList( cityRepository, CountryId, 0);
-            return View();
-        }
-
-        public ActionResult SelectSpecificSitePartialView(int CountryId = 0, int CityId = 0, int SiteId = 0)
-        {
-            ViewBag["SiteId"] = Site.GetCitySelectList(repository, CountryId, CityId, SiteId);
-            return View();
-        }
-
 
         // GET: SiteController
         public ActionResult Index()
@@ -106,8 +94,13 @@ namespace EDC2Reporting.WebAPI.Controllers
         public ActionResult Edit(int id)
         {
             var model = repository.GetById(id);
+            ViewBag.Countries = ExtractSelectList(countryRepository.GetAll(), model.CountryId);
+            ViewBag.Cities = ExtractSelectList(cityRepository.GetAll(), model.CityId);
+            ViewBag.Sites = ExtractSelectList(repository.GetAll(), model.Id);
+
             return View(model);
         }
+
 
         // POST: SiteController/Edit/5
         [HttpPost]
@@ -118,10 +111,14 @@ namespace EDC2Reporting.WebAPI.Controllers
             {
                 SiteFactory siteFactory = new SiteFactory(repoOptions);
                 repository.Update(site);
+                
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
+                ViewBag.Countries = ExtractSelectList(countryRepository.GetAll(), site.CountryId);
+                ViewBag.Cities = ExtractSelectList(cityRepository.GetAll(), site.CityId);
+                ViewBag.Sites = ExtractSelectList(repository.GetAll(), site.Id);
 
                 return View(site);
             }
@@ -134,6 +131,14 @@ namespace EDC2Reporting.WebAPI.Controllers
             repository.Delete(model);
             return RedirectToAction(nameof(Index));
         }
-        
+
+
+        private List<SelectListItem> ExtractSelectList(IEnumerable<IPersistentEntity> list, int selectValue)
+        {
+            var entities = list.OrderBy(x => x.Id).ToList();
+            entities.Insert(0, new PersistentEntity() { Id = 0, Name = "--UnSelected--" });
+            return entities
+                .Select(x => new SelectListItem(x.Name, x.Id.ToString(), x.Id == selectValue)).ToList();
+        }
     }
 }

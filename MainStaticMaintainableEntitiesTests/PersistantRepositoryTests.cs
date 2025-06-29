@@ -22,7 +22,7 @@ namespace MainStaticMaintainableEntities.Tests
                 new PersistentEntity() { Id = 1, Name ="abc"  , EntityName="Site", 
                     JsonValue=JsonConvert.SerializeObject(new Site() { Id=2,  Name="HYMC" }) },
                 new PersistentEntity() { Id = 2, Name ="abc"  , EntityName="Doctor",
-                    JsonValue=JsonConvert.SerializeObject(new Doctor() {Id = 2, Name = "Jaun"}) }
+                    JsonValue=JsonConvert.SerializeObject(new Investigator() {Id = 2, Name = "Jaun"}) }
             };
 
             //Act 
@@ -39,7 +39,7 @@ namespace MainStaticMaintainableEntities.Tests
             // Arrange
             var myList = new List<IPersistentEntity>() {
                 new Site() { Name ="abc"   },
-                new Doctor() {Name = "Jaun"},
+                new Investigator() {Name = "Jaun"},
                 new Module() { Name = "Inclusion/Exclusion"}
             };
             var connStr = "Data Source=LAPTOP-6ORP7UKE\\SQLEXPRESS;Database=EDC_Dev;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";

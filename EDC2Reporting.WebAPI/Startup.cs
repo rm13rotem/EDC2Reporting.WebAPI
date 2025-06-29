@@ -44,6 +44,8 @@ namespace EDC2Reporting.WebAPI
             //services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddControllersWithViews();
+            services.AddControllers();
+
             services.AddHttpContextAccessor();
 
             
@@ -124,13 +126,13 @@ namespace EDC2Reporting.WebAPI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(name: "site",
-                pattern: "v1/api/site",
-                defaults: new { controller = "SiteApi", action = "Index" });
-
                 endpoints.MapControllerRoute(
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+                // Enables attribute routing (like [Route("api/...")])
+                endpoints.MapControllers();
             });
         } 
     }

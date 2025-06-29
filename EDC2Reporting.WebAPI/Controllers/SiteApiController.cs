@@ -26,6 +26,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             repoOptions = options.Value;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             _logger.LogInformation($"{nameof(SiteApiController)}.{nameof(Index)} method called!!!");
@@ -37,43 +38,20 @@ namespace EDC2Reporting.WebAPI.Controllers
                 repository = new FromDbRepository<Site>(_dbContext);
                 sites = repository.GetAll();
             }
-            else            if (_repositoryType == RepositoryType.FromJsonRepository)
+            else if (_repositoryType == RepositoryType.FromJsonRepository)
             {
                 repository = new FromJsonRepository<Site>("Site.json");
-                sites = repository.GetAll();                
+                sites = repository.GetAll();
             }
             else sites = new List<Site>() { new Site() { Name = "rotem" } };
             return Ok(sites);
         }
 
-        public IActionResult OverwriteOtherRepositories(bool forceReloadFromOriginalRepository)
+
+        [HttpGet("Load")]
+        public IActionResult Load()
         {
-            bool isOverwritingOtherRepositories = repoOptions.IsOverwritingOtherRepositories;
-            if (!isOverwritingOtherRepositories)
-                return new JsonResult(new { IsSuccess = false });
-
-            if (repoOptions.RepositoryType == RepositoryType.FromDbRepository)
-            {
-                if (forceReloadFromOriginalRepository)
-                    repository = new FromDbRepository<Site>(_dbContext);
-
-                var siteJsonRepository = new FromJsonRepository<Site>(repository, "Site.json");
-                return new JsonResult(new { IsSuccess = true });
-            }
-
-            if (repoOptions.RepositoryType == RepositoryType.FromJsonRepository)
-            {
-                if (forceReloadFromOriginalRepository)
-                    repository = new FromJsonRepository<Site>("Site.json");
-
-                var _dbRepo = new FromDbRepository<Site>(_dbContext);
-                foreach (var site in repository.GetAll())
-                {
-                    _dbRepo.UpsertActivation(site);
-                }
-                return new JsonResult(new { IsSuccess = true });
-            }
-
+ 
             return new JsonResult(new { IsSuccess = false });
         }
 

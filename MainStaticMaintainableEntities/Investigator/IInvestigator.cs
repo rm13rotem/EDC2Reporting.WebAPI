@@ -3,7 +3,7 @@ using System;
 
 namespace MainStaticMaintainableEntities
 {
-    public interface IDoctor
+    public interface IInvestigator
     {
         DateTime DateOfBirth { get; set; }
         int DoctorNumber { get; set; }

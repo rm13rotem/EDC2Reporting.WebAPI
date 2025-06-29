@@ -9,13 +9,13 @@ namespace MainStaticMaintainableEntities.SiteAssembly
 {
     public class SiteFactory : ISiteFactory
     {
-        private IRepository<Doctor> doctorRepository;
+        private IRepository<Investigator> doctorRepository;
         private IRepository<Country> countryRepository;
         private IRepository<City> cityRepository;
 
         public SiteFactory(RepositoryOptions options)
         {
-            RepositoryLocator<Doctor> repositoryLocator = new RepositoryLocator<Doctor>();
+            RepositoryLocator<Investigator> repositoryLocator = new RepositoryLocator<Investigator>();
             doctorRepository = repositoryLocator.GetRepository(options.RepositoryType);
             RepositoryLocator<Country> countryRepositoryLocator = new RepositoryLocator<Country>();
             countryRepository = countryRepositoryLocator.GetRepository(options.RepositoryType);
@@ -23,7 +23,7 @@ namespace MainStaticMaintainableEntities.SiteAssembly
             cityRepository = cityRepositoryLocator.GetRepository(options.RepositoryType);
         }
 
-        public Doctor LoadDoctorById(int siteManagerId)
+        public Investigator LoadDoctorById(int siteManagerId)
         {
             var doctor = doctorRepository.GetById(siteManagerId);
             return doctor;

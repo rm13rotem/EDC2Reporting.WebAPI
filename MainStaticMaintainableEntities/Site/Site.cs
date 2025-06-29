@@ -15,7 +15,7 @@ namespace MainStaticMaintainableEntities.SiteAssembly
         };
 
         [JsonIgnore]
-        public Doctor SiteManager
+        public Investigator SiteManager
         {
             get
             {

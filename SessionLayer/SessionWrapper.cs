@@ -143,11 +143,11 @@ namespace SessionLayer
             }
         }
 
-        public Doctor CurrentDoctor
+        public Investigator CurrentDoctor
         {
             get
             {
-                return GetPersistentEntity<Doctor>();
+                return GetPersistentEntity<Investigator>();
             }
         }
 

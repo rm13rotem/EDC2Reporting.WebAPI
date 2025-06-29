@@ -2,6 +2,6 @@
 {
     public interface ISiteFactory
     {
-        Doctor LoadDoctorById(int siteManagerId);
+        Investigator LoadDoctorById(int siteManagerId);
     }
 }

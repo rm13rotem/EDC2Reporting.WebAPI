@@ -1,0 +1,17 @@
+﻿@model EDC2Reporting.WebAPI.Models.SiteModels.SelectSiteViewModel
+@{
+    Layout = null;
+}
+
+<div>
+    Country
+    @Html.DropDownList("CountryId", Model.Countries);
+</div>
+<div>
+    City
+    @Html.DropDownList("CityId", Model.Cities)
+</div>
+<div>
+    Site
+    @Html.DropDownList("SiteId", Model.Sites)
+</div>

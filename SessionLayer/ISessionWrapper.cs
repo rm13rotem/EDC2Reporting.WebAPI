@@ -9,7 +9,7 @@ namespace SessionLayer
 {
     public interface ISessionWrapper
     {
-        Doctor CurrentDoctor { get; }
+        Investigator CurrentDoctor { get; }
         Module CurrentModuleInVisitBeingHandled { get; }
         Patient CurrentPatientDetails { get; }
         ModuleInfo CurrentResult { get; }
