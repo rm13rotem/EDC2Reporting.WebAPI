@@ -1,0 +1,46 @@
+﻿@model DataServices.SqlServerRepository.Models.PersistentEntity
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>PersistentEntity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Load">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="EntityName" class="control-label"></label>
+                <input asp-for="EntityName" class="form-control" />
+                <span asp-validation-for="EntityName" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="JsonValue" class="control-label"></label>
+                <textarea asp-for="JsonValue" class="form-control" rows="20" cols="50">
+                </textarea>
+                <span asp-validation-for="JsonValue" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -10,8 +10,8 @@ namespace EDC2Reporting.WebAPI.Models.SiteModels
     public class SelectSiteViewModel
     {
         
-        public List<SelectListItem> Countries { get; set; }
-        public List<SelectListItem> Cities { get; set; }
-        public List<SelectListItem> Sites { get; set; }
+        public List<SelectListItem> CountryId { get; set; }
+        public List<SelectListItem> CityId { get; set; }
+        public List<SelectListItem> SiteId { get; set; }
     }
 }

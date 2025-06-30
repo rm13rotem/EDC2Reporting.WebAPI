@@ -66,10 +66,19 @@ namespace DataServices.Providers
             ;
             if (_dataContext != null)
             {
-                dbEntity.Id = _dataContext.PersistentEntities.Max(x => x.Id) + 1;
-                dictionary.Add(dbEntity, entity);
+                // No need for the following line - Identity Insert
+                //dbEntity.Id = _dataContext.PersistentEntities.Max(x => x.Id) + 1;
+                //db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PersistentEntity ON");
+                //db.PersistentEntities.Add(dbEntity);
+                //db.SaveChanges();
+                //db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PersistentEntity OFF");
+
+
+                if (dbEntity.JsonValue == null)
+                    dbEntity.JsonValue = JsonConvert.SerializeObject(entity);
                 _dataContext.PersistentEntities.Add(dbEntity);
                 _dataContext.SaveChanges();
+                dictionary.Add(dbEntity, entity);
             }
             return dbEntity;
         }

@@ -1,6 +1,7 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
 using DataServices.SqlServerRepository.Models;
+using EDC2Reporting.WebAPI.Models.SiteModels;
 using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,35 +31,20 @@ namespace EDC2Reporting.WebAPI.Controllers
             cityRepository = city_repositoryLocator.GetRepository(repoOptions.RepositoryType);
             RepositoryLocator<Site> repositoryLocator = new RepositoryLocator<Site>();
             repository = repositoryLocator.GetRepository(repoOptions.RepositoryType);
-        }
 
-        public IViewComponentResult SelectSitePartialView(int? SiteId = 0)
-        {
-            var Site = new Site();
-            if (SiteId > 0)
-                Site = repository.GetById((int)SiteId);
+            if (SiteViewModel.CityRepository == null)
+                SiteViewModel.CityRepository = cityRepository;
 
-            if (Site != null)
-            {
-                ViewBag["CountryId"] = Country.GetCountrySelectList(countryRepository,Site.CountryId);
-                ViewBag["CityId"] = City.GetCitySelectList(cityRepository, Site.CountryId, Site.CityId);
-                ViewBag["SiteId"] = Site.GetCitySelectList(repository, Site.CountryId, Site.CityId, Site.Id);
-            }
-            else
-            {
-                ViewBag["CountryId"] = Country.GetCountrySelectList(countryRepository, 0);
-                ViewBag["CityId"] = City.GetCitySelectList(cityRepository, 0,0);
-                ViewBag["SiteId"] = Site.GetCitySelectList(repository, 0,0,0);
-            }
-
-            return View(Site) as IViewComponentResult;
+            if (SiteViewModel.CountryRepository == null)
+                SiteViewModel.CountryRepository = countryRepository;
         }
 
         // GET: SiteController
         public ActionResult Index()
         {
             List<Site> list = repository.GetAll().ToList();
-            return View(list);
+            var results = list.Select(x => new SiteViewModel(x)).ToList();
+            return View(results);
         }
 
         // GET: SiteController/Details/5
