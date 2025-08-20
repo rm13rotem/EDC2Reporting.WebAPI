@@ -1,15 +1,18 @@
 using DataServices.Providers;
 using DataServices.SqlServerRepository;
+using Edc2Reporting.AuthenticationStartup.Areas.Identity;
 using MailClientLayer;
 using MainStaticMaintainableEntities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMq;
 using System;
+using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI
 {
@@ -48,7 +51,16 @@ namespace EDC2Reporting.WebAPI
 
             services.AddHttpContextAccessor();
 
-            
+
+            services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
+            services.AddIdentity<Investigator, IdentityRole>(options =>
+                options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<AppIdentityDbContext>()
+                .AddDefaultTokenProviders();
+
             var _environment = Configuration.GetValue<string>("Environment");
             if (_environment == "DEV")
             {
@@ -87,6 +99,7 @@ namespace EDC2Reporting.WebAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {
@@ -134,6 +147,8 @@ namespace EDC2Reporting.WebAPI
                 // Enables attribute routing (like [Route("api/...")])
                 endpoints.MapControllers();
             });
-        } 
-    }
+
+        }
+
+   }
 }

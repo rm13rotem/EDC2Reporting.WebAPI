@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models
 {
-    public class CrfAnswer
+    public class CrfEntry
     {
+        [Key]
         public int Id { get; set; }
 
 
@@ -31,19 +34,24 @@ namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models
         /// Study Id being done
         /// </summary>       
         public int StudyId { get; set; }
-        public QuestionType AnswerType { get; set; }
-        public string AnswerInText { get; set; } = "";  // For all answers
-        public string AnswerText { get; set; } = "";  // For text answers
-        public int? OptionId { get; set; }  // For multiple-choice answers (nullable)
-        public DateTime? AnswerDate { get; set; }  // For date questions
-        public double? AnswerNumeric { get; set; }  // For numeric answerpublic bool?
-        public bool? CheckboxAnswer { get; set; }  // For checkbox questions
 
         /// <summary>
-        // Navigation properties
-        /// Origin of the answer
+        /// Foreign key to Doctor filling out the form
         /// </summary>
-        public int CrfQuestionId { get; set; }
-        public CrfOption CRFOption { get; set; }
+        [Required]
+        public int CrfPageId { get; set; }
+
+        [ForeignKey(nameof(CrfPageId))]
+        public CrfPage CrfPage { get; set; } = null!;
+
+        /// <summary>   
+        /// store the submitted form data (as JSON for flexibility)
+        /// </summary>  
+        [Required]
+        public string FormDataJson { get; set; } = string.Empty;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime? UpdatedAt { get; set; }
     }
 }

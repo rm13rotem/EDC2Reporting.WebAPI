@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Controllers
@@ -19,9 +20,14 @@ namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Controllers
         {
             ViewBag.Title = "Contact Us";
 
-            throw new InvalidOperationException("Bad things happen to good people");
-
             return View(model);
         }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminOnlyPage()
+        {
+            return View();
+        }
+
     }
 }

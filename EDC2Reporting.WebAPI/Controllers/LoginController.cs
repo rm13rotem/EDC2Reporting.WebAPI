@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EDC2Reporting.WebAPI.Models.LoginModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SessionLayer;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
+    [AllowAnonymous]
     public class LoginController : Controller
     {
         private readonly ISessionWrapper _sessionWrapper;
@@ -27,7 +29,7 @@ namespace EDC2Reporting.WebAPI.Controllers
                 model = new FullLogin()
                 {
                     ExistingPassword1 = "12345",
-                    ExistingRole = "User",
+                    ExistingRole = "Investigator",
                     Id = _sessionWrapper?.CurrentUser?.Id ?? 0
                 };
             return View(model);

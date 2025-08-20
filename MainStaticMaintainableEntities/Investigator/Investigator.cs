@@ -4,7 +4,7 @@ using System;
 
 namespace MainStaticMaintainableEntities
 {
-    public class Investigator : IPersistentEntity, IInvestigator
+    public class Investigator : IPersistentEntity, IInvestigator, IdentityUser
     {
         public DateTime DateOfBirth { get; set; }
         public int DoctorNumber { get; set; }

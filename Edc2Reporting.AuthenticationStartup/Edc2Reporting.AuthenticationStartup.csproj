@@ -30,10 +30,6 @@
     <Folder Include="Areas\PersistentEntities\Controllers\" />
     <Folder Include="Areas\PersistentEntities\Data\" />
     <Folder Include="Areas\PersistentEntities\Views\" />
-    <Folder Include="Areas\SiteManagement\Controllers\" />
-    <Folder Include="Areas\SiteManagement\Data\" />
-    <Folder Include="Areas\SiteManagement\Models\" />
-    <Folder Include="Areas\SiteManagement\Views\" />
     <Folder Include="Areas\StudyManagement\Controllers\" />
     <Folder Include="Areas\StudyManagement\Data\" />
     <Folder Include="Areas\StudyManagement\Models\" />
