@@ -1,14 +1,11 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
-using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
-using MainStaticMaintainableEntities;
-using MainStaticMaintainableEntities.ModuleAssembly;
+using DataServices.SqlServerRepository.Models.CrfModels;
 using MainStaticMaintainableEntities.PatientAssembley;
 using MainStaticMaintainableEntities.VisitAssembly;
 using MainStaticMaintainableEntities.VisitGroupAssembley;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
@@ -143,11 +140,11 @@ namespace SessionLayer
             }
         }
 
-        public Investigator CurrentDoctor
+        public Investigator CurrentInvestigator
         {
             get
             {
-                return GetPersistentEntity<Investigator>();
+                return null; // GetPersistentEntity<Investigator>();
             }
         }
 
@@ -160,9 +157,9 @@ namespace SessionLayer
         {
             get { return GetPersistentEntity<Patient>(); }
         }
-        public Module CurrentModuleInVisitBeingHandled
+        public CrfPage CurrentCrfPageInVisitBeingHandled
         {
-            get { return GetPersistentEntity<Module>(); }
+            get { return GetPersistentEntity<CrfPage>(); }
         }
 
         public EdcUser CurrentUser { get; set; } // string?

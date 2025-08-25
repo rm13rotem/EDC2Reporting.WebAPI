@@ -1,5 +1,7 @@
 ﻿using DataServices.SqlServerRepository.Models;
+using DataServices.SqlServerRepository.Models.CrfModels;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataServices.SqlServerRepository
 {
@@ -30,6 +32,11 @@ namespace DataServices.SqlServerRepository
             }
             
         }
+
+
+        public DbSet<CrfPage> CrfPages { get; set; }
+        public  DbSet<CrfEntry> CrfEntries { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
 
         public virtual DbSet<Experiment> Experiments { get; set; }
         public virtual DbSet<ModuleInfo> ModuleInfos { get; set; }
@@ -79,6 +86,42 @@ namespace DataServices.SqlServerRepository
                     .HasMaxLength(100);
             });
 
+            // NEW: CrfPage
+            modelBuilder.Entity<CrfPage>(entity =>
+            {
+                entity.ToTable("CrfPages");
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.Html).IsRequired();
+            });
+
+            // NEW: CrfEntry
+            modelBuilder.Entity<CrfEntry>(entity =>
+            {
+                entity.ToTable("CrfEntries");
+                entity.Property(e => e.CrfPageId).IsRequired();
+                entity.Property(e => e.StudyId).IsRequired();
+                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.IsDeleted).IsRequired();
+                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
+
+                entity.HasOne(d => d.CrfPage)
+                       .WithMany(p => p.Entries)
+                      .HasForeignKey(d => d.CrfPageId)
+                      .OnDelete(DeleteBehavior.NoAction);
+            });
+
+            // NEW: AuditLog
+            modelBuilder.Entity<AuditLog>(entity =>
+            {
+                entity.ToTable("AuditLogs");
+                entity.Property(e => e.Action).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.EntityName).HasMaxLength(4000);
+                entity.Property(e => e.UserId).HasMaxLength(40);
+                entity.Property(e => e.BeforeJson).HasMaxLength(4000);
+                entity.Property(e => e.AfterJson).HasMaxLength(4000);
+                entity.Property(e => e.MetadataJson).IsRequired().HasMaxLength(500);
+                entity.Property(e => e.TimestampUtc).HasDefaultValueSql("GETDATE()");
+            });
             OnModelCreatingPartial(modelBuilder);
         }
     

@@ -1,8 +1,4 @@
 ﻿using DataServices.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Web.Mvc;
 
 namespace MainStaticMaintainableEntities.SiteAssembly
 {
@@ -15,10 +11,6 @@ namespace MainStaticMaintainableEntities.SiteAssembly
 
         public string NameShort { get; set; }
         public string Languages { get; set; }
-
-        public static SelectList GetCountrySelectList(IRepository<Country> countryRepository, int CountryId)
-        {
-            return new SelectList(countryRepository.GetAll(), "Id", "Name", CountryId);
-        }
+       
     }
 }

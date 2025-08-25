@@ -1,4 +1,6 @@
-﻿namespace MainStaticMaintainableEntities.SiteAssembly
+﻿using DataServices.SqlServerRepository.Models;
+
+namespace MainStaticMaintainableEntities.SiteAssembly
 {
     public interface ISiteFactory
     {

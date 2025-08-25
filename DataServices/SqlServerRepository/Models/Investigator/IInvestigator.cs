@@ -1,7 +1,8 @@
-﻿using MainStaticMaintainableEntities.SiteAssembly;
+﻿using System;
+using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace MainStaticMaintainableEntities
+namespace DataServices.SqlServerRepository.Models
 {
     public interface IInvestigator
     {
@@ -12,7 +13,6 @@ namespace MainStaticMaintainableEntities
         bool IsDeleted { get; set; }
         string JsonValue { get; set; }
         string Name { get; set; }
-        Site Site { get; set; }
         int SiteId { get; set; }
     }
 }

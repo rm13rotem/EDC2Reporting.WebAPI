@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+﻿@using DataServices.SqlServerRepository.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Investigator> SignInManager
+@inject UserManager<Investigator> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))

@@ -1,6 +1,8 @@
 using DataServices.Providers;
 using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models;
 using Edc2Reporting.AuthenticationStartup.Areas.Identity;
+using EDC2Reporting.WebAPI.Models.Managers;
 using MailClientLayer;
 using MainStaticMaintainableEntities;
 using Microsoft.AspNetCore.Builder;
@@ -91,6 +93,8 @@ namespace EDC2Reporting.WebAPI
             services.Configure<RepositoryOptions>(Configuration.GetSection(RepositoryOptions.RepositorySettings));
             services.Configure<MailClientOptions>(Configuration.GetSection(MailClientOptions.MailClientSettings));
             services.Configure<RabbitMqOptions>(Configuration.GetSection(RabbitMqOptions.RabbitMqSettings));
+
+            services.AddSingleton<ICrfPageManager, CrfPageManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

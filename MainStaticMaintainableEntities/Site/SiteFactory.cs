@@ -1,5 +1,6 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
+using DataServices.SqlServerRepository.Models;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -9,14 +10,14 @@ namespace MainStaticMaintainableEntities.SiteAssembly
 {
     public class SiteFactory : ISiteFactory
     {
-        private IRepository<Investigator> doctorRepository;
+        //private IRepository<Investigator> doctorRepository;
         private IRepository<Country> countryRepository;
         private IRepository<City> cityRepository;
 
         public SiteFactory(RepositoryOptions options)
         {
-            RepositoryLocator<Investigator> repositoryLocator = new RepositoryLocator<Investigator>();
-            doctorRepository = repositoryLocator.GetRepository(options.RepositoryType);
+            //RepositoryLocator<Investigator> repositoryLocator = new RepositoryLocator<Investigator>();
+            //doctorRepository = repositoryLocator.GetRepository(options.RepositoryType);
             RepositoryLocator<Country> countryRepositoryLocator = new RepositoryLocator<Country>();
             countryRepository = countryRepositoryLocator.GetRepository(options.RepositoryType);
             RepositoryLocator<City> cityRepositoryLocator = new RepositoryLocator<City>();
@@ -25,7 +26,7 @@ namespace MainStaticMaintainableEntities.SiteAssembly
 
         public Investigator LoadDoctorById(int siteManagerId)
         {
-            var doctor = doctorRepository.GetById(siteManagerId);
+            Investigator doctor = null; // TODO - doctorRepository.GetById(siteManagerId);
             return doctor;
         }
 

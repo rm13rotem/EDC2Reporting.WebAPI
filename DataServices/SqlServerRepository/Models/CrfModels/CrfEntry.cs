@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Edc2Reporting.AuthenticationStartup.Areas.CrfPages.Models
+namespace DataServices.SqlServerRepository.Models.CrfModels
 {
     public class CrfEntry
     {
         [Key]
         public int Id { get; set; }
-
+        public string Name { get { return $"CRF Entry {Id}"; } set { return; } }
+        public bool IsDeleted { get; set; } = false;
 
         /// <summary>
         /// Foreign key to Doctor filling out the form

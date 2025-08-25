@@ -2,12 +2,13 @@
 using DataServices.Providers;
 using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
-using MainStaticMaintainableEntities.ModuleAssembly;
-using Newtonsoft.Json;
-using System.Collections.Generic;
+using DataServices.SqlServerRepository.Models.CrfModels;
 using Microsoft.EntityFrameworkCore;
-using System;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MainStaticMaintainableEntities.VisitAssembly
@@ -15,7 +16,7 @@ namespace MainStaticMaintainableEntities.VisitAssembly
     public class Visit : IPersistentEntity, IVisit
     {
         [JsonIgnore]
-        public List<ModuleAssembly.Module> Modules { get; set; }
+        public List<CrfPage> CrfPages { get; set; }
         [JsonIgnore]
         public int InternalIndex { get; set; }
 
@@ -34,75 +35,76 @@ namespace MainStaticMaintainableEntities.VisitAssembly
         {
             DbAccessOptions = snapshotOptions.Value;
         }
-        public Visit(PersistentEntity details, List<int> moduleIds = null)
+        public Visit(PersistentEntity details, List<int> crfPageIds = null)
         {
             Id = details.Id;
             Name = details.Name;
             IsDeleted = details.IsDeleted;
             GuidId = details.GuidId;
 
-            if (moduleIds != null)
+            if (crfPageIds != null)
             {
-                JsonValue = JsonConvert.SerializeObject(moduleIds);
+                JsonValue = JsonConvert.SerializeObject(crfPageIds);
             }
-            else moduleIds = JsonConvert.DeserializeObject<List<int>>(details.JsonValue);
+            else crfPageIds = JsonConvert.DeserializeObject<List<int>>(details.JsonValue);
 
-            if (moduleIds == null)
+            if (crfPageIds == null)
                 return; // almost - throw exception;
 
-            IRepositoryLocator<ModuleAssembly.Module> repositoryLocator = new RepositoryLocator<ModuleAssembly.Module>();
-            var module_repository = repositoryLocator.GetRepository(RepositoryType.FromDbRepository);
-            Modules = new List<ModuleAssembly.Module>();
-            foreach (int ModuleId in moduleIds)
+            //IRepositoryLocator<CrfPage> repositoryLocator = new RepositoryLocator<CrfPage>();
+            //var module_repository = repositoryLocator.GetRepository(RepositoryType.FromDbRepository);
+            var db = new EdcDbContext();
+            CrfPages = db.CrfPages.ToList();
+            foreach (int CrfPageId in crfPageIds)
             {
-                var m = module_repository.GetById(ModuleId);
+                var m = CrfPages.FirstOrDefault(x=> x.Id == CrfPageId);
                 if (m != null)
-                    Modules.Add(m);
+                    db.CrfPages.Add(m);
             }
         }
 
-        private async Task<bool> TryUpdateJsonValuePropertiesAsync(PersistentEntity details, List<int> moduleIds)
-        {
-            try
-            {
-                using (EdcDbContext db = new EdcDbContext())
-                {
-                    if (string.IsNullOrWhiteSpace(details.JsonValue))
-                    {
-                        db.PersistentEntities.Attach(details);
-                        details.JsonValue = JsonValue;
-                        db.Entry<PersistentEntity>(details).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-                //logger ex
-                for (int i = 0; i < DbAccessOptions.DbNRetrys; i++)
-                {
-                    try
-                    {
-                        using (EdcDbContext db = new EdcDbContext())
-                        {
-                            if (string.IsNullOrWhiteSpace(details.JsonValue))
-                            {
-                                db.PersistentEntities.Attach(details);
-                                details.JsonValue = JsonValue;
-                                db.Entry<PersistentEntity>(details).State = EntityState.Modified;
-                                db.SaveChanges();
-                            }
-                        }
-                        return true;
-                    }
-                    catch
-                    {
-                        await Task.Delay(DbAccessOptions.DbWaitTimeInSeconds * 1000);
-                    }
-                }
-                return false;
-            }
-        }
+        //private async Task<bool> TryUpdateJsonValuePropertiesAsync(PersistentEntity details, List<int> moduleIds)
+        //{
+        //    try
+        //    {
+        //        using (EdcDbContext db = new EdcDbContext())
+        //        {
+        //            if (string.IsNullOrWhiteSpace(details.JsonValue))
+        //            {
+        //                db.PersistentEntities.Attach(details);
+        //                details.JsonValue = JsonValue;
+        //                db.Entry<PersistentEntity>(details).State = EntityState.Modified;
+        //                db.SaveChanges();
+        //            }
+        //        }
+        //        return true;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        //logger ex
+        //        for (int i = 0; i < DbAccessOptions.DbNRetrys; i++)
+        //        {
+        //            try
+        //            {
+        //                using (EdcDbContext db = new EdcDbContext())
+        //                {
+        //                    if (string.IsNullOrWhiteSpace(details.JsonValue))
+        //                    {
+        //                        db.PersistentEntities.Attach(details);
+        //                        details.JsonValue = JsonValue;
+        //                        db.Entry<PersistentEntity>(details).State = EntityState.Modified;
+        //                        db.SaveChanges();
+        //                    }
+        //                }
+        //                return true;
+        //            }
+        //            catch
+        //            {
+        //                await Task.Delay(DbAccessOptions.DbWaitTimeInSeconds * 1000);
+        //            }
+        //        }
+        //        return false;
+        //    }
+        //}
     }
 }

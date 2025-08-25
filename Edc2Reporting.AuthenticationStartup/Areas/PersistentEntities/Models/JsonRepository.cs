@@ -53,7 +53,7 @@ namespace Edc2Reporting.AuthenticationStartup.Areas.PersistentEntities.Models
                 if (entities != null && entities.Count > 0)
                     _inMemoryList = entities;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // in the future - log here
                 throw;

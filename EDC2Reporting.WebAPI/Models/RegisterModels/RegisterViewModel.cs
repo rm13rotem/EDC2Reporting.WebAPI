@@ -1,4 +1,5 @@
-﻿using MainStaticMaintainableEntities;
+﻿using DataServices.SqlServerRepository.Models;
+using MainStaticMaintainableEntities;
 using MainStaticMaintainableEntities.SiteAssembly;
 using System;
 using System.Collections.Generic;

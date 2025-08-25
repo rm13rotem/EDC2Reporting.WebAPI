@@ -1,4 +1,4 @@
-﻿using MainStaticMaintainableEntities.ModuleAssembly;
+﻿using DataServices.SqlServerRepository.Models.CrfModels;
 using System.Collections.Generic;
 
 namespace MainStaticMaintainableEntities.VisitAssembly
@@ -10,7 +10,7 @@ namespace MainStaticMaintainableEntities.VisitAssembly
         int InternalIndex { get; set; }
         bool IsDeleted { get; set; }
         string JsonValue { get; set; }
-        List<ModuleAssembly.Module> Modules { get; set; }
+        List<CrfPage> CrfPages { get; set; }
         string Name { get; set; }
     }
 }

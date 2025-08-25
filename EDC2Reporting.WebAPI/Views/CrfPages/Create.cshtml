@@ -1,0 +1,59 @@
+﻿@model DataServices.SqlServerRepository.Models.CrfModels.CrfPage
+
+@{
+    ViewData["Title"] = "Create CRF Page";
+}
+
+<h1>Create CRF Page</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="StudyId" class="control-label"></label>
+        <input asp-for="StudyId" class="form-control" />
+        <span asp-validation-for="StudyId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Html" class="control-label"></label>
+        <textarea rows="20" cols="50" asp-for="Html" class="form-control"></textarea>
+        <span asp-validation-for="Html" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="GuidId" class="control-label"></label>
+        <input asp-for="GuidId" class="form-control" />
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="IsLockedForChanges" class="form-check-input" />
+        <label asp-for="IsLockedForChanges" class="form-check-label"></label>
+    </div>
+
+    <div class="form-group form-check">
+        <input asp-for="IsDeleted" class="form-check-input" />
+        <label asp-for="IsDeleted" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create</button>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</form>
+
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
