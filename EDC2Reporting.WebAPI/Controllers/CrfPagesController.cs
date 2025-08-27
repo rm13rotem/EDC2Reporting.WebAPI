@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using DataServices.SqlServerRepository.Models.CrfModels;
 using DataServices.SqlServerRepository;
 using EDC2Reporting.WebAPI.Models.Managers;
+using EDC2Reporting.WebAPI.Filters;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {

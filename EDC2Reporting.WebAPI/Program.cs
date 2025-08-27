@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
 
@@ -15,23 +10,17 @@ namespace EDC2Reporting.WebAPI
     {
         public static void Main(string[] args)
         {
-            int nErrors = 0;
             var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
             try
             {
-                logger.Debug("let's start the App" + DateTime.UtcNow.ToLongDateString());
-                for (int i = 0; i < 200; i++)
-                {
-                    nErrors++;
-                    try
-                    {
-                        CreateHostBuilder(args).Build().Run();
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Error(ex, $"Error {nErrors} - CreateHostBuilder in Program.cs");
-                    }
-                }
+                logger.Debug("Application starting up...");
+
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Stopped program because of exception");
+                throw; // allow process manager (systemd, IIS, docker, etc.) to restart app
             }
             finally
             {
@@ -41,12 +30,12 @@ namespace EDC2Reporting.WebAPI
 
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .ConfigureLogging(logging => 
+                .UseStartup<Startup>()
+                .ConfigureLogging(logging =>
                 {
                     logging.ClearProviders();
-                    logging.SetMinimumLevel(LogLevel.Information);
+                    logging.SetMinimumLevel(LogLevel.Debug); // allow Debug+ into NLog
                 })
-            .UseNLog();
+                .UseNLog(); // NLog: setup NLog for Dependency injection
     }
 }

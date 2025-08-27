@@ -2,6 +2,7 @@ using DataServices.Providers;
 using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
 using Edc2Reporting.AuthenticationStartup.Areas.Identity;
+using EDC2Reporting.WebAPI.Filters;
 using EDC2Reporting.WebAPI.Models.Managers;
 using MailClientLayer;
 using MainStaticMaintainableEntities;
@@ -48,7 +49,12 @@ namespace EDC2Reporting.WebAPI
 
             //services.AddSingleton<IConfiguration>(Configuration);
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add<LogExceptionsFilter>();
+                options.Filters.Add<LogUserActivityFilter>();
+            });
+
             services.AddControllers();
 
             services.AddHttpContextAccessor();
