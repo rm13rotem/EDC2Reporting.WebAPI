@@ -93,10 +93,8 @@ namespace EDC2Reporting.WebAPI.Controllers
             }
 
             return RedirectToAction("Index", "Home");
-
-            // Send Mail
-            return View();
         }
+
         public IActionResult InviteUser(QuickLookIdSetupRegister invite)
         {
             if (SessionInvalid())

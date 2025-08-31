@@ -69,7 +69,7 @@ namespace EDC2Reporting.WebAPI.Controllers.SetUpNewStudy
         }
 
         // GET: City/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             if (id == null)
             {

@@ -21,7 +21,7 @@ namespace EDC2Reporting.WebAPI.Models.Managers
             return await _db.CrfPages.ToListAsync();
         }
 
-        public async Task<CrfPage?> GetByIdAsync(int id)
+        public async Task<CrfPage> GetByIdAsync(int id)
         {
             return await _db.CrfPages
                 .Include(p => p.Entries) // eager-load related entries

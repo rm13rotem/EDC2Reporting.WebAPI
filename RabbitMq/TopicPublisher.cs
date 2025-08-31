@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using System;
 using System.Text;
@@ -8,12 +9,17 @@ namespace RabbitMq
     public class TopicPublisher
     {
         private ChannelFactory channelFactory;
+        private ILogger<TopicPublisher> _logger;
         private IModel channel;
         private RabbitMqOptions options;
-        public TopicPublisher(IOptionsSnapshot<RabbitMqOptions> optionsRabbitMq)
+        public TopicPublisher(IOptionsSnapshot<RabbitMqOptions> optionsRabbitMq, ILogger<TopicPublisher> logger)
         {
             options = optionsRabbitMq.Value;
             channelFactory = new ChannelFactory(options);
+            _logger = logger;
+
+            // create channel immediately
+            channel = channelFactory.CreateChannel();
         }
 
         public bool TryDeclareExchange(string exchangeName)
@@ -29,7 +35,7 @@ namespace RabbitMq
             }
             catch (Exception e)
             {
-                //Logger.log(e);
+                _logger.LogError(e, e.Message);
                 return false;
             }
 
@@ -51,7 +57,7 @@ namespace RabbitMq
             }
             catch (Exception e)
             {
-                //Logger.Log(e.Message);
+                _logger.LogError(e, e.Message);
                 return false;
             }
         }

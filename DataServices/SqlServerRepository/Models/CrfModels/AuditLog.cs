@@ -22,9 +22,9 @@ namespace DataServices.SqlServerRepository.Models.CrfModels
 
         public DateTime TimestampUtc { get; set; } = DateTime.UtcNow;
 
-        public string? ChangesJson { get; set; } // optional diff or snapshot
-        public string? BeforeJson { get; set; }
-        public string AfterJson { get; set; }
-        public string? MetadataJson { get; set; } // optional context: IP, PatientId, etc.
+        public string ChangesJson { get; set; } = null; // optional diff or snapshot
+        public string BeforeJson { get; set; } = null;
+        public string AfterJson { get; set; } = null;
+        public string MetadataJson { get; set; } // optional context: IP, PatientId, etc.
     }
 }

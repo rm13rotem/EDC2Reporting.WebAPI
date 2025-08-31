@@ -1,6 +1,4 @@
 ﻿using System;
-using Microsoft.AspNetCore.Identity;
-using System;
 
 namespace DataServices.SqlServerRepository.Models
 {

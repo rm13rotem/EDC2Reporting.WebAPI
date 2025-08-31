@@ -15,7 +15,8 @@ namespace EDC2Reporting.WebAPI.Services
 
         public AuditService(EdcDbContext db, IHttpContextAccessor http)
         {
-            _db = db; _http = http;
+            _db = db;
+            _http = http;
         }
 
         public async Task LogAsync(string userId, string action, string entityName, string entityId, string? changesJson = null, string? metadataJson = null)

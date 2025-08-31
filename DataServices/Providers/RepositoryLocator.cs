@@ -1,36 +1,57 @@
 ﻿using DataServices.Interfaces;
 using DataServices.SqlServerRepository;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using System;
 
 namespace DataServices.Providers
 {
     public class RepositoryLocator<T> : IRepositoryLocator<T> where T : IPersistentEntity, new()
     {
-        private static RepositoryType cachedRepositoryType;
-        private static IRepository<T> cachedRepository;
+        // Singleton instance per T
+        private static readonly Lazy<RepositoryLocator<T>> _instance =
+            new(() => new RepositoryLocator<T>());
+
+        public static RepositoryLocator<T> Instance => _instance.Value;
+
+        private RepositoryType? _cachedRepositoryType;
+        private IRepository<T>? _cachedRepository;
+        private readonly object _lock = new();
+
+        // Private constructor prevents external instantiation
+        private RepositoryLocator() { }
 
         public IRepository<T> GetRepository(RepositoryType repositoryType, bool isForceRefresh = false)
         {
+            // Return cached if valid
+            if (!isForceRefresh && _cachedRepositoryType == repositoryType && _cachedRepository != null)
+                return _cachedRepository;
 
-            if (cachedRepositoryType == repositoryType && cachedRepository != null && !isForceRefresh)
-                return cachedRepository;
+            IRepository<T> repository;
 
-            if (repositoryType == RepositoryType.FromJsonRepository)
+            switch (repositoryType)
             {
-                cachedRepository = new FromJsonRepository<T>(typeof(T).Name);
-                cachedRepository = new InMemoryRepository<T>(cachedRepository);
+                case RepositoryType.FromJsonRepository:
+                    repository = new FromJsonRepository<T>(typeof(T).Name);
+                    repository = new InMemoryRepository<T>(repository);
+                    break;
+
+                case RepositoryType.FromDbRepository:
+                    var dbLocator = new DbRepositoryLocator<T>();
+                    repository = dbLocator.GetRepository();
+                    repository = new InMemoryRepository<T>(repository);
+                    break;
+
+                default:
+                    throw new NotSupportedException($"RepositoryType '{repositoryType}' is not supported.");
             }
 
-            if (repositoryType == RepositoryType.FromDbRepository)
+            // Thread-safe cache update
+            lock (_lock)
             {
-                DbRepositoryLocator<T> repositoryLocator = new DbRepositoryLocator<T>();
-                cachedRepository = repositoryLocator.GetRepository();
-                cachedRepository = new InMemoryRepository<T>(cachedRepository);
+                _cachedRepositoryType = repositoryType;
+                _cachedRepository = repository;
             }
 
-            return cachedRepository;
-
+            return repository;
         }
     }
 }
