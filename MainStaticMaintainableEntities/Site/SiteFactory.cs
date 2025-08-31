@@ -16,11 +16,11 @@ namespace MainStaticMaintainableEntities.SiteAssembly
 
         public SiteFactory(RepositoryOptions options)
         {
-            //RepositoryLocator<Investigator> repositoryLocator = new RepositoryLocator<Investigator>();
+            //RepositoryLocator<Investigator> repositoryLocator = RepositoryLocator<Investigator>.Instance;
             //doctorRepository = repositoryLocator.GetRepository(options.RepositoryType);
-            RepositoryLocator<Country> countryRepositoryLocator = new RepositoryLocator<Country>();
+            RepositoryLocator<Country> countryRepositoryLocator = RepositoryLocator<Country>.Instance;
             countryRepository = countryRepositoryLocator.GetRepository(options.RepositoryType);
-            RepositoryLocator<City> cityRepositoryLocator = new RepositoryLocator<City>();
+            RepositoryLocator<City> cityRepositoryLocator = RepositoryLocator<City>.Instance;
             cityRepository = cityRepositoryLocator.GetRepository(options.RepositoryType);
         }
 

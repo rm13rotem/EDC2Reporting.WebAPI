@@ -19,11 +19,12 @@ namespace EDC2Reporting.WebAPI.Services
             _http = http;
         }
 
-        public async Task LogAsync(string userId, string action, string entityName, string entityId, string? changesJson = null, string? metadataJson = null)
+        public async Task LogAsync(string userId, string action, string entityName, string entityId, 
+            string changesJson = null, string metadataJson = null)
         {
             var ip = _http.HttpContext?.Connection?.RemoteIpAddress?.ToString();
             var ua = _http.HttpContext?.Request?.Headers["User-Agent"].ToString();
-            var meta = new Dictionary<string, string?>
+            var meta = new Dictionary<string, string>
             {
                 ["ip"] = ip,
                 ["userAgent"] = ua
@@ -32,7 +33,7 @@ namespace EDC2Reporting.WebAPI.Services
             {
                 try
                 {
-                    var extra = JsonSerializer.Deserialize<Dictionary<string, string?>>(metadataJson);
+                    var extra = JsonSerializer.Deserialize<Dictionary<string, string>>(metadataJson);
                     if (extra != null)
                         foreach (var kv in extra) meta[kv.Key] = kv.Value;
                 }

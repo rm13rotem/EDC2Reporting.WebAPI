@@ -8,7 +8,7 @@ namespace EDC2Reporting.WebAPI.Services
     public class FormRenderingService : IFormRenderingService
     {
         // Very simple hydrator: inject value="..." for inputs whose name matches keys in JSON
-        public string Render(CrfPage page, string? formDataJson)
+        public string Render(CrfPage page, string formDataJson)
         {
             var html = page.Html ?? string.Empty;
             if (string.IsNullOrWhiteSpace(formDataJson)) return html;

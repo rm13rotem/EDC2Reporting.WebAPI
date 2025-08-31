@@ -19,8 +19,12 @@ namespace MailClientLayer
         {
             mailOptions = mailClientOptionsSnapshot.Value;
             var dbOptions = options.Value;
-            DbRepositoryLocator<LoggedMailMessage> dbRepositoryLocator = new DbRepositoryLocator<LoggedMailMessage>();
-            repository = dbRepositoryLocator.GetRepository();
+            var repoType = RepositoryType.FromDbRepository; ;
+            if (dbOptions?.RepositoryType != null)
+                repoType = dbOptions.RepositoryType;
+
+            RepositoryLocator<LoggedMailMessage> dbRepositoryLocator = RepositoryLocator<LoggedMailMessage>.Instance;
+            repository = dbRepositoryLocator.GetRepository(repoType, true);
         }
 
         public bool TryInsertIntoQueue(LoggedMailMessage message)

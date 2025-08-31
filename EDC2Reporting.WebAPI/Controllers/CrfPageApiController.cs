@@ -24,7 +24,7 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             logger = _logger;
             repositorySettings = options.Value;
-            var locator = new RepositoryLocator<CrfPage>();
+            var locator = RepositoryLocator<CrfPage>.Instance;
             repository = locator.GetRepository(repositorySettings.RepositoryType);
         }
 
@@ -66,8 +66,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             repository.Update(entity);
         }
         
-        // UNDELETE api/<CrfPageApiController>/5
-        [HttpDelete("{id}")]
+        // UNDELETE api/<CrfPageApiController>/Undelete/5
         public void Undelete(int id)
         {
             var entity = repository.GetById(id);

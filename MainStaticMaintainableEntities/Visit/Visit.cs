@@ -54,7 +54,7 @@ namespace MainStaticMaintainableEntities.VisitAssembly
             if (crfPageIds == null)
                 return; // almost - throw exception;
 
-            //IRepositoryLocator<CrfPage> repositoryLocator = new RepositoryLocator<CrfPage>();
+            //IRepositoryLocator<CrfPage> repositoryLocator = RepositoryLocator<CrfPage>.Instance;
             //var module_repository = repositoryLocator.GetRepository(RepositoryType.FromDbRepository);
             var db = new EdcDbContext();
             CrfPages = db.CrfPages.ToList();

@@ -125,7 +125,7 @@ namespace SessionLayer
             if (CurrentResult == null)
                 return default; // TODO : throw exception? Log?
 
-            var locator = new RepositoryLocator<T>();
+            var locator = RepositoryLocator<T>.Instance;
             var repo = locator.GetRepository(_repositoryOptions.RepositoryType);
 
             return repo.GetById(GetId(typeof(T).Name)); //from Session

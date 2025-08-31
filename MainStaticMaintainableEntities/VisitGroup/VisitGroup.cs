@@ -42,7 +42,7 @@ namespace MainStaticMaintainableEntities.VisitGroupAssembley
         {
             if (VisitIds != null && VisitIds.Count > 0)
             {
-                RepositoryLocator<Visit> repositoryLocator = new RepositoryLocator<Visit>();
+                RepositoryLocator<Visit> repositoryLocator = RepositoryLocator<Visit>.Instance;
                 var repository = repositoryLocator.GetRepository(repositoryOption.RepositoryType);
                 foreach (var visitId in VisitIds)
                 {
@@ -54,7 +54,7 @@ namespace MainStaticMaintainableEntities.VisitGroupAssembley
             if (VisitGroupIds != null && VisitGroupIds.Count > 0)
             {
 
-                RepositoryLocator<VisitGroup> repositoryLocator = new RepositoryLocator<VisitGroup>();
+                RepositoryLocator<VisitGroup> repositoryLocator = RepositoryLocator<VisitGroup>.Instance;
                 var repository = repositoryLocator.GetRepository(repositoryOption.RepositoryType);
                 foreach (var _visitGroupId in VisitGroupIds)
                 {

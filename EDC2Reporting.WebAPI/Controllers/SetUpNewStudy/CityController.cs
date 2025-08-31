@@ -25,9 +25,9 @@ namespace EDC2Reporting.WebAPI.Controllers.SetUpNewStudy
         {
             _logger = logger;
             repoOptions = options.Value;
-            RepositoryLocator<Country> country_repositoryLocator = new RepositoryLocator<Country>();
+            RepositoryLocator<Country> country_repositoryLocator = RepositoryLocator<Country>.Instance;
             countryRepository = country_repositoryLocator.GetRepository(repoOptions.RepositoryType);
-            RepositoryLocator<City> city_repositoryLocator = new RepositoryLocator<City>();
+            RepositoryLocator<City> city_repositoryLocator = RepositoryLocator<City>.Instance;
             cityRepository = city_repositoryLocator.GetRepository(repoOptions.RepositoryType);
 
             if (CityViewModel.CountryRepository == null)
@@ -44,7 +44,7 @@ namespace EDC2Reporting.WebAPI.Controllers.SetUpNewStudy
         }
 
         // GET: City/Duplicate/5
-        public async Task<IActionResult> Duplicate(int? id)
+        public IActionResult Duplicate(int? id)
         {
             if (id == null)
             {

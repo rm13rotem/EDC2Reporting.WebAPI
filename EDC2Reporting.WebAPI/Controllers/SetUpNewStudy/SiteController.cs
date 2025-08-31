@@ -25,11 +25,11 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             _logger = logger;
             repoOptions = options.Value;
-            RepositoryLocator<Country> country_repositoryLocator = new RepositoryLocator<Country>();
+            RepositoryLocator<Country> country_repositoryLocator = RepositoryLocator<Country>.Instance;
             countryRepository = country_repositoryLocator.GetRepository(repoOptions.RepositoryType);
-            RepositoryLocator<City> city_repositoryLocator = new RepositoryLocator<City>();
+            RepositoryLocator<City> city_repositoryLocator = RepositoryLocator<City>.Instance;
             cityRepository = city_repositoryLocator.GetRepository(repoOptions.RepositoryType);
-            RepositoryLocator<Site> repositoryLocator = new RepositoryLocator<Site>();
+            RepositoryLocator<Site> repositoryLocator = RepositoryLocator<Site>.Instance;
             repository = repositoryLocator.GetRepository(repoOptions.RepositoryType);
 
             if (SiteViewModel.CityRepository == null)

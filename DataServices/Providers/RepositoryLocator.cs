@@ -12,8 +12,8 @@ namespace DataServices.Providers
 
         public static RepositoryLocator<T> Instance => _instance.Value;
 
-        private RepositoryType? _cachedRepositoryType;
-        private IRepository<T>? _cachedRepository;
+        private RepositoryType _cachedRepositoryType;
+        private IRepository<T> _cachedRepository;
         private readonly object _lock = new();
 
         // Private constructor prevents external instantiation
