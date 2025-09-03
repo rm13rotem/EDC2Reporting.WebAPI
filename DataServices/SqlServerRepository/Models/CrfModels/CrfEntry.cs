@@ -1,13 +1,15 @@
-﻿using System;
+﻿using DataServices.Interfaces;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataServices.SqlServerRepository.Models.CrfModels
 {
-    public class CrfEntry
+    public class CrfEntry // : IPersistentEntity (missing GuidId)
     {
         [Key]
         public int Id { get; set; }
+        // public string GuidId { get; set; }
         public string Name { get { return $"CRF Entry {Id}"; } set { return; } }
         public bool IsDeleted { get; set; } = false;
 

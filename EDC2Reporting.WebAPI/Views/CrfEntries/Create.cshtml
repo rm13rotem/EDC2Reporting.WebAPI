@@ -1,53 +1,60 @@
-﻿@model DataServices.SqlServerRepository.Models.Experiment
+﻿@model DataServices.SqlServerRepository.Models.CrfModels.CrfEntry
 
 @{
-    ViewData["Title"] = "Create";
+    var crfPage = ViewBag.CrfPage as DataServices.SqlServerRepository.Models.CrfModels.CrfPage;
+    ViewData["Title"] = "Fill CRF" + crfPage.Name;
 }
 
-<h1>Create</h1>
+<h2>@crfPage.Name</h2>
+<p>@crfPage.Description</p>
 
-<h4>Experiment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UniqueIdentifier" class="control-label"></label>
-                <input asp-for="UniqueIdentifier" class="form-control" />
-                <span asp-validation-for="UniqueIdentifier" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HelsinkiApprovalNumber" class="control-label"></label>
-                <input asp-for="HelsinkiApprovalNumber" class="form-control" />
-                <span asp-validation-for="HelsinkiApprovalNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyName" class="control-label"></label>
-                <input asp-for="CompanyName" class="form-control" />
-                <span asp-validation-for="CompanyName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyId" class="control-label"></label>
-                <input asp-for="CompanyId" class="form-control" />
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="CrfPageId" />
+    <input type="hidden" asp-for="StudyId" />
+    <input type="hidden" asp-for="DoctorId" />
+    <input type="hidden" asp-for="PatientId" />
+    <input type="hidden" asp-for="VisitId" />
+    <input type="hidden" asp-for="VisitIndex" />
+
+    <div>
+        <!-- Render the CRF Page Html (raw form HTML template) -->
+        @Html.Raw(crfPage.Html)
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <!-- Hidden field for JSON data -->
+    <input type="hidden" asp-for="FormDataJson" id="FormDataJson" />
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+<script>
+        // Before submit, gather form data into JSON and set FormDataJson
+        document.querySelector("form").addEventListener("submit", function (e) {
+            console.log("form submitted");
+            var form = e.target;
+            var data = {};
+            new FormData(form).forEach((value, key) => {
+                if (key == "FormDataJson"){
+                    return;
+                }
+                if (!!data[key]){
+                    return;
+                }                  
+
+                data[key] = value;
+                console.log("key = "+key.toString());
+                console.log("value = "+value.toString());
+            });
+
+            var hiddenJson = document.getElementById('FormDataJson');
+            var stringData = JSON.stringify(data);
+            console.log(stringData);
+            hiddenJson.value = stringData;
+
+            // Force sync update before posting
+            console.log("Submitting with FormDataJson:", document.getElementById('FormDataJson').value);
+
+            return true;
+        });
+</script>
+

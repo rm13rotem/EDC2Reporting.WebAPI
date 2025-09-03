@@ -5,17 +5,17 @@ using Edc2Reporting.AuthenticationStartup.Areas.Identity;
 using EDC2Reporting.WebAPI.Filters;
 using EDC2Reporting.WebAPI.Models.Managers;
 using MailClientLayer;
-using MainStaticMaintainableEntities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMq;
 using System;
-using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI
 {
@@ -48,12 +48,10 @@ namespace EDC2Reporting.WebAPI
             //  .AddV8();
 
             //services.AddSingleton<IConfiguration>(Configuration);
-
-            services.AddControllersWithViews(options =>
-            {
+            services.AddControllersWithViews(options => {
                 options.Filters.Add<LogExceptionsFilter>();
                 options.Filters.Add<LogUserActivityFilter>();
-            });
+            }).AddRazorRuntimeCompilation();
 
             services.AddControllers();
 
@@ -100,7 +98,7 @@ namespace EDC2Reporting.WebAPI
             services.Configure<MailClientOptions>(Configuration.GetSection(MailClientOptions.MailClientSettings));
             services.Configure<RabbitMqOptions>(Configuration.GetSection(RabbitMqOptions.RabbitMqSettings));
 
-            services.AddSingleton<ICrfPageManager, CrfPageManager>();
+            services.AddScoped<ICrfPageManager, CrfPageManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

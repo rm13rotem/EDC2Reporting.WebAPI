@@ -1,54 +1,40 @@
-﻿@model DataServices.SqlServerRepository.Models.Experiment
+﻿@model DataServices.SqlServerRepository.Models.CrfModels.CrfEntry
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit CRF Entry";
+    var crfPage = ViewBag.CrfPage as DataServices.SqlServerRepository.Models.CrfModels.CrfPage;
+    var formData = string.IsNullOrWhiteSpace(Model.FormDataJson) ? "{}" : Model.FormDataJson;
 }
 
-<h1>Edit</h1>
+<h2>Edit: @crfPage.Name</h2>
 
-<h4>Experiment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="UniqueIdentifier" class="control-label"></label>
-                <input asp-for="UniqueIdentifier" class="form-control" />
-                <span asp-validation-for="UniqueIdentifier" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HelsinkiApprovalNumber" class="control-label"></label>
-                <input asp-for="HelsinkiApprovalNumber" class="form-control" />
-                <span asp-validation-for="HelsinkiApprovalNumber" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyName" class="control-label"></label>
-                <input asp-for="CompanyName" class="form-control" />
-                <span asp-validation-for="CompanyName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CompanyId" class="control-label"></label>
-                <input asp-for="CompanyId" class="form-control" />
-                <span asp-validation-for="CompanyId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="CrfPageId" />
+    <input type="hidden" asp-for="StudyId" />
+    <input type="hidden" asp-for="FormDataJson" />
+
+    <div>
+        @Html.Raw(crfPage.Html)
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<script>
+    var existingData = @Html.Raw(formData);
+
+    // Pre-fill form
+    for (var key in existingData) {
+        var el = document.querySelector(`[name="${key}"]`);
+        if (el) el.value = existingData[key];
+    }
+
+    // Collect data again on submit
+    document.querySelector("form").addEventListener("submit", function (e) {
+        var form = e.target;
+        var data = {};
+        new FormData(form).forEach((value, key) => data[key] = value);
+        form.querySelector("input[name='FormDataJson']").value = JSON.stringify(data);
+    });
+</script>

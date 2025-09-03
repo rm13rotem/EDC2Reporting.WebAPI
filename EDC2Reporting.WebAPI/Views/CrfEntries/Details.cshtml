@@ -1,7 +1,7 @@
-﻿@model DataServices.SqlServerRepository.Models.Experiment
+﻿@model DataServices.SqlServerRepository.Models.CrfModels.CrfEntry;
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Details - CrfPageId,DoctorId,PatientId,VisitId,VisitIndex,StudyId,FormDataJson";
 }
 
 <h1>Details</h1>
@@ -11,28 +11,18 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UniqueIdentifier)
+            @Html.DisplayNameFor(model => model.Id)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UniqueIdentifier)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id) -
+            @*Html.DisplayFor(model => model.GuidId)*@
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.HelsinkiApprovalNumber)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.StudyId)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.HelsinkiApprovalNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompanyName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompanyName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompanyId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompanyId)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.StudyId)
+            Crf Page Id - @Html.DisplayFor(model => model.CrfPageId)             
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Name)
@@ -40,6 +30,38 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DoctorId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DoctorId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PatientId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PatientId)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VisitId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VisitId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.VisitIndex)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.VisitIndex)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FormDataJson)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FormDataJson)
+        </dd>
+
+
     </dl>
 </div>
 <div>
