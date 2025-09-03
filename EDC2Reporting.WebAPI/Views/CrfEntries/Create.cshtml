@@ -19,42 +19,47 @@
     <div>
         <!-- Render the CRF Page Html (raw form HTML template) -->
         @Html.Raw(crfPage.Html)
+        <!-- End of Render the CRF Page Html (raw form HTML template) -->
+
+        <!-- Hidden field for JSON data -->
+        <div class="form-group">
+            <input type="hidden" asp-for="FormDataJson" id="FormDataJson" />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
     </div>
 
-    <!-- Hidden field for JSON data -->
-    <input type="hidden" asp-for="FormDataJson" id="FormDataJson" />
-
-    <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 <script>
-        // Before submit, gather form data into JSON and set FormDataJson
-        document.querySelector("form").addEventListener("submit", function (e) {
-            console.log("form submitted");
-            var form = e.target;
-            var data = {};
-            new FormData(form).forEach((value, key) => {
-                if (key == "FormDataJson"){
-                    return;
-                }
-                if (!!data[key]){
-                    return;
-                }                  
+    // Before submit, gather form data into JSON and set FormDataJson
+    document.querySelector("form").addEventListener("submit", function (e) {
+        console.log("form submitted");
+        var form = e.target;
+        var data = {};
+        new FormData(form).forEach((value, key) => {
+            if (key == "FormDataJson"){
+                return;
+            }
+            if (!!data[key]){
+                return;
+            }
 
-                data[key] = value;
-                console.log("key = "+key.toString());
-                console.log("value = "+value.toString());
-            });
-
-            var hiddenJson = document.getElementById('FormDataJson');
-            var stringData = JSON.stringify(data);
-            console.log(stringData);
-            hiddenJson.value = stringData;
-
-            // Force sync update before posting
-            console.log("Submitting with FormDataJson:", document.getElementById('FormDataJson').value);
-
-            return true;
+            data[key] = value;
+            console.log("key = "+key.toString());
+            console.log("value = "+value.toString());
         });
+
+        var hiddenJson = document.getElementById('FormDataJson');
+        var stringData = JSON.stringify(data);
+        console.log(stringData);
+        hiddenJson.value = stringData;
+
+        // Force sync update before posting
+        console.log("Submitting with FormDataJson:", document.getElementById('FormDataJson').value);
+
+        return true;
+    });
 </script>
 
