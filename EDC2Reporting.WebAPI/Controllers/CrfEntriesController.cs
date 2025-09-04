@@ -1,5 +1,7 @@
 ﻿using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models.CrfModels;
+using EDC2Reporting.WebAPI.Models.Managers;
+using EDC2Reporting.WebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -76,9 +78,14 @@ namespace EDC2Reporting.WebAPI.Controllers
                     return RedirectToAction(nameof(Index));
                 }
 
-                var page = await _context.CrfPages.FirstOrDefaultAsync(p => p.Id == entry.CrfPageId);
-                ViewBag.PageName = page?.Name ?? "";
-                ViewBag.PageHtml = page?.Html ?? "";
+                // else 
+                var crfPage = await _context.CrfPages.FirstOrDefaultAsync(p => p.Id == entry.CrfPageId);
+                if (crfPage == null) return NotFound();
+
+                // repopulate ViewBag with FormDataJson
+                var manager = new FormRenderingService();
+                crfPage.Html = manager.Render(crfPage, entry.FormDataJson);
+                ViewBag.CrfPage = crfPage;
 
                 return View(entry);
             }
@@ -91,8 +98,14 @@ namespace EDC2Reporting.WebAPI.Controllers
                 var entry = await _context.CrfEntries.Include(e => e.CrfPage).FirstOrDefaultAsync(e => e.Id == id);
                 if (entry == null) return NotFound();
 
-                ViewBag.PageName = entry.CrfPage.Name;
-                ViewBag.PageHtml = entry.CrfPage.Html;
+                var crfPage = await _context.CrfPages.FirstOrDefaultAsync(p => p.Id == entry.CrfPageId);
+                if (crfPage == null) return NotFound();
+
+                // repopulate ViewBag with FormDataJson
+                var manager = new FormRenderingService();
+                crfPage.Html = manager.Render(crfPage, entry.FormDataJson);
+                ViewBag.CrfPage = crfPage;
+
 
                 return View(entry);
             }
@@ -109,6 +122,7 @@ namespace EDC2Reporting.WebAPI.Controllers
                     try
                     {
                         entry.UpdatedAt = DateTime.UtcNow;
+                        _context.Attach(entry);
                         _context.Update(entry);
                         await _context.SaveChangesAsync();
                     }
@@ -121,6 +135,15 @@ namespace EDC2Reporting.WebAPI.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
+
+                //else - faulty postback
+                var crfPage = await _context.CrfPages.FirstOrDefaultAsync(p => p.Id == entry.CrfPageId);
+                if (crfPage == null) return NotFound();
+
+                // repopulate ViewBag with FormDataJson
+                var manager = new FormRenderingService();
+                crfPage.Html = manager.Render(crfPage, entry.FormDataJson);
+                ViewBag.CrfPage = crfPage;
 
                 return View(entry);
             }

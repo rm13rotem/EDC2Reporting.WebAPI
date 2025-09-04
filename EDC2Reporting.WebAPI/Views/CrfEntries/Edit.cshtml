@@ -1,40 +1,65 @@
 ﻿@model DataServices.SqlServerRepository.Models.CrfModels.CrfEntry
 
 @{
-    ViewData["Title"] = "Edit CRF Entry";
     var crfPage = ViewBag.CrfPage as DataServices.SqlServerRepository.Models.CrfModels.CrfPage;
     var formData = string.IsNullOrWhiteSpace(Model.FormDataJson) ? "{}" : Model.FormDataJson;
+    ViewData["Title"] = "Edit CRF Entry" + crfPage.Name;
 }
 
-<h2>Edit: @crfPage.Name</h2>
+<h2>@crfPage.Name</h2>
+<p>@crfPage.Description</p>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
+   @*  <input type="hidden" asp-for="GuidId" /> *@
     <input type="hidden" asp-for="CrfPageId" />
     <input type="hidden" asp-for="StudyId" />
-    <input type="hidden" asp-for="FormDataJson" />
+    <input type="hidden" asp-for="DoctorId" />
+    <input type="hidden" asp-for="PatientId" />
+    <input type="hidden" asp-for="VisitId" />
+    <input type="hidden" asp-for="VisitIndex" />
 
     <div>
+        <!-- Render the CRF Page Html (raw form HTML template) -->
         @Html.Raw(crfPage.Html)
+        <!-- End of Render the CRF Page Html (raw form HTML template) -->
+        <!-- Hidden field for JSON data -->
+        <div class="form-group">
+            <input type="hidden" asp-for="FormDataJson" id="FormDataJson" />
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
     </div>
 
-    <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>
 
 <script>
-    var existingData = @Html.Raw(formData);
-
-    // Pre-fill form
-    for (var key in existingData) {
-        var el = document.querySelector(`[name="${key}"]`);
-        if (el) el.value = existingData[key];
-    }
-
-    // Collect data again on submit
+    // Before submit, gather form data into JSON and set FormDataJson
     document.querySelector("form").addEventListener("submit", function (e) {
+        console.log("form submitted");
         var form = e.target;
         var data = {};
-        new FormData(form).forEach((value, key) => data[key] = value);
-        form.querySelector("input[name='FormDataJson']").value = JSON.stringify(data);
+        new FormData(form).forEach((value, key) => {
+            if (key == "FormDataJson"){
+                return;
+            }
+            if (!!data[key]){
+                return;
+            }
+
+            data[key] = value;
+        });
+
+        var hiddenJson = document.getElementById('FormDataJson');
+        var stringData = JSON.stringify(data);
+        console.log(stringData);
+        hiddenJson.value = stringData;
+
+        // Force sync update before posting
+        console.log("Submitting with FormDataJson:", document.getElementById('FormDataJson').value);
+
+        return true;
     });
 </script>
+
