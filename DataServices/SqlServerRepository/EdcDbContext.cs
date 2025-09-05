@@ -1,7 +1,12 @@
 ﻿using DataServices.SqlServerRepository.Models;
 using DataServices.SqlServerRepository.Models.CrfModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DataServices.SqlServerRepository
 {
@@ -11,9 +16,15 @@ namespace DataServices.SqlServerRepository
         {
         }
 
-        public EdcDbContext(DbContextOptions<EdcDbContext> options)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        private readonly UserManager<Investigator> _userManager;
+        public EdcDbContext(DbContextOptions<EdcDbContext> options, IHttpContextAccessor httpContextAccessor,
+        UserManager<Investigator> userManager)
             : base(options)
         {
+            _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
         }
 
         public EdcDbContext(string connString) : base()
@@ -28,14 +39,14 @@ namespace DataServices.SqlServerRepository
                 if (!string.IsNullOrWhiteSpace(ConnectionString))
                     optionsBuilder.UseSqlServer(ConnectionString);
                 else
-                optionsBuilder.UseSqlServer("Server=LAPTOP-6ORP7UKE\\SQLEXPRESS;Initial Catalog=EDC_Dev;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                    optionsBuilder.UseSqlServer("Server=LAPTOP-6ORP7UKE\\SQLEXPRESS;Initial Catalog=EDC_Dev;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
-            
+
         }
 
 
         public DbSet<CrfPage> CrfPages { get; set; }
-        public  DbSet<CrfEntry> CrfEntries { get; set; }
+        public DbSet<CrfEntry> CrfEntries { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
 
         public virtual DbSet<Experiment> Experiments { get; set; }
@@ -99,10 +110,15 @@ namespace DataServices.SqlServerRepository
             {
                 entity.ToTable("CrfEntries");
                 entity.Property(e => e.CrfPageId).IsRequired();
+                entity.Property(e => e.GuidId).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.FormDataJson).IsRequired(); ;
                 entity.Property(e => e.StudyId).IsRequired();
-                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.IsDeleted).IsRequired();
                 entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
+                entity.Property(e => e.LastUpdator).HasDefaultValueSql("Auto generated")
+                .IsRequired()
+                .HasMaxLength(200);
 
                 entity.HasOne(d => d.CrfPage)
                        .WithMany(p => p.Entries)
@@ -124,8 +140,40 @@ namespace DataServices.SqlServerRepository
             });
             OnModelCreatingPartial(modelBuilder);
         }
-    
+
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            string userName = "System";
+
+            if (_httpContextAccessor.HttpContext?.User?.Identity?.IsAuthenticated == true)
+            {
+                var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext.User);
+                if (user != null)
+                {
+                    userName = $"{user.FirstName} {user.LastName}".Trim();
+                }
+            }
+
+            foreach (var entry in ChangeTracker.Entries<CrfEntry>())
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                    entry.Entity.LastUpdator = userName;
+                    entry.Entity.GuidId = Guid.NewGuid().ToString();
+                }
+                else if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    entry.Entity.LastUpdator = userName;
+                }
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+
     }
 }

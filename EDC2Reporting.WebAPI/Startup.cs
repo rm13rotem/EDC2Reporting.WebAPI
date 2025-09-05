@@ -65,7 +65,8 @@ namespace EDC2Reporting.WebAPI
                 options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppIdentityDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
             var _environment = Configuration.GetValue<string>("Environment");
             if (_environment == "DEV")
@@ -91,8 +92,12 @@ namespace EDC2Reporting.WebAPI
             else
             {
                 services.AddDbContext<EdcDbContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
+             
+                options.UseSqlServer(Configuration.GetConnectionString("DevConnection")));
             }
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<UserManager<Investigator>>();
 
             services.Configure<RepositoryOptions>(Configuration.GetSection(RepositoryOptions.RepositorySettings));
             services.Configure<MailClientOptions>(Configuration.GetSection(MailClientOptions.MailClientSettings));
@@ -143,6 +148,7 @@ namespace EDC2Reporting.WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -154,6 +160,7 @@ namespace EDC2Reporting.WebAPI
 
                 // Enables attribute routing (like [Route("api/...")])
                 endpoints.MapControllers();
+                endpoints.MapRazorPages();
             });
 
         }

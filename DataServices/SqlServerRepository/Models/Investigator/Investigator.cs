@@ -21,7 +21,7 @@ namespace DataServices.SqlServerRepository.Models
         // public string GuidId { get; set; }
         // public bool IsDeleted { get; set; }
         // public string JsonValue { get; set; }
-        // public string Name { get; set; }
+        public string FullName => $"{FirstName} {LastName}".Trim();
 
     }
 }

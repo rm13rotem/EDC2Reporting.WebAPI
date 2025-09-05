@@ -5,34 +5,46 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataServices.SqlServerRepository.Models.CrfModels
 {
-    public class CrfEntry // : IPersistentEntity (missing GuidId)
+    public class CrfEntry : IPersistentEntity
     {
         [Key]
         public int Id { get; set; }
-        // public string GuidId { get; set; }
+
+        //[Required]
+        [MaxLength(100)]
+        public string GuidId { get; set; } = Guid.NewGuid().ToString();
+
+        [Required]
+        [MaxLength(200)]
         public string Name { get { return $"CRF Entry {Id}"; } set { return; } }
+        [Required]
         public bool IsDeleted { get; set; } = false;
 
         /// <summary>
-        /// Foreign key to Doctor filling out the form
+        /// Foreign key to Investigator filling out the form
         /// </summary>
-        public int DoctorId { get; set; }
+        [Required]
+        public int InvestigatorId { get; set; }
         /// <summary>
         /// Foreign key to Patient (101, ...)
         /// </summary>
+        [Required]
         public int PatientId { get; set; }
 
         /// <summary>
         /// Foreign key to Visit type (Visit Id)
         /// </summary>
+        [Required]
         public int VisitId { get; set; }
         /// <summary>
         /// Foreign key to Visit Index inside the big VisitGroup
         /// </summary>        
+        [Required]
         public int VisitIndex { get; set; }
         /// <summary>
         /// Study Id being done
         /// </summary>       
+        [Required]
         public int StudyId { get; set; }
 
         /// <summary>
@@ -53,5 +65,14 @@ namespace DataServices.SqlServerRepository.Models.CrfModels
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime? UpdatedAt { get; set; }
+
+        public bool IsValid { get; set; } = false;
+
+        /// <summary>
+        /// Last user who created or updated this entry
+        /// </summary>
+        // [Required]
+        [MaxLength(200)]
+        public string LastUpdator { get; set; } = string.Empty;
     }
 }

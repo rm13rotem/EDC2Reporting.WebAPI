@@ -2,6 +2,7 @@
 using DataServices.SqlServerRepository.Models.CrfModels;
 using EDC2Reporting.WebAPI.Models.Managers;
 using EDC2Reporting.WebAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +14,7 @@ namespace EDC2Reporting.WebAPI.Controllers
 
     namespace EDC2Reporting.Web.Controllers
     {
+        [Authorize]
         public class CrfEntriesController : Controller
         {
             private readonly EdcDbContext _context;
@@ -59,7 +61,7 @@ namespace EDC2Reporting.WebAPI.Controllers
                     StudyId = crfPage.StudyId, // TODO: plug in current study from doctor context
                     VisitId = 0, // TODO : plug in selected visitId
                     VisitIndex = 0, // TODO : plug in selected visitIndex
-                    DoctorId = 0 // TODO: plug in current logged-in doctor
+                    InvestigatorId = 0 // TODO: plug in current logged-in user Id
                 };
 
                 return View(entry);
@@ -68,10 +70,12 @@ namespace EDC2Reporting.WebAPI.Controllers
             // POST: CrfEntries/Create
             [HttpPost]
             [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Create([Bind("CrfPageId,DoctorId,PatientId,VisitId,VisitIndex,StudyId,FormDataJson")] CrfEntry entry)
+            public async Task<IActionResult> Create([Bind("CrfPageId,InvestigatorId,PatientId,VisitId,VisitIndex,StudyId,FormDataJson")] CrfEntry entry)
             {
                 if (ModelState.IsValid)
                 {
+                    entry.IsValid = true;
+                    entry.GuidId = Guid.NewGuid().ToString();
                     entry.CreatedAt = DateTime.UtcNow;
                     _context.Add(entry);
                     await _context.SaveChangesAsync();
@@ -113,7 +117,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             // POST: CrfEntries/Edit/5
             [HttpPost]
             [ValidateAntiForgeryToken]
-            public async Task<IActionResult> Edit(int id, [Bind("Id,CrfPageId,DoctorId,PatientId,VisitId,VisitIndex,StudyId,FormDataJson,CreatedAt")] CrfEntry entry)
+            public async Task<IActionResult> Edit(int id, [Bind("Id,GuidId,CrfPageId,InvestigatorId,PatientId,VisitId,VisitIndex,StudyId,FormDataJson,CreatedAt")] CrfEntry entry)
             {
                 if (id != entry.Id) return NotFound();
 
@@ -121,6 +125,9 @@ namespace EDC2Reporting.WebAPI.Controllers
                 {
                     try
                     {
+                        entry.IsValid = true;
+                        if (string.IsNullOrWhiteSpace(entry.GuidId))
+                        entry.GuidId = Guid.NewGuid().ToString();
                         entry.UpdatedAt = DateTime.UtcNow;
                         _context.Attach(entry);
                         _context.Update(entry);
@@ -159,7 +166,7 @@ namespace EDC2Reporting.WebAPI.Controllers
 
                 return View(entry);
             }
-            
+
             // GET: CrfEntries/Undelete/5
             public async Task<IActionResult> Undelete(int? id)
             {

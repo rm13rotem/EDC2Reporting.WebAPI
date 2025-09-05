@@ -1,7 +1,7 @@
 ﻿@model DataServices.SqlServerRepository.Models.CrfModels.CrfEntry;
 
 @{
-    ViewData["Title"] = "Details - CrfPageId,DoctorId,PatientId,VisitId,VisitIndex,StudyId,FormDataJson";
+    ViewData["Title"] = "Details";
 }
 
 <h1>Details</h1>
@@ -14,8 +14,7 @@
             @Html.DisplayNameFor(model => model.Id)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Id) -
-            @*Html.DisplayFor(model => model.GuidId)*@
+            @Html.DisplayFor(model => model.Id)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.StudyId)
@@ -31,10 +30,10 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DoctorId)
+            @Html.DisplayNameFor(model => model.InvestigatorId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DoctorId)
+            @Html.DisplayFor(model => model.InvestigatorId)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.PatientId)
@@ -59,6 +58,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.FormDataJson)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastUpdator)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastUpdator)
         </dd>
 
 
