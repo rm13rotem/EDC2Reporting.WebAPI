@@ -29,6 +29,8 @@ namespace MainStaticMaintainableEntities.VisitAssembly
 
         public Visit()
         {
+            if (DbAccessOptions == null)
+                DbAccessOptions = new();
             DbAccessOptions.DbNRetrys = 3;
             DbAccessOptions.DbWaitTimeInSeconds = 20;
             DbAccessOptions.DbAccessSettings = "DbAccessSettings";

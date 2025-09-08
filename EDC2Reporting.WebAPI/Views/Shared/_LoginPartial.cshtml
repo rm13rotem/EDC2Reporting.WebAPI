@@ -1,0 +1,66 @@
+﻿@using DataServices.SqlServerRepository.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Investigator> SignInManager
+@inject UserManager<Investigator> UserManager
+
+@{
+    Investigator investigator = null;
+    if (SignInManager.IsSignedIn(User))
+    {
+        investigator = await UserManager.GetUserAsync(User);
+    }
+}
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User) && investigator != null)
+    {
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout"
+                  asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
+               aria-expanded="false">
+                @if (!await UserManager.IsInRoleAsync(investigator, "Admin"))
+                {
+                    @:Hello, @investigator.FirstName! (Admin)
+                }
+                else
+                {
+                    @:Hello, @investigator.FirstName @investigator.LastName!
+                }
+            </a>
+
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" asp-controller="CrfPages" asp-action="Index">CRF Pages Setup</a></li>
+                <li><a class="dropdown-item" asp-controller="Visits" asp-action="Index">Visits Setup</a></li>
+                <li><a class="dropdown-item" asp-controller="VisitGroups" asp-action="Index">Visit Groups Setup</a></li>
+                <li><a class="dropdown-item" asp-controller="Patients" asp-action="Index">Select Patient</a></li>
+                <li><a class="dropdown-item" asp-controller="Visits" asp-action="Select">Select Current Visit</a></li>
+                <li><a class="dropdown-item" asp-controller="Visits" asp-action="NextCrfPage">Select Current CRF Page</a></li>
+
+                @if (await UserManager.IsInRoleAsync(investigator, "Admin"))
+                {
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" asp-controller="Backup" asp-action="Save">Backup & Restore</a></li>
+                    <li><a class="dropdown-item" asp-controller="UserManagement" asp-action="Index">User Management</a></li>
+                    <li><a class="dropdown-item" asp-controller="Investigators" asp-action="Index">User Details</a></li>
+                    <li><a class="dropdown-item" asp-controller="CrfPages" asp-action="ReloadCache">Reload CRF Data Store Cache</a></li>
+
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>

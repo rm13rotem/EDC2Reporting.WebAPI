@@ -36,8 +36,10 @@ namespace DataServices.Providers
 
                 case RepositoryType.FromDbRepository:
                     var dbLocator = new DbRepositoryLocator<T>();
-                    repository = dbLocator.GetRepository();
-                    repository = new InMemoryRepository<T>(repository);
+                    EdcDbContext dbContext = new EdcDbContext();
+                    repository =  new FromDbRepository<T>(dbContext);
+                    // repository = dbLocator.GetRepository();
+                    // repository = new InMemoryRepository<T>(repository);
                     break;
 
                 default:

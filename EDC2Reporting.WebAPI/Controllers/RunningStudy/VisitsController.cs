@@ -19,21 +19,21 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
     public class VisitsController : Controller
     {
 
-        private readonly SessionWrapper _session;
+        private readonly ISessionWrapper _session;
         private readonly ILogger<VisitsController> _logger;
-        private IRepository<Visit> repository;
+        private IRepository<Visit> visitRepository;
         private readonly RepositoryOptions repoOptions;
         private readonly EdcDbContext _context;
 
         public VisitsController(ILogger<VisitsController> logger
             , EdcDbContext context
             , IOptionsSnapshot<RepositoryOptions> options
-            , SessionWrapper session)
+            , ISessionWrapper session)
         {
             _logger = logger;
             repoOptions = options.Value;
-            RepositoryLocator<Visit> country_repositoryLocator = RepositoryLocator<Visit>.Instance;
-            repository = country_repositoryLocator.GetRepository(repoOptions.RepositoryType);
+            RepositoryLocator<Visit> repositoryLocator = RepositoryLocator<Visit>.Instance;
+            visitRepository = repositoryLocator.GetRepository(repoOptions.RepositoryType);
             _session = session;
             _context = context;
         }
@@ -41,7 +41,7 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         // GET: Visits
         public IActionResult Index()
         {
-            var visits = repository.GetAll();
+            var visits = visitRepository.GetAll();
             return View(visits);
         }
 
@@ -50,7 +50,7 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         {
             if (id == null) return NotFound();
 
-            var visit = repository.GetById((int)id);
+            var visit = visitRepository.GetById((int)id);
             if (visit == null) return NotFound();
 
             return View(visit);
@@ -83,7 +83,7 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         // GET: Visits/Edit/5
         public IActionResult Edit(int id)
         {
-            var visit = repository.GetById(id);
+            var visit = visitRepository.GetById(id);
             if (visit == null) return NotFound();
 
             ViewBag.CrfPages = _context.CrfPages.ToList();
@@ -101,12 +101,14 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
             {
                 try
                 {
-                    repository.Update(visit);
+                    if (string.IsNullOrWhiteSpace(visit.GuidId))
+                        visit.GuidId = Guid.NewGuid().ToString();
+                    visitRepository.Update(visit);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!repository.GetAll().Any(e => e.Id == visit.Id))
+                    if (!visitRepository.GetAll().Any(e => e.Id == visit.Id))
                         return NotFound();
                     else throw;
                 }
@@ -121,7 +123,7 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         {
             if (id == null) return NotFound();
 
-            var visit = repository.GetById((int)id);
+            var visit = visitRepository.GetById((int)id);
             if (visit == null) return NotFound();
 
             return View(visit);
@@ -132,17 +134,17 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
-            var visit = repository.GetById(id);
+            var visit = visitRepository.GetById(id);
             visit.IsDeleted = true;
-            repository.Update(visit);
+            visitRepository.Update(visit);
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Undelete(int id)
         {
-            var visit = repository.GetById(id);
+            var visit = visitRepository.GetById(id);
             visit.IsDeleted = false;
-            repository.Update(visit);
+            visitRepository.Update(visit);
             return RedirectToAction(nameof(Index));
         }
 
@@ -151,7 +153,7 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         // Select Visit and redirect to first CRF
         public IActionResult SelectVisit(int id)
         {
-            var visit = repository.GetById(id);
+            var visit = visitRepository.GetById(id);
             if (visit == null) return NotFound();
 
             // Store in session
@@ -160,27 +162,33 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
             var crfIds = JsonConvert.DeserializeObject<List<int>>(visit.JsonValue);
             if (crfIds == null || !crfIds.Any()) return RedirectToAction(nameof(Index));
 
-            var firstCrf = _context.CrfPages.FirstOrDefault(c => c.Id == crfIds.First());
-            if (firstCrf == null) return RedirectToAction(nameof(Index));
-            _session.SelectedCrfId = firstCrf.Id;
+            if (_session.SelectedCrfId == 0) {
+                var firstCrf = _context.CrfPages.FirstOrDefault(c => c.Id == crfIds.First());
+                if (firstCrf == null) return RedirectToAction(nameof(Index));
+                _session.SelectedCrfId = firstCrf.Id;
+            }
+            
 
-            return RedirectToAction("Create", "CrfEntries", new { crfPageId = firstCrf.Id, PatientId = 0 });
+                return RedirectToAction("Create", "CrfEntries", new { crfPageId = _session.SelectedCrfId, PatientId = _session.SelectedPatientId });
         }
 
         // Move to next CRF page in current Visit
-        public IActionResult NextCrfPage(int currentCrfId)
+        public IActionResult NextCrfPage()
         {
+            int currentCrfId = _session.SelectedCrfId;;
             var visitId = _session.SelectedVisitId;
             if (visitId == 0) return RedirectToAction(nameof(Index));
 
-            var visit = repository.GetById(visitId);
+            var visit = visitRepository.GetById(visitId);
             var crfIds = JsonConvert.DeserializeObject<List<int>>(visit.JsonValue);
             var idx = crfIds.IndexOf(currentCrfId);
             if (idx == -1 || idx + 1 >= crfIds.Count)
                 return RedirectToAction(nameof(Index));
 
-            int nextCrfId = crfIds[idx + 1];
-            return RedirectToAction("Details", "CrfEntries", new { id = nextCrfId });
+            _session.SelectedCrfId = crfIds[idx + 1];
+
+            return RedirectToAction("Create", "CrfEntries", new { crfPageId = _session.SelectedCrfId, PatientId = _session.SelectedPatientId });
+
         }
     }
 }

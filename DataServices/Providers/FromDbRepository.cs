@@ -21,7 +21,9 @@ namespace DataServices.Providers
         public FromDbRepository(EdcDbContext dataContext)
         {
             _dataContext = dataContext;
-            persistentEntities = dataContext.PersistentEntities.ToList();
+            string typeName = typeof(T).Name;
+            persistentEntities = dataContext.PersistentEntities
+                .Where(persistentEntity => persistentEntity.EntityName == typeName).ToList();
             LoadEntitiesToDictionaryFromSource(persistentEntities);
         }
 
@@ -35,14 +37,26 @@ namespace DataServices.Providers
         {
             foreach (var persistentEntity in source)
             {
-                T t = default(T);
-                if (persistentEntity.EntityName == typeof(T).Name)
-                {
-                    t = JsonConvert.DeserializeObject<T>(persistentEntity.JsonValue);
-                    if (t != null)
-                        dictionary.Add(persistentEntity, t);
-                }
+                T t;
+                if (_isEmpty(persistentEntity.JsonValue))
+                    persistentEntity.JsonValue = $"{{ \"Id\": {persistentEntity.Id}, \"Name\": \"{persistentEntity.Name}\" }}";
+                
+                t = JsonConvert.DeserializeObject<T>(persistentEntity.JsonValue);
+                if (t != null)
+                    dictionary.Add(persistentEntity, t);
             }
+        }
+
+        private bool _isEmpty(string jsonValue)
+        {
+            if (string.IsNullOrEmpty(jsonValue))
+                return true;
+            if (jsonValue == "{}")
+                return true;
+            if (jsonValue == "[]")
+                return true;
+             
+            return false;
         }
 
         private PersistentEntity GetDbEntityOrDefault(T entity)

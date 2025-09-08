@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMq;
+using SessionLayer;
 using System;
 
 namespace EDC2Reporting.WebAPI
@@ -54,9 +55,6 @@ namespace EDC2Reporting.WebAPI
             }).AddRazorRuntimeCompilation();
 
             services.AddControllers();
-
-            services.AddHttpContextAccessor();
-
 
             services.AddDbContext<AppIdentityDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
@@ -104,6 +102,7 @@ namespace EDC2Reporting.WebAPI
             services.Configure<RabbitMqOptions>(Configuration.GetSection(RabbitMqOptions.RabbitMqSettings));
 
             services.AddScoped<ICrfPageManager, CrfPageManager>();
+            services.AddScoped<ISessionWrapper, SessionWrapper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
