@@ -1,0 +1,23 @@
+﻿@model EDC2Reporting.WebAPI.Models.RegisterModels.RegisterViewModel
+
+<h2>Register</h2>
+
+<form asp-action="Index" method="post">
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" />
+    </div>
+    <div>
+        <label>First Name</label>
+        <input asp-for="FirstName" />
+    </div>
+    <div>
+        <label>Last Name</label>
+        <input asp-for="LastName" />
+    </div>
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" type="password" />
+    </div>
+    <button type="submit">Register</button>
+</form>

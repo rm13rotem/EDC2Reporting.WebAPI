@@ -1,138 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EDC2Reporting.WebAPI.Models;
-using EDC2Reporting.WebAPI.Models.LoginModels;
+﻿using DataServices.SqlServerRepository.Models;
 using EDC2Reporting.WebAPI.Models.RegisterModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using RabbitMq;
-using SessionLayer;
+using System;
+using System.Threading.Tasks;
+using EDC2Reporting.WebAPI.Models.LoginModels;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
     public class RegisterController : Controller
     {
-        private readonly ISessionWrapper session;
-        private readonly IOptionsSnapshot<RabbitMqOptions> rabbitSettings;
-        private readonly IFanoutPublisher rabbitManger;
-        public RegisterController(ISessionWrapper sessionWrapper, IOptionsSnapshot<RabbitMqOptions> options, IFanoutPublisher fanoutPublisher)
+        private readonly UserManager<Investigator> _userManager;
+        private readonly SignInManager<Investigator> _signInManager;
+
+        public RegisterController(UserManager<Investigator> userManager, SignInManager<Investigator> signInManager)
         {
-            session = sessionWrapper;
-            rabbitSettings = options;
-            rabbitManger = fanoutPublisher;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
-        public IActionResult InviteAdministrator(RegisterViewModel invite)
+
+        // Self-register (Anonymous allowed)
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult Index()
         {
-            // If not administrator - goto home/error
-            if (SessionInvalid() || session.CurrentUser.RoleName != "Administrator")
-                return RedirectToAction("Error", "Home");
+            return View(new RegisterViewModel());
+        }
 
-            // notify by alert email all existing administrators
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
 
-            if (IsModelInvalid(invite))
-                return View(invite);
-
-            // else
-            // 1. Create the UserAndMailHimToConfirm;
-            // TODO - RegisterManager.CreateUser(invite)
-
-            // 2.send mail to CTL
-            if (!IsSuccesfulAlertCurrentUserThatNewUserCreated(invite))
+            var user = new Investigator
             {
-                return View(invite);
-            }
-
-            return RedirectToAction("Index", "Home");
-
-        }
-
-        public IActionResult InviteClinicalTrialLeader(QuickLookIdSetupRegister invite)
-        {
-            if (SessionInvalid())
-            return RedirectToAction("Error", "Home");
-
-            if ((session.CurrentUser.RoleName != "Admin" &&
-                session.CurrentUser.RoleName != "ClinicalTrailLeader"))
-                return RedirectToAction("Error", "Home");
-
-            if (IsModelInvalid(invite))
-                return View(invite);
-
-            // else
-            // 1. Create the UserAndMailHimToConfirm;
-            // TODO - RegisterManager.CreateUser(invite)
-
-            // 2.send mail to CTL
-            if (!IsSuccesfulAlertCurrentUserThatNewUserCreated(invite))
-            {
-                return View(invite);
-            }
-                
-            return RedirectToAction("Index", "Home");
-        }
-
-
-        public IActionResult InviteSiteManager(QuickLookIdSetupRegister invite)
-        {
-            // If not admin or CTL or Site Manager - got to home error
-
-            if (IsModelInvalid(invite))
-                return View(invite);
-
-            // else
-            // 1. Create the UserAndMailHimToConfirm;
-            // TODO - RegisterManager.CreateUser(invite)
-
-            // 2.send mail to CTL
-            if (!IsSuccesfulAlertCurrentUserThatNewUserCreated(invite))
-            {
-                return View(invite);
-            }
-
-            return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult InviteUser(QuickLookIdSetupRegister invite)
-        {
-            if (SessionInvalid())
-                return RedirectToAction("Error", "Home");
-
-            if ((session.CurrentUser.RoleName != "Admin" &&
-                session.CurrentUser.RoleName != "ClinicalTrailLeader" &&
-                session.CurrentUser.RoleName != "SiteManager"
-                ))
-                return RedirectToAction("Error", "Home");
-
-            // Send Mail
-            return View();
-        }
-        
-        private bool IsSuccesfulAlertCurrentUserThatNewUserCreated(QuickLookIdSetupRegister invite)
-        {
-            var newUserMsg = new NewUserCreatedMessage()
-            {
-                DestinationEmail = session.CurrentUser.Email,
-                Invite = invite
+                UserName = model.Email,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                QuickLookId = Guid.NewGuid().ToString("N").Substring(0, 6)
             };
-            var jsonMessage = JsonConvert.SerializeObject(newUserMsg);
-            return rabbitManger.TrySendMessage("MailOutExchange", "MailOutQueue", jsonMessage);
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError("", error.Description);
+
+            return View(model);
         }
 
-        public bool SessionInvalid()
+        // Invite user (only by ClinicalTrialLeader or SiteManager)
+        [HttpPost]
+        [Authorize(Roles = "ClinicalTrialLeader,SiteManager")]
+        public async Task<IActionResult> Invite(string email)
         {
-            return session == null ||
-                session.CurrentUser == null ||
-                session.CurrentUser.ExperimentId == 0;
-        }
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest("Email required.");
 
-        public bool IsModelInvalid(QuickLookIdSetupRegister invite)
-        {
-          return  string.IsNullOrEmpty(invite.Email) ||
-                string.IsNullOrEmpty(invite.FirstName) ||
-                string.IsNullOrEmpty(invite.LastName);
+            var user = new Investigator
+            {
+                UserName = email,
+                Email = email,
+                QuickLookId = Guid.NewGuid().ToString("N").Substring(0, 6)
+            };
+
+            var result = await _userManager.CreateAsync(user);
+            if (result.Succeeded)
+            {
+                // TODO: send email invitation with QuickLookId
+                return Ok(new { Message = "Invitation sent", QuickLookId = user.QuickLookId });
+            }
+
+            return BadRequest(result.Errors);
         }
     }
 }

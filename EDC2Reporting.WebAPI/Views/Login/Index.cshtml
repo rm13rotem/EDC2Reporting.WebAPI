@@ -1,0 +1,28 @@
+﻿@model EDC2Reporting.WebAPI.Models.LoginModels.LoginViewModel
+
+<h2>Login</h2>
+
+<form asp-action="Index" method="post">
+    <div>
+        <label>Email</label>
+        <input asp-for="Email" />
+    </div>
+    <div>
+        <label>Guid ID</label>
+        <input asp-for="GuidId" />
+    </div>
+    <div>
+        <label>Password</label>
+        <input asp-for="Password" type="password" />
+    </div>
+    <hr />
+    <div>
+        <label>QuickLook ID (no password)</label>
+        <input asp-for="QuickLookId" />
+    </div>
+    <button type="submit">Login</button>
+</form>
+@if (ViewBag.ErrorMessage != null)
+{
+    <div style="color:red">@ViewBag.ErrorMessage</div>
+}

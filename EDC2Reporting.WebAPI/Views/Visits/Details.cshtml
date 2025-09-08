@@ -1,0 +1,43 @@
+﻿@model MainStaticMaintainableEntities.VisitAssembly.Visit
+
+<h2>Details - Visit</h2>
+
+<h3>Details of Visit @Model.Name</h3>
+<div>
+    <h4>@Model.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">GuidId</dt>
+        <dd class="col-sm-10">@Model.GuidId</dd>
+
+        <dt class="col-sm-2">CRF IDs</dt>
+        <dd class="col-sm-10">@Model.JsonValue</dd>
+
+        <dt class="col-sm-2">Selected CRF Names</dt>
+        <dd class="col-sm-10">
+            <textarea id="crfNames" class="form-control" readonly></textarea>
+        </dd>
+
+
+
+    </dl>
+</div>
+
+<script>
+    const crfIds = document.getElementById("crfIds");
+    const crfNames = document.getElementById("crfNames");
+
+    function syncNames() {
+        const ids = crfIds.value.split(",").filter(x => x);
+        let names = [];
+        ids.forEach(id => {
+            let opt = crfSelect.querySelector(`option[value='${id}']`);
+            if (opt) names.push(opt.getAttribute("data-name"));
+        });
+        crfNames.value = names.join(", ");
+    }
+
+
+    // init names when page loads
+    syncNames();
+</script>

@@ -1,0 +1,79 @@
+﻿@model MainStaticMaintainableEntities.VisitAssembly.Visit
+@{
+    var crfPages = ViewBag.CrfPages as List<DataServices.SqlServerRepository.Models.CrfModels.CrfPage>;
+    var selectedIds = string.IsNullOrEmpty(Model.JsonValue)
+        ? new List<int>()
+        : Model.JsonValue.Split(",").Select(int.Parse).ToList();
+}
+
+<h2>Edit Visit</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>CRF Pages</label>
+        <select id="crfSelect" class="form-control">
+            <option value="">-- Select CRF --</option>
+            @foreach (var crf in crfPages)
+            {
+                <option value="@crf.Id" data-name="@crf.Name">@crf.Id - @crf.Name</option>
+            }
+        </select>
+        <button type="button" id="addCrf" class="btn btn-secondary">Add</button>
+        <button type="button" id="removeCrf" class="btn btn-danger">Remove</button>
+    </div>
+
+    <div class="form-group">
+        <label>Selected CRF IDs</label>
+        <input asp-for="JsonValue" id="crfIds" class="form-control" readonly value="@Model.JsonValue" />
+    </div>
+
+    <div class="form-group">
+        <label>Selected CRF Names</label>
+        <textarea id="crfNames" class="form-control" readonly></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+    <script>
+        const crfSelect = document.getElementById("crfSelect");
+        const crfIds = document.getElementById("crfIds");
+        const crfNames = document.getElementById("crfNames");
+
+        function syncNames() {
+            const ids = crfIds.value.split(",").filter(x => x);
+            let names = [];
+            ids.forEach(id => {
+                let opt = crfSelect.querySelector(`option[value='${id}']`);
+                if (opt) names.push(opt.getAttribute("data-name"));
+            });
+            crfNames.value = names.join(", ");
+        }
+
+        document.getElementById("addCrf").addEventListener("click", () => {
+            if (crfSelect.value) {
+                crfIds.value = crfIds.value
+                    ? crfIds.value + "," + crfSelect.value
+                    : crfSelect.value;
+                syncNames();
+            }
+        });
+
+        document.getElementById("removeCrf").addEventListener("click", () => {
+            if (!crfSelect.value) return;
+            let ids = crfIds.value.split(",").filter(x => x !== crfSelect.value);
+            crfIds.value = ids.join(",");
+            syncNames();
+        });
+
+        // init names when page loads
+        syncNames();
+    </script>
+

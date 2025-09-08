@@ -1,58 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EDC2Reporting.WebAPI.Models.LoginModels;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SessionLayer;
+using EDC2Reporting.WebAPI.Models;
+using System.Threading.Tasks;
+using DataServices.SqlServerRepository.Models;
+using EDC2Reporting.WebAPI.Models.LoginModels;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
-    [AllowAnonymous]
     public class LoginController : Controller
     {
-        private readonly ISessionWrapper _sessionWrapper;
+        private readonly SignInManager<Investigator> _signInManager;
+        private readonly UserManager<Investigator> _userManager;
 
-        public LoginController(ISessionWrapper sessionWrapper)
+        public LoginController(SignInManager<Investigator> signInManager, UserManager<Investigator> userManager)
         {
-            _sessionWrapper = sessionWrapper;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
-        public IActionResult FirstLogin(FullLogin model)
-        {
-            // hardest - the URL with Id, GuidId, existingRole, DefaultPassword 1234
-            // assigns user the quicklookId
 
-            //if (roleProvider.IsValid(model)) ...
-            // CreateSession....
-            if (model == null)
-                model = new FullLogin()
+        [HttpGet]
+        public IActionResult Index(string returnUrl = null)
+        {
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            Investigator user = null;
+
+            if (!string.IsNullOrEmpty(model.GuidId))
+            {
+                user = await _userManager.FindByIdAsync(model.GuidId);
+                if (user != null)
                 {
-                    ExistingPassword1 = "12345",
-                    ExistingRole = "Investigator",
-                    Id = _sessionWrapper?.CurrentUser?.Id ?? 0
-                };
+                    var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, lockoutOnFailure: false);
+                    if (result.Succeeded)
+                        return RedirectToLocal(model.ReturnUrl);
+                }
+            }
+            else if (!string.IsNullOrEmpty(model.QuickLookId))
+            {
+                user = await _userManager.FindByNameAsync(model.QuickLookId);
+                if (user != null)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: true);
+                    return RedirectToLocal(model.ReturnUrl);
+                }
+            }
+
+            ModelState.AddModelError("", "Invalid login attempt.");
             return View(model);
         }
 
-        public IActionResult Login(LoginViewModel loginViewModel) 
+        [HttpPost]
+        public async Task<IActionResult> Logout()
         {
-            // usual - quicklookId, username, and password
-            // validates details - BirthDate, DoctorNumber, etc.
-            // generates quickpassword
-
-            //if (roleProvider.IsValid(model)) ...
-            //   CreateSession...
-            return View();
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult QuickLogin(QuickLoginViewModel model)
+        private IActionResult RedirectToLocal(string returnUrl)
         {
-            // just the quicklookId, the yearOfBirth and a quickpassword
-
-            //if (roleProvider.IsValid(model))
-            //    Continue Session until a maximum of 3 days.
-            return View(model);
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+            else
+                return RedirectToAction("Index", "Home");
         }
     }
 }

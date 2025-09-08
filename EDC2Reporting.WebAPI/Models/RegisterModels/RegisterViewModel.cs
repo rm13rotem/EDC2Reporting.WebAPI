@@ -17,7 +17,7 @@ namespace EDC2Reporting.WebAPI.Models.RegisterModels
         public bool IsDeleted { get; set; }
         public string JsonValue { get; set; }
         public string Name { get; set; }
-        public Site Site { get; set; }
         public int SiteId { get; set; }
+        
     }
 }
