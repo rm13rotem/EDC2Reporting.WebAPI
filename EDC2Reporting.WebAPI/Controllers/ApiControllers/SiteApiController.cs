@@ -1,9 +1,8 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
 using DataServices.SqlServerRepository;
-using MainStaticMaintainableEntities.SiteAssembly;
+using DataServices.SqlServerRepository.Models.Site;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;

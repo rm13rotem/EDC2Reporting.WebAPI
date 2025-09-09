@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Linq;
 
-namespace MainStaticMaintainableEntities.SiteAssembly
+namespace DataServices.SqlServerRepository.Models.Site
 {
     public class City : IPersistentEntity
     {

@@ -1,9 +1,5 @@
 ﻿using DataServices.Interfaces;
-using MainStaticMaintainableEntities.SiteAssembly;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using DataServices.SqlServerRepository.Models.Site;
 
 namespace EDC2Reporting.WebAPI.Models.SiteModels
 {

@@ -1,5 +1,4 @@
-﻿using DataServices.SqlServerRepository.Models;
-using MainStaticMaintainableEntities.SiteAssembly;
+﻿using DataServices.SqlServerRepository.Models.Site;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Utilities.Tests

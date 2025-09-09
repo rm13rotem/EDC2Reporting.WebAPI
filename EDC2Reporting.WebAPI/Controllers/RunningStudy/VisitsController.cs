@@ -1,12 +1,8 @@
-﻿using DataServices.Interfaces;
-using DataServices.Providers;
-using DataServices.SqlServerRepository;
-using DataServices.SqlServerRepository.Models.CrfModels;
-using MainStaticMaintainableEntities.VisitAssembly;
+﻿using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models.VisitAssembley;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using SessionLayer;
 using System;
@@ -21,19 +17,13 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
 
         private readonly ISessionWrapper _session;
         private readonly ILogger<VisitsController> _logger;
-        private IRepository<Visit> visitRepository;
-        private readonly RepositoryOptions repoOptions;
         private readonly EdcDbContext _context;
 
         public VisitsController(ILogger<VisitsController> logger
             , EdcDbContext context
-            , IOptionsSnapshot<RepositoryOptions> options
             , ISessionWrapper session)
         {
             _logger = logger;
-            repoOptions = options.Value;
-            RepositoryLocator<Visit> repositoryLocator = RepositoryLocator<Visit>.Instance;
-            visitRepository = repositoryLocator.GetRepository(repoOptions.RepositoryType);
             _session = session;
             _context = context;
         }
@@ -41,16 +31,16 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         // GET: Visits
         public IActionResult Index()
         {
-            var visits = visitRepository.GetAll();
+            var visits = _context.Visits.ToList();
             return View(visits);
         }
 
         // GET: Visits/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> DetailsAsync(int? id)
         {
             if (id == null) return NotFound();
 
-            var visit = visitRepository.GetById((int)id);
+            var visit = await _context.Visits.FindAsync(id);
             if (visit == null) return NotFound();
 
             return View(visit);
@@ -83,7 +73,7 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         // GET: Visits/Edit/5
         public IActionResult Edit(int id)
         {
-            var visit = visitRepository.GetById(id);
+            var visit = _context.Visits.Find(id);
             if (visit == null) return NotFound();
 
             ViewBag.CrfPages = _context.CrfPages.ToList();
@@ -103,14 +93,21 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
                 {
                     if (string.IsNullOrWhiteSpace(visit.GuidId))
                         visit.GuidId = Guid.NewGuid().ToString();
-                    visitRepository.Update(visit);
+                    _context.Update(visit);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!visitRepository.GetAll().Any(e => e.Id == visit.Id))
+                    if (!_context.Visits.Any(e => e.Id == visit.Id))
                         return NotFound();
                     else throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Edit (POST) failed in Visits Controller.");
+
+                    ViewBag.CrfPages = _context.CrfPages.ToList();
+                    return View(visit);
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -119,11 +116,11 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         }
 
         // GET: Visits/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> DeleteAsync(int? id)
         {
             if (id == null) return NotFound();
 
-            var visit = visitRepository.GetById((int)id);
+            var visit = await _context.Visits.FindAsync(id);
             if (visit == null) return NotFound();
 
             return View(visit);
@@ -132,28 +129,29 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         // POST: Visits/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmedAsync(int id)
         {
-            var visit = visitRepository.GetById(id);
+            var visit = await _context.Visits.FindAsync(id);
             visit.IsDeleted = true;
-            visitRepository.Update(visit);
+            _context.Visits.Update(visit);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Undelete(int id)
+        public async Task<IActionResult> UndeleteAsync(int id)
         {
-            var visit = visitRepository.GetById(id);
+            var visit = await _context.Visits.FindAsync(id);
             visit.IsDeleted = false;
-            visitRepository.Update(visit);
+            _context.Visits.Update(visit);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         // ----------------- EXTRA ACTIONS -----------------
 
         // Select Visit and redirect to first CRF
-        public IActionResult SelectVisit(int id)
+        public async Task<IActionResult> SelectVisit(int id)
         {
-            var visit = visitRepository.GetById(id);
+            var visit = await  _context.Visits.FindAsync(id);
             if (visit == null) return NotFound();
 
             // Store in session
@@ -173,13 +171,13 @@ namespace EDC2Reporting.WebAPI.Controllers.RunningStudy
         }
 
         // Move to next CRF page in current Visit
-        public IActionResult NextCrfPage()
+        public async Task<IActionResult> NextCrfPageAsync()
         {
             int currentCrfId = _session.SelectedCrfId;;
             var visitId = _session.SelectedVisitId;
             if (visitId == 0) return RedirectToAction(nameof(Index));
 
-            var visit = visitRepository.GetById(visitId);
+            var visit = await _context.Visits.FindAsync(visitId);
             var crfIds = JsonConvert.DeserializeObject<List<int>>(visit.JsonValue);
             var idx = crfIds.IndexOf(currentCrfId);
             if (idx == -1 || idx + 1 >= crfIds.Count)

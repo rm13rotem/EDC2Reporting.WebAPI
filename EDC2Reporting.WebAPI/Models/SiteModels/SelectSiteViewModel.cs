@@ -1,9 +1,5 @@
-﻿using MainStaticMaintainableEntities.SiteAssembly;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Models.SiteModels
 {

@@ -1,10 +1,8 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
-using DataServices.SqlServerRepository.Models;
 using Newtonsoft.Json;
-using System.Linq;
 
-namespace MainStaticMaintainableEntities.SiteAssembly
+namespace DataServices.SqlServerRepository.Models.Site
 {
     public class Site : IPersistentEntity
     {

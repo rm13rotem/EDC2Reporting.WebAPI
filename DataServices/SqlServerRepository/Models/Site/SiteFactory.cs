@@ -1,12 +1,7 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
-using DataServices.SqlServerRepository.Models;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace MainStaticMaintainableEntities.SiteAssembly
+namespace DataServices.SqlServerRepository.Models.Site
 {
     public class SiteFactory : ISiteFactory
     {

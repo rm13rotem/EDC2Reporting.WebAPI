@@ -1,7 +1,7 @@
 ﻿using DataServices.SqlServerRepository.Models.CrfModels;
 using System.Collections.Generic;
 
-namespace MainStaticMaintainableEntities.VisitAssembly
+namespace DataServices.SqlServerRepository.Models.VisitAssembley
 {
     public interface IVisit
     {

@@ -1,8 +1,8 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
 using DataServices.SqlServerRepository.Models;
+using DataServices.SqlServerRepository.Models.Site;
 using EDC2Reporting.WebAPI.Models.SiteModels;
-using MainStaticMaintainableEntities.SiteAssembly;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;

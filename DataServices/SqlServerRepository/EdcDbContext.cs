@@ -1,10 +1,11 @@
 ﻿using DataServices.SqlServerRepository.Models;
 using DataServices.SqlServerRepository.Models.CrfModels;
+using DataServices.SqlServerRepository.Models.VisitAssembley;
+using DataServices.SqlServerRepository.Models.VisitGroup;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,7 +51,11 @@ namespace DataServices.SqlServerRepository
         public DbSet<AuditLog> AuditLogs { get; set; }
 
         public virtual DbSet<Experiment> Experiments { get; set; }
-        public virtual DbSet<ModuleInfo> ModuleInfos { get; set; }
+        public virtual DbSet<Visit> Visits { get; set; }
+        public virtual DbSet<VisitGroup> VisitGroups { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+
+        //public virtual DbSet<Study> Studies { get; set; }
         public virtual DbSet<PersistentEntity> PersistentEntities { get; set; }
         public string ConnectionString { get; private set; }
 

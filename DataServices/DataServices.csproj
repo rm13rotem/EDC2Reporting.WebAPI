@@ -22,4 +22,8 @@
     <ProjectReference Include="..\Utilities\Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Patient\" />
+  </ItemGroup>
+
 </Project>

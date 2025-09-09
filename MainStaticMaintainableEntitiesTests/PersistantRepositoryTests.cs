@@ -1,9 +1,7 @@
-﻿using DataServices.Interfaces;
-using DataServices.Providers;
+﻿using DataServices.Providers;
 using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
-using DataServices.SqlServerRepository.Models.CrfModels;
-using MainStaticMaintainableEntities.SiteAssembly;
+using DataServices.SqlServerRepository.Models.Site;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using System;

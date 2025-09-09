@@ -1,17 +1,12 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
-using DataServices.SqlServerRepository;
-using DataServices.SqlServerRepository.Models;
 using DataServices.SqlServerRepository.Models.CrfModels;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace MainStaticMaintainableEntities.VisitAssembly
+namespace DataServices.SqlServerRepository.Models.VisitAssembley
 {
     public class Visit : IPersistentEntity, IVisit
     {
@@ -25,21 +20,13 @@ namespace MainStaticMaintainableEntities.VisitAssembly
         public bool IsDeleted { get; set; }
         public string JsonValue { get; set; }
         public string Name { get; set; }
-        public DbAccessOptions DbAccessOptions { get; private set; }
-
+        
         public Visit()
         {
-            if (DbAccessOptions == null)
-                DbAccessOptions = new();
-            DbAccessOptions.DbNRetrys = 3;
-            DbAccessOptions.DbWaitTimeInSeconds = 20;
-            DbAccessOptions.DbAccessSettings = "DbAccessSettings";
+           
 
         }
-        public Visit(IOptionsSnapshot<DbAccessOptions> snapshotOptions)
-        {
-            DbAccessOptions = snapshotOptions.Value;
-        }
+        
         public Visit(PersistentEntity details, List<int> crfPageIds = null)
         {
             Id = details.Id;

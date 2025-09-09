@@ -1,8 +1,8 @@
-﻿using MainStaticMaintainableEntities.VisitAssembly;
+﻿using DataServices.SqlServerRepository.Models.VisitAssembley;
+using DataServices.SqlServerRepository.Models.VisitGroup;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MainStaticMaintainableEntities.VisitGroupAssembley;
 
-namespace MainStaticMaintainableEntities.VisitGroupAssembley1.Tests
+namespace DataServices.VisitGroupAssembley1.Tests
 {
     [TestClass()]
     public class VisitGroupTests

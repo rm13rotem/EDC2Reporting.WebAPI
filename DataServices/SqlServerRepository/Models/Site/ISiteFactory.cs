@@ -1,6 +1,6 @@
 ﻿using DataServices.SqlServerRepository.Models;
 
-namespace MainStaticMaintainableEntities.SiteAssembly
+namespace DataServices.SqlServerRepository.Models.Site
 {
     public interface ISiteFactory
     {

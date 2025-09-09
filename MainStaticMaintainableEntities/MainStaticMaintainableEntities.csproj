@@ -19,7 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Module\" />
+    <Folder Include="Interfaces\" />
+    <Folder Include="VisitGroup\" />
+    <Folder Include="Visit\" />
   </ItemGroup>
 
 </Project>

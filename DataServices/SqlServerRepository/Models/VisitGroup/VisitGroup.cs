@@ -1,15 +1,11 @@
 ﻿using DataServices.Interfaces;
 using DataServices.Providers;
-using DataServices.SqlServerRepository;
-using DataServices.SqlServerRepository.Models;
-using MainStaticMaintainableEntities.Interfaces;
-using MainStaticMaintainableEntities.VisitAssembly;
+using DataServices.SqlServerRepository.Models.VisitAssembley;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.Linq;
 using Utilities;
 
-namespace MainStaticMaintainableEntities.VisitGroupAssembley
+namespace DataServices.SqlServerRepository.Models.VisitGroup
 {
     public class VisitGroup : IPersistentEntity, ILoadableByVisityGroupIds
     {
@@ -22,28 +18,19 @@ namespace MainStaticMaintainableEntities.VisitGroupAssembley
         public string JsonValue { get; set; }
         public string Name { get; set; }
 
-        private readonly RepositoryOptions repositoryOption;
-
-        private readonly EdcDbContext dbContext;
-
+        
         public VisitGroup()
         {
             VisitGroups = new List<VisitGroup>();
             Visits = new List<Visit>();
         }
-
-        public VisitGroup(IOptionsSnapshot<RepositoryOptions> options, EdcDbContext _dbContext)
-        {
-            repositoryOption = options.Value;
-            dbContext = _dbContext;
-        }
-          
+         
         public void LoadFromDbByIds(List<int> VisitIds, List<int> VisitGroupIds)
         {
             if (VisitIds != null && VisitIds.Count > 0)
             {
                 RepositoryLocator<Visit> repositoryLocator = RepositoryLocator<Visit>.Instance;
-                var repository = repositoryLocator.GetRepository(repositoryOption.RepositoryType);
+                var repository = repositoryLocator.GetRepository(RepositoryType.FromDbRepository);
                 foreach (var visitId in VisitIds)
                 {
                     var visit = repository.GetById(visitId);
@@ -55,7 +42,7 @@ namespace MainStaticMaintainableEntities.VisitGroupAssembley
             {
 
                 RepositoryLocator<VisitGroup> repositoryLocator = RepositoryLocator<VisitGroup>.Instance;
-                var repository = repositoryLocator.GetRepository(repositoryOption.RepositoryType);
+                var repository = repositoryLocator.GetRepository(RepositoryType.FromDbRepository);
                 foreach (var _visitGroupId in VisitGroupIds)
                 {
                     var visitGroup = repository.GetById(_visitGroupId);

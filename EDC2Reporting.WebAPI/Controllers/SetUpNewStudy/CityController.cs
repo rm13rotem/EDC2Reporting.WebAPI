@@ -1,16 +1,15 @@
 ﻿using DataServices.Interfaces;
+using DataServices.Providers;
+using DataServices.SqlServerRepository.Models;
+using DataServices.SqlServerRepository.Models.Site;
+using EDC2Reporting.WebAPI.Models.SiteModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using MainStaticMaintainableEntities.SiteAssembly;
-using Microsoft.Extensions.Logging;
-using DataServices.Providers;
-using Microsoft.Extensions.Options;
-using EDC2Reporting.WebAPI.Models.SiteModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using DataServices.SqlServerRepository.Models;
 
 namespace EDC2Reporting.WebAPI.Controllers.SetUpNewStudy
 {

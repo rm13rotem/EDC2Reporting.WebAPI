@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MainStaticMaintainableEntities.Interfaces
+namespace DataServices.SqlServerRepository.Models.VisitAssembley
 {
     interface ILoadableByVisityGroupIds
     {
