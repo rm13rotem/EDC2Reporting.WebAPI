@@ -1,0 +1,24 @@
+﻿@model DataServices.SqlServerRepository.Models.VisitGroup.VisitGroup
+
+@{
+    ViewData["Title"] = "Visit Group Details";
+}
+
+<h2>Visit Group Details</h2>
+
+<div class="mb-3">
+    <h4>@Model.Name</h4>
+    <hr />
+
+    <div class="form-group">
+        <label>Visits in this Group</label>
+        <textarea class="form-control" readonly rows="4">
+@string.Join(", ", Model.Visits?.Select(v => v.Name) ?? Enumerable.Empty<string>())
+        </textarea>
+    </div>
+</div>
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a> |
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</p>

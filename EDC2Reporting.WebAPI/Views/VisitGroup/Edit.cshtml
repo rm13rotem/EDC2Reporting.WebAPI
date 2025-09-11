@@ -1,0 +1,41 @@
+﻿@model DataServices.SqlServerRepository.Models.VisitGroup.VisitGroup
+
+@{
+    ViewData["Title"] = "Edit Visit Group";
+}
+
+<h2>Edit Visit Group</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Select Visits</label>
+        <select asp-items="ViewBag.Visits" name="selectedVisits" class="form-control" multiple="multiple"></select>
+    </div>
+
+    <div class="form-group mt-3">
+        <label>Selected Visit Names</label>
+        <textarea id="visitNames" class="form-control" readonly rows="4">
+@string.Join(", ", Model.Visits?.Select(v => v.Name) ?? Enumerable.Empty<string>())
+        </textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button> |
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+
+<script>
+    // Update textarea dynamically when visits are selected/unselected
+    document.querySelector('select[name="selectedVisits"]').addEventListener('change', function () {
+        let selectedOptions = Array.from(this.selectedOptions).map(o => o.text);
+        document.getElementById('visitNames').value = selectedOptions.join(", ");
+    });
+</script>

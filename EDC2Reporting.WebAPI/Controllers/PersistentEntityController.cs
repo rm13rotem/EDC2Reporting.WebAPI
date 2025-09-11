@@ -1,5 +1,7 @@
 ﻿using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
+using DataServices.SqlServerRepository.Models.CrfModels;
+using DataServices.SqlServerRepository.Models.VisitAssembley;
 using EDC2Reporting.WebAPI.Models.SiteModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +27,9 @@ namespace EDC2Reporting.WebAPI.Controllers
         // GET: PersistentEntityController
         public async Task<IActionResult> Index()
         {
-            var list = await db.PersistentEntities.ToListAsync();
+            List<PersistentEntity> list = await db.PersistentEntities.
+                Where(x => x.EntityName == "Visit").ToListAsync();
+
             return View(list);
         }
 
@@ -100,7 +104,7 @@ namespace EDC2Reporting.WebAPI.Controllers
                     persistentEntity.GuidId = Guid.NewGuid().ToString();
                     persistentEntity.CreateDate = DateTime.UtcNow;
                     persistentEntity.IsDeleted = false;
-                                
+
                     db.Add(persistentEntity);
                     await db.SaveChangesAsync();
                 }
@@ -108,6 +112,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             }
             return View(persistentEntity);
         }
+
 
 
         // GET: PersistentEntity/Create
@@ -199,6 +204,40 @@ namespace EDC2Reporting.WebAPI.Controllers
             }
 
             return View(persistentEntity);
+        }
+
+        // GET: PersistentEntity/ToVisit
+        public async Task<IActionResult> ToVisitAsync(int id)
+        {
+            var persistentEntity = await db.PersistentEntities
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (persistentEntity == null)
+            {
+                return NotFound();
+            }
+
+            if (persistentEntity.EntityName != "visit")
+                return RedirectToAction(nameof(Index));
+
+            var exists = db.Visits.FirstOrDefault(x => x.Name == persistentEntity.Name);
+            if (exists != null)
+            {
+                db.PersistentEntities.Remove(persistentEntity);
+                await db.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            //else 
+            var visit = new Visit() { CrfPages = new List<CrfPage>(), Name = persistentEntity.Name };
+
+            db.Visits.Add(visit);
+            db.PersistentEntities.Remove(persistentEntity);
+            await db.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
         }
 
         // POST: PersistentEntity/Delete/5
