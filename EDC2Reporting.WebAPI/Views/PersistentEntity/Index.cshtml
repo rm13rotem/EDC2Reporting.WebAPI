@@ -1,62 +1,90 @@
-﻿@using DataServices.SqlServerRepository.Models
-@model IEnumerable<PersistentEntity>
+﻿@using EDC2Reporting.WebAPI.Models.ViewModels;
+@model PersistentEntityIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> entityNames = ViewBag.EntityNames as List<string> ?? new List<string>();
 }
 
 <h1>Index</h1>
 
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="form-group">
+        <label for="EntityName">Entity Name</label>
+        <select class="form-control" id="EntityName" name="EntityName">
+            <option value="">-- All --</option>
+            @foreach (var name in @entityNames)
+            {
+                @if (name == Model.Filter.EntityName)
+                {
+                    <option value="@name" selected="selected">
+                        @name
+                    </option>
+                }
+                else
+                {
+                    <option value="@name">
+                        @name
+                    </option>
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input"
+               id="IsDeletedDisplayed" name="IsDeletedDisplayed"
+               value="true" @(Model.Filter.IsDeletedDisplayed ? "checked" : "") />
+        <label class="form-check-label" for="IsDeletedDisplayed">
+            Show Deleted
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label for="CreatedFrom">Created From</label>
+        <input type="date" class="form-control" id="CreatedFrom"
+               name="CreatedFrom"
+               value="@(Model.Filter.CreatedFrom == DateTime.MinValue ? "" : Model.Filter.CreatedFrom.ToString("yyyy-MM-dd"))" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<hr />
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GuidId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EntityName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.JsonValue)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
+            <th>Id</th>
+            <th>Entity Name</th>
+            <th>Name</th>
+            <th>Create Date</th>
+            <th>Value</th>
+            <th>Is Deleted</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Results)
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.GuidId)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.EntityName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CreateDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+               
                 <td>
                     @Html.DisplayFor(modelItem => item.JsonValue)
                 </td>
@@ -67,7 +95,7 @@
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                    
+
                 </td>
             </tr>
         }

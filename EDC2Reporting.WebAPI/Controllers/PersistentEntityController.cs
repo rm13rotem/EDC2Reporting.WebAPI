@@ -3,7 +3,9 @@ using DataServices.SqlServerRepository.Models;
 using DataServices.SqlServerRepository.Models.CrfModels;
 using DataServices.SqlServerRepository.Models.VisitAssembley;
 using Edc2Reporting.AuthenticationStartup.Areas.PersistentEntities.Models;
+using EDC2Reporting.WebAPI.Models;
 using EDC2Reporting.WebAPI.Models.SiteModels;
+using EDC2Reporting.WebAPI.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +28,36 @@ namespace EDC2Reporting.WebAPI.Controllers
 
 
         // GET: PersistentEntityController
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(PersistentEntityFilter filter)
         {
-            List<PersistentEntity> list = await db.PersistentEntities.ToListAsync();
+            var query = db.PersistentEntities.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(filter.EntityName))
+            {
+                query = query.Where(x => x.EntityName.ToLower() == filter.EntityName.ToLower());
+            }
+            if (filter.IsDeletedDisplayed == false)
+            {
+                query = query.Where(x => x.IsDeleted == false);
+            }
+            if (filter.CreatedFrom > DateTime.Now.AddYears(-50))
+            {
+                query = query.Where(x => x.CreateDate > filter.CreatedFrom);
+            }
+            List<PersistentEntity> list = await query.ToListAsync();
 
-            return View(list);
+            ViewBag.EntityNames = await db.PersistentEntities
+                                 .Select(e => e.EntityName)
+                                 .Distinct()
+                                 .OrderBy(n => n)
+                                 .ToListAsync();
+
+            var vm = new PersistentEntityIndexViewModel
+            {
+                Filter = filter,
+                Results = list
+            };
+
+            return View(vm);
         }
 
 
