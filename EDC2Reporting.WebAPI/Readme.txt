@@ -35,3 +35,6 @@ h. by default - Visit is selected as *LastExistingVisitIndex* + 1
 i. Expose existing CRF pages (Modules) for anonymous use (the whole point of the Site)
 j. Publicise Medical History Term and Labs and Adverse Events Terms as a service (For registered users) build 
    them controllers that expose (with caching) the GET ALL functionality. Base it on Wikipedia (Seperate DLL).
+
+v1.0.0.18 - 2024-06-10
+Added a new entity to DB EmailModel for sending emails. Added a new controller EmailController to manage email templates.

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DataServices.SqlServerRepository.Models.EmailModel>
+
+<h2>Emails</h2>
+
+<form method="get" asp-action="Index">
+    <input type="text" name="toFilter" placeholder="Filter by recipient..." />
+    <select name="isSent">
+        <option value="">All</option>
+        <option value="true">Sent</option>
+        <option value="false">Pending</option>
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>To</th>
+            <th>Subject</th>
+            <th>BCC</th>
+            <th>Attachments</th>
+            <th>IsSent</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var email in Model)
+        {
+            <tr>
+                <td>@email.To</td>
+                <td>@email.Subject</td>
+                <td>@email.BCC</td>
+                <td>@email.Attachment</td>
+                <td>@email.IsSent</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-primary">Create Email</a>
+<a asp-action="SendMatan" class="btn btn-primary">Send To Matan</a>
+<a asp-action="SendAll" class="btn btn-success">Send Pending Emails</a>

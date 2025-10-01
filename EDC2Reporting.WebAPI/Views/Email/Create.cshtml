@@ -1,0 +1,32 @@
+﻿@model DataServices.SqlServerRepository.Models.EmailModel
+
+<h2>Login</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>To</label>
+        <input asp-for="To" />
+    </div>
+    <div>
+        <label>Subject</label>
+        <input asp-for="Subject" />
+    </div>
+    <div>
+        <label>Body</label>
+        <input asp-for="Body"/>
+    </div>
+    <hr />
+    <div>
+        <label>BCC</label>
+        <input asp-for="BCC" />
+    </div>
+    <div>
+        <label>Attachment</label>
+        <input asp-for="Attachment" />
+    </div>
+    <button type="submit">Send Email</button>
+</form>
+@if (ViewBag.ErrorMessage != null)
+{
+    <div style="color:red">@ViewBag.ErrorMessage</div>
+}

@@ -103,6 +103,8 @@ namespace EDC2Reporting.WebAPI
 
             services.AddScoped<ICrfPageManager, CrfPageManager>();
             services.AddScoped<ISessionWrapper, SessionWrapper>();
+
+            services.AddScoped<IMailClientSender, MailClientSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

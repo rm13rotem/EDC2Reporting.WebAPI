@@ -1,98 +1,168 @@
-﻿using DataServices.Interfaces;
-using DataServices.Providers;
+﻿using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace MailClientLayer
 {
     public class MailClientSender : IMailClientSender
     {
         private readonly MailClientOptions mailOptions;
-        private readonly IRepository<LoggedMailMessage> repository;
+        private readonly SmtpClient client;
+        private readonly EdcDbContext _context;
+        private readonly ILogger<MailClientSender> _logger;
+        private static bool _isSending;
 
-        public MailClientSender(
+        public MailClientSender(EdcDbContext context,
             IOptionsSnapshot<MailClientOptions> mailClientOptionsSnapshot,
-            IOptionsSnapshot<RepositoryOptions> options)
+            ILogger<MailClientSender> logger)
         {
+            // 1. Get options
             mailOptions = mailClientOptionsSnapshot.Value;
-            var dbOptions = options.Value;
-            var repoType = RepositoryType.FromDbRepository; ;
-            if (dbOptions?.RepositoryType != null)
-                repoType = dbOptions.RepositoryType;
 
-            RepositoryLocator<LoggedMailMessage> dbRepositoryLocator = RepositoryLocator<LoggedMailMessage>.Instance;
-            repository = dbRepositoryLocator.GetRepository(repoType, true);
+            // 2. Setup SMTP client. using mailOptions
+            client = SmtpFactory.GetSmtp(mailOptions);
+
+            // 3. DbContext
+            _context = context;
+
+            // 4. Logger
+            _logger = logger;
         }
 
-        public bool TryInsertIntoQueue(LoggedMailMessage message)
+        public bool TryInsertIntoQueue(EmailModel email)
         {
             try
             {
-                int EmailMessageId = LogToDb(message);
-                if (EmailMessageId <= 0)
-                    return false;
-                // else 
-                TrySendEmail(EmailMessageId);
+                _context.Emails.Add(email);
+                _context.SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Failed to insert email into queue");
                 return false;
             }
         }
 
-        private async Task<bool> TrySendAllUnsentEmailsAsync()
-        {
-            bool result = true;
-            var toBeSent = repository.GetAll().Where(x => x.IsDeleted = false);
-            foreach (var msg in toBeSent.AsParallel())
-            {
-                bool success = await TrySendEmailAsync(msg);
-                if (!success)
-                    result = false;
-            }
-            return result;
-        }
 
-        private async Task<bool> TrySendEmailAsync(LoggedMailMessage msg)
+
+
+        private bool SendEmail(EmailModel emailModel)
         {
+            var mail = new MailMessage
+            {
+                From = new MailAddress("rm13rotem@gmail.com", "רותם מירון 972528829604"),
+                Subject = emailModel.Subject,
+                Body = emailModel.Body,
+                IsBodyHtml = emailModel.IsBodyHtml
+            };
+
+            if (!string.IsNullOrWhiteSpace(emailModel.To))
+            {
+                AddToCollection(emailModel.To, mail.To);
+            }
+            if (!string.IsNullOrWhiteSpace(emailModel.CC))
+            {
+                AddToCollection(emailModel.CC, mail.CC);
+            }
+            if (!string.IsNullOrWhiteSpace(emailModel.BCC))
+            {
+                AddToCollection(emailModel.BCC, mail.Bcc);
+            }
+
+            if (!string.IsNullOrWhiteSpace(emailModel?.Attachment))
+            {
+                foreach (var attachmentStr in emailModel.Attachment.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    string filePath = @"C:\Users\rm13r\Downloads\";
+                    var allFiles = Directory.GetFiles(filePath);
+                    
+                    filePath = allFiles.FirstOrDefault(x=>x.Contains(attachmentStr));
+                    if (filePath != null && File.Exists(filePath))
+                    {
+                        Attachment attachment = new Attachment(filePath);
+                        mail.Attachments.Add(attachment);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Attachment not found: {filePath}");
+                    }
+                }
+            }
+            // 4. Send
             try
             {
-                var smtp = SmtpFactory.GetSmtp(mailOptions);
-                MailMessage mailMessage = MailMessageFactory.GetMailMessage(msg, mailOptions);
-                smtp.Send(mailMessage);
-
-                msg.IsDeleted = true;
-                await Task.Run(() => repository.Update(msg));
+                client.Send(mail);
+                Console.WriteLine($"Email sent to {emailModel.To}");
+                emailModel.IsSent = true;
+                _context.Emails.Update(emailModel);
+                _context.SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                msg.IsDeleted = false;
-                await Task.Run(() => repository.Update(msg));
+                Console.WriteLine($"Failed to send to {emailModel.To}: {ex.Message}");
+                emailModel.IsSent = false;
+                _context.Emails.Update(emailModel);
+                _context.SaveChanges();
                 return false;
             }
         }
 
-        private bool TrySendEmail(int emailMessageId)
+        private void AddToCollection(string adresses, MailAddressCollection mailProperty)
         {
-            var message = repository.GetById(emailMessageId);
-            return TrySendEmailAsync(message).Result;
+            var toAddresses = adresses.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var toAddress in toAddresses)
+            {
+                var toAddress1 = toAddress.Replace(" ", "");
+                mailProperty.Add(toAddress1);
+            }
         }
 
-        private int LogToDb(LoggedMailMessage message)
+        public bool SendAllPendingEmails()
         {
+            if (_isSending)
+            {
+                _logger.LogWarning("SendAllPendingEmails is already running.");
+                return true;
+            }
+            _isSending = true;
             try
             {
-                repository.UpsertActivation(message);
-                return message.Id;
+                var pending = _context.Emails.Where(e => !e.IsSent).ToList();
+                bool allOk = true;
+
+                foreach (var email in pending)
+                {
+                    try
+                    {
+                        bool isSuccess = SendEmail(email);
+                        if (!isSuccess)
+                        {
+                            allOk = false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex, $"Failed to send email to {email.To}");
+                        allOk = false;
+                    }
+                }
+                return allOk;
             }
-            catch (Exception)
+            catch (Exception ex1)
             {
-                return 0;
+                _logger.LogError(ex1, $"Failed to send emails. Loop threw unhandled exception");
+                return false;
+            }
+            finally
+            {
+                _isSending = false;
             }
         }
     }

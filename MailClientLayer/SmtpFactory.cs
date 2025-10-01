@@ -16,7 +16,8 @@ namespace MailClientLayer
                 EnableSsl = true,
                 DeliveryMethod = SmtpDeliveryMethod.Network,
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential(mailOptions.UserName, mailOptions.Password)
+                Credentials = new NetworkCredential(mailOptions.UserName, mailOptions.Password),
+                Timeout = 20000
             };
             return smtp;
             

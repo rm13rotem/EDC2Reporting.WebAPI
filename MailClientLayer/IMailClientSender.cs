@@ -1,7 +1,10 @@
-﻿namespace MailClientLayer
+﻿using DataServices.SqlServerRepository.Models;
+
+namespace MailClientLayer
 {
     public interface IMailClientSender
     {
-        bool TryInsertIntoQueue(LoggedMailMessage message);
+        bool TryInsertIntoQueue(EmailModel email);
+        bool SendAllPendingEmails();
     }
 }

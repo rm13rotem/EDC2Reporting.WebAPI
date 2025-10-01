@@ -55,6 +55,8 @@ namespace DataServices.SqlServerRepository
         public virtual DbSet<VisitGroup> VisitGroups { get; set; }
         public virtual DbSet<Patient> Patients { get; set; }
 
+        public virtual DbSet<EmailModel> Emails { get; set; }
+
         //public virtual DbSet<Study> Studies { get; set; }
         public virtual DbSet<PersistentEntity> PersistentEntities { get; set; }
         public string ConnectionString { get; private set; }
