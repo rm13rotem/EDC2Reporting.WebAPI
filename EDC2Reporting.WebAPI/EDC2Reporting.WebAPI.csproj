@@ -3,7 +3,11 @@
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
-
+  
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);NETSDK1187</NoWarn>
+  </PropertyGroup>
+  
   <ItemGroup>
     <!-- Drop ASP.NET Core framework packages (they’re built-in now) -->
 

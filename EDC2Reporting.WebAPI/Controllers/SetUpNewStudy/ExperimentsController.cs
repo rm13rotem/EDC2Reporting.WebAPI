@@ -108,10 +108,7 @@ namespace EDC2Reporting.WebAPI.Controllers
                 return NotFound();
             }
 
-            HtmlSanitizer sanitizer = new HtmlSanitizer();
-            experiment.HelsinkiApprovalNumber = sanitizer.Sanitize(experiment.HelsinkiApprovalNumber);
-            experiment.Name = sanitizer.Sanitize(experiment.Name);
-            return View(experiment);
+             return View(experiment);
         }
 
         // POST: Experiments/Edit/5
