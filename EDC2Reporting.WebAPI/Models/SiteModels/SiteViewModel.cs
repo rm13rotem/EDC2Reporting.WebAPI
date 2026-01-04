@@ -1,8 +1,10 @@
 ﻿using DataServices.Interfaces;
 using DataServices.SqlServerRepository.Models.Site;
+using DataServices.Common.Attributes;
 
 namespace EDC2Reporting.WebAPI.Models.SiteModels
 {
+    [SanitizeInput]
     public class SiteViewModel
     {
         public SiteViewModel(Site x)

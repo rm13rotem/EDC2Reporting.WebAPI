@@ -1,4 +1,5 @@
-﻿using DataServices.Interfaces;
+﻿using DataServices.Common.Attributes;
+using DataServices.Interfaces;
 using DataServices.Providers;
 using DataServices.SqlServerRepository.Models.CrfModels;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,8 @@ using System.Linq;
 
 namespace DataServices.SqlServerRepository.Models.VisitAssembley
 {
+
+    [SanitizeInput]
     public class Visit : IPersistentEntity, IVisit
     {
         [JsonIgnore]

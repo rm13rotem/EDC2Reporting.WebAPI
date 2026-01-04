@@ -1,12 +1,16 @@
 ﻿using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
+using Ganss.Xss;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
+    [Authorize(Roles = "Admin, ClinicalTrialLeader, InternationalReviewBoard")]
     public class ExperimentsController : Controller
     {
         private readonly EdcDbContext _context;
@@ -41,9 +45,12 @@ namespace EDC2Reporting.WebAPI.Controllers
         }
 
         // GET: Experiments/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
-            return View();
+            Experiment experiment = new();
+            experiment.UniqueIdentifier = Guid.NewGuid().ToString();
+            return View(experiment);
         }
 
         // POST: Experiments/Create
@@ -51,19 +58,39 @@ namespace EDC2Reporting.WebAPI.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,UniqueIdentifier,HelsinkiApprovalNumber,CompanyName,CompanyId,Name")] Experiment experiment)
         {
             if (ModelState.IsValid)
             {
-                // HtmlSanitizer sanitizer = new HtmlSanitizer();
-                // experiment.HelsinkiApprovalNumber = sanitizer.Sanitize(experiment.HelsinkiApprovalNumber);
-                // experiment.Name = sanitizer.Sanitize(experiment.Name);
+                HtmlSanitizer sanitizer = new HtmlSanitizer();
+                experiment.HelsinkiApprovalNumber = sanitizer.Sanitize(experiment.HelsinkiApprovalNumber);
+                experiment.Name = sanitizer.Sanitize(experiment.Name);
                 // TODO - continue. or find somebody else to sanitize;
 
                 _context.Add(experiment);
                 await _context.SaveChangesAsync();
+                if (experiment.Id == 0)
+                    throw new Exception("Error! Experiment created with Id = 0");
+                else
+                {
+                    // Create 100 new dummy patients for this new experiment.
+                    for (int i = 0; i < 100; i++)
+                    {
+                        Patient p = QueueFactory<Patient>.GetNew();
+                        p.Name = "UKN";
+                        p.IsDeleted = false;
+                        p.StudyId = experiment.Id;
+                        p.GuidId = Guid.NewGuid().ToString();
+                        p.SubjectIdInTrial = i + 1;
+
+                        _context.Add(p);
+                        await _context.SaveChangesAsync();
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
+            // current user.ExperimentId = experiment.Id;  TODO - set current user's ExperimentId
             return View(experiment);
         }
 
@@ -80,7 +107,8 @@ namespace EDC2Reporting.WebAPI.Controllers
             {
                 return NotFound();
             }
-            return View(experiment);
+
+             return View(experiment);
         }
 
         // POST: Experiments/Edit/5
@@ -99,6 +127,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             {
                 try
                 {
+
                     _context.Update(experiment);
                     await _context.SaveChangesAsync();
                 }

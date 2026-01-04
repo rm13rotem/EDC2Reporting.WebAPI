@@ -52,6 +52,7 @@ namespace EDC2Reporting.WebAPI
             services.AddControllersWithViews(options => {
                 options.Filters.Add<LogExceptionsFilter>();
                 options.Filters.Add<LogUserActivityFilter>();
+                options.Filters.Add<SanitizeInputFilter>();
             }).AddRazorRuntimeCompilation();
 
             services.AddControllers();

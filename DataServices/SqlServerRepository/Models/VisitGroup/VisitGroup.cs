@@ -1,4 +1,5 @@
-﻿using DataServices.Interfaces;
+﻿using DataServices.Common.Attributes;
+using DataServices.Interfaces;
 using DataServices.Providers;
 using DataServices.SqlServerRepository.Models.VisitAssembley;
 using Microsoft.Extensions.Options;
@@ -7,6 +8,8 @@ using Utilities;
 
 namespace DataServices.SqlServerRepository.Models.VisitGroup
 {
+
+    [SanitizeInput]
     public class VisitGroup : IPersistentEntity, ILoadableByVisityGroupIds
     {
         public List<VisitGroup> VisitGroups { get; set; }

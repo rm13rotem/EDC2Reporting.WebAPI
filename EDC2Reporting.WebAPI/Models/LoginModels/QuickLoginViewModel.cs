@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DataServices.Common.Attributes;
 
 namespace EDC2Reporting.WebAPI.Models.LoginModels
 {
+    [SanitizeInput]
     public class QuickLoginViewModel
     {
         public string QuickLookId { get; set; }

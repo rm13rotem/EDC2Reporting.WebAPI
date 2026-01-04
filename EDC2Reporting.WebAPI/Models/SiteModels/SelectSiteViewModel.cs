@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using DataServices.Common.Attributes;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 
 namespace EDC2Reporting.WebAPI.Models.SiteModels
 {
+    [SanitizeInput]
     public class SelectSiteViewModel
     {
         
