@@ -21,7 +21,7 @@ namespace DataServices.SqlServerRepository.Models
         {
             while(_queue.Count < N)
             {
-                _queue.Enqueue(Activator.CreateInstance<T>());
+                _queue.Enqueue(new T());
             }
         }
         public static T GetNew()
