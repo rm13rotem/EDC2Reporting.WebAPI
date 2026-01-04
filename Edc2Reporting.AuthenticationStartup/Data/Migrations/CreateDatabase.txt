@@ -1,0 +1,370 @@
+﻿USE [master]
+GO
+/****** Object:  Database [EDC_Dev]    Script Date: 1/4/2026 8:27:02 AM ******/
+CREATE DATABASE [EDC_Dev]
+GO
+ALTER DATABASE [EDC_Dev] SET COMPATIBILITY_LEVEL = 150
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [EDC_Dev].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [EDC_Dev] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET AUTO_CLOSE OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [EDC_Dev] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET CURSOR_DEFAULT  GLOBAL 
+GO
+ALTER DATABASE [EDC_Dev] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET  DISABLE_BROKER 
+GO
+ALTER DATABASE [EDC_Dev] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [EDC_Dev] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET RECOVERY SIMPLE 
+GO
+ALTER DATABASE [EDC_Dev] SET  MULTI_USER 
+GO
+ALTER DATABASE [EDC_Dev] SET PAGE_VERIFY CHECKSUM  
+GO
+ALTER DATABASE [EDC_Dev] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [EDC_Dev] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+GO
+ALTER DATABASE [EDC_Dev] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+GO
+ALTER DATABASE [EDC_Dev] SET DELAYED_DURABILITY = DISABLED 
+GO
+ALTER DATABASE [EDC_Dev] SET QUERY_STORE = OFF
+GO
+USE [EDC_Dev]
+GO
+/****** Object:  Table [dbo].[__EFMigrationsHistory]    Script Date: 1/4/2026 8:27:02 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[__EFMigrationsHistory](
+	[MigrationId] [nvarchar](150) NOT NULL,
+	[ProductVersion] [nvarchar](32) NOT NULL,
+ CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY CLUSTERED 
+(
+	[MigrationId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AuditLogs]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AuditLogs](
+	[Id] [bigint] IDENTITY(1,1) NOT NULL,
+	[UserId] [nvarchar](40) NOT NULL,
+	[Action] [nvarchar](100) NOT NULL,
+	[EntityName] [nvarchar](4000) NOT NULL,
+	[EntityId] [nvarchar](max) NOT NULL,
+	[TimestampUtc] [datetime2](7) NOT NULL,
+	[ChangesJson] [nvarchar](max) NULL,
+	[BeforeJson] [nvarchar](4000) NULL,
+	[AfterJson] [nvarchar](4000) NULL,
+	[MetadataJson] [nvarchar](500) NOT NULL,
+ CONSTRAINT [PK_AuditLogs] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[CrfEntries]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CrfEntries](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[InvestigatorId] [int] NOT NULL,
+	[PatientId] [int] NOT NULL,
+	[VisitId] [int] NOT NULL,
+	[VisitIndex] [int] NOT NULL,
+	[StudyId] [int] NOT NULL,
+	[CrfPageId] [int] NOT NULL,
+	[FormDataJson] [nvarchar](max) NOT NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[UpdatedAt] [datetime2](7) NULL,
+	[GuidId] [nvarchar](100) NOT NULL,
+	[IsValid] [bit] NOT NULL,
+	[LastUpdator] [nvarchar](200) NOT NULL,
+ CONSTRAINT [PK_CrfEntries] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[CrfPages]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[CrfPages](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[StudyId] [int] NOT NULL,
+	[Name] [nvarchar](200) NOT NULL,
+	[Html] [nvarchar](max) NOT NULL,
+	[Description] [nvarchar](max) NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[IsLockedForChanges] [bit] NOT NULL,
+	[GuidId] [nvarchar](max) NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[VisitId] [int] NULL,
+ CONSTRAINT [PK_CrfPages] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Emails]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Emails](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[To] [nvarchar](max) NULL,
+	[From] [nvarchar](max) NULL,
+	[Subject] [nvarchar](max) NULL,
+	[Body] [nvarchar](max) NULL,
+	[BCC] [nvarchar](max) NULL,
+	[CC] [nvarchar](max) NULL,
+	[IsBodyHtml] [bit] NOT NULL,
+	[Attachment] [nvarchar](max) NULL,
+	[IsSent] [bit] NOT NULL,
+ CONSTRAINT [PK_Emails] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Experiments]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Experiments](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UniqueIdentifier] [nvarchar](1000) NULL,
+	[HelsinkiApprovalNumber] [nvarchar](1000) NULL,
+	[CompanyName] [nvarchar](1000) NULL,
+	[CompanyId] [int] NULL,
+	[Name] [nvarchar](max) NULL,
+	[MainVisitGroupId] [int] NULL,
+ CONSTRAINT [PK_Experiments] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[ModuleInfo]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ModuleInfo](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[ExperimentId] [int] NOT NULL,
+	[VisitGroupId] [int] NOT NULL,
+	[VisitId] [int] NOT NULL,
+	[DoctorId] [int] NOT NULL,
+	[PatientId] [int] NOT NULL,
+	[ModuleId] [int] NOT NULL,
+	[DataInJson] [nvarchar](max) NOT NULL,
+	[CurrentDataInJson] [nvarchar](max) NULL,
+	[LastUpdator] [int] NOT NULL,
+	[CreatedDateTime] [datetime2](7) NOT NULL,
+	[LastUpdatedDateTime] [datetime2](7) NOT NULL,
+	[CurrentLastUpdateDateTime] [datetime] NOT NULL,
+ CONSTRAINT [PK_ModuleInfo] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Patients]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Patients](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[SubjectIdInTrial] [int] NOT NULL,
+	[StudyId] [int] NOT NULL,
+	[SubjectInitials] [nvarchar](max) NULL,
+	[GuidId] [nvarchar](max) NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[Name] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Patients] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[PersistentEntity]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[PersistentEntity](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[GuidId] [nvarchar](100) NOT NULL,
+	[EntityName] [nvarchar](100) NOT NULL,
+	[CreateDate] [datetime] NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[JsonValue] [nvarchar](max) NOT NULL,
+	[IsDeleted] [bit] NOT NULL,
+ CONSTRAINT [PK__PersistentEntity] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[VisitGroups]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[VisitGroups](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[GuidId] [nvarchar](max) NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[JsonValue] [nvarchar](max) NULL,
+	[Name] [nvarchar](max) NULL,
+	[VisitGroupId] [int] NULL,
+ CONSTRAINT [PK_VisitGroups] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Visits]    Script Date: 1/4/2026 8:27:03 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Visits](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[InternalIndex] [int] NOT NULL,
+	[GuidId] [nvarchar](max) NULL,
+	[IsDeleted] [bit] NOT NULL,
+	[JsonValue] [nvarchar](max) NULL,
+	[Name] [nvarchar](max) NULL,
+	[VisitGroupId] [int] NULL,
+ CONSTRAINT [PK_Visits] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Index [IX_CrfEntries_CrfPageId]    Script Date: 1/4/2026 8:27:03 AM ******/
+CREATE NONCLUSTERED INDEX [IX_CrfEntries_CrfPageId] ON [dbo].[CrfEntries]
+(
+	[CrfPageId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_CrfPages_VisitId]    Script Date: 1/4/2026 8:27:03 AM ******/
+CREATE NONCLUSTERED INDEX [IX_CrfPages_VisitId] ON [dbo].[CrfPages]
+(
+	[VisitId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+SET ANSI_PADDING ON
+GO
+/****** Object:  Index [IX_EntityName]    Script Date: 1/4/2026 8:27:03 AM ******/
+CREATE NONCLUSTERED INDEX [IX_EntityName] ON [dbo].[PersistentEntity]
+(
+	[EntityName] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_VisitGroups_VisitGroupId]    Script Date: 1/4/2026 8:27:03 AM ******/
+CREATE NONCLUSTERED INDEX [IX_VisitGroups_VisitGroupId] ON [dbo].[VisitGroups]
+(
+	[VisitGroupId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+/****** Object:  Index [IX_Visits_VisitGroupId]    Script Date: 1/4/2026 8:27:03 AM ******/
+CREATE NONCLUSTERED INDEX [IX_Visits_VisitGroupId] ON [dbo].[Visits]
+(
+	[VisitGroupId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AuditLogs] ADD  DEFAULT (getdate()) FOR [TimestampUtc]
+GO
+ALTER TABLE [dbo].[CrfEntries] ADD  DEFAULT (getdate()) FOR [CreatedAt]
+GO
+ALTER TABLE [dbo].[CrfEntries] ADD  DEFAULT (N'') FOR [GuidId]
+GO
+ALTER TABLE [dbo].[CrfEntries] ADD  DEFAULT (CONVERT([bit],(0))) FOR [IsValid]
+GO
+ALTER TABLE [dbo].[CrfEntries] ADD  DEFAULT (N'') FOR [LastUpdator]
+GO
+ALTER TABLE [dbo].[PersistentEntity] ADD  DEFAULT (getdate()) FOR [CreateDate]
+GO
+ALTER TABLE [dbo].[PersistentEntity] ADD  CONSTRAINT [DF_PersistentEntity_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
+GO
+ALTER TABLE [dbo].[CrfEntries]  WITH CHECK ADD  CONSTRAINT [FK_CrfEntries_CrfPages_CrfPageId] FOREIGN KEY([CrfPageId])
+REFERENCES [dbo].[CrfPages] ([Id])
+GO
+ALTER TABLE [dbo].[CrfEntries] CHECK CONSTRAINT [FK_CrfEntries_CrfPages_CrfPageId]
+GO
+ALTER TABLE [dbo].[CrfPages]  WITH CHECK ADD  CONSTRAINT [FK_CrfPages_Visits_VisitId] FOREIGN KEY([VisitId])
+REFERENCES [dbo].[Visits] ([Id])
+GO
+ALTER TABLE [dbo].[CrfPages] CHECK CONSTRAINT [FK_CrfPages_Visits_VisitId]
+GO
+ALTER TABLE [dbo].[VisitGroups]  WITH CHECK ADD  CONSTRAINT [FK_VisitGroups_VisitGroups_VisitGroupId] FOREIGN KEY([VisitGroupId])
+REFERENCES [dbo].[VisitGroups] ([Id])
+GO
+ALTER TABLE [dbo].[VisitGroups] CHECK CONSTRAINT [FK_VisitGroups_VisitGroups_VisitGroupId]
+GO
+ALTER TABLE [dbo].[Visits]  WITH CHECK ADD  CONSTRAINT [FK_Visits_VisitGroups_VisitGroupId] FOREIGN KEY([VisitGroupId])
+REFERENCES [dbo].[VisitGroups] ([Id])
+GO
+ALTER TABLE [dbo].[Visits] CHECK CONSTRAINT [FK_Visits_VisitGroups_VisitGroupId]
+GO
+USE [master]
+GO
+ALTER DATABASE [EDC_Dev] SET  READ_WRITE 
+GO

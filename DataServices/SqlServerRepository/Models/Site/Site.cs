@@ -1,9 +1,11 @@
-﻿using DataServices.Interfaces;
+﻿using DataServices.Common.Attributes;
+using DataServices.Interfaces;
 using DataServices.Providers;
 using Newtonsoft.Json;
 
 namespace DataServices.SqlServerRepository.Models.Site
 {
+    [SanitizeInput]
     public class Site : IPersistentEntity
     {
         private RepositoryOptions repositoryOptions = new RepositoryOptions()

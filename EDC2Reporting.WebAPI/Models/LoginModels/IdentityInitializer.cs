@@ -1,12 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DataServices.Common.Attributes;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Models.LoginModels
 {
+
+    [SanitizeInput]
     public class IdentityInitializer
     {
         public static async Task SeedRolesAsync(IServiceProvider serviceProvider)

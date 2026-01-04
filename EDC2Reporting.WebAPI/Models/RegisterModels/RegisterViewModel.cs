@@ -1,8 +1,10 @@
 ﻿using DataServices.SqlServerRepository.Models;
+using DataServices.Common.Attributes;
 using System;
 
 namespace EDC2Reporting.WebAPI.Models.RegisterModels
 {
+    [SanitizeInput]
     public class RegisterViewModel : QuickLookIdSetupRegister, IInvestigator
     {
         public DateTime DateOfBirth { get; set; }

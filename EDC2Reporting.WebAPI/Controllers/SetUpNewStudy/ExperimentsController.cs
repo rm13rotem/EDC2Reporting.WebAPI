@@ -1,7 +1,6 @@
 ﻿using DataServices.SqlServerRepository;
 using DataServices.SqlServerRepository.Models;
 using Ganss.Xss;
-using Ganss.XSS;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -81,17 +80,17 @@ namespace EDC2Reporting.WebAPI.Controllers
                         Patient p = QueueFactory<Patient>.GetNew();
                         p.Name = "UKN";
                         p.IsDeleted = false;
-                        p.StudyId = experiment.Id; 
+                        p.StudyId = experiment.Id;
                         p.GuidId = Guid.NewGuid().ToString();
                         p.SubjectIdInTrial = i + 1;
-                        
+
                         _context.Add(p);
                         await _context.SaveChangesAsync();
                     }
                 }
-                    return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
-            experiment.BelongsToCompany = _context.Companies.FirstOrDefault(c => c.Id == experiment.CompanyId);
+            // current user.ExperimentId = experiment.Id;  TODO - set current user's ExperimentId
             return View(experiment);
         }
 
@@ -108,6 +107,10 @@ namespace EDC2Reporting.WebAPI.Controllers
             {
                 return NotFound();
             }
+
+            HtmlSanitizer sanitizer = new HtmlSanitizer();
+            experiment.HelsinkiApprovalNumber = sanitizer.Sanitize(experiment.HelsinkiApprovalNumber);
+            experiment.Name = sanitizer.Sanitize(experiment.Name);
             return View(experiment);
         }
 
@@ -127,6 +130,7 @@ namespace EDC2Reporting.WebAPI.Controllers
             {
                 try
                 {
+
                     _context.Update(experiment);
                     await _context.SaveChangesAsync();
                 }

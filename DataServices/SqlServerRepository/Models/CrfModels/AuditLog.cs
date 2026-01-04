@@ -1,8 +1,10 @@
-﻿using System;
+﻿using DataServices.Common.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DataServices.SqlServerRepository.Models.CrfModels
 {
+    [SanitizeInput]
     public class AuditLog
     {
         [Key]

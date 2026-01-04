@@ -1,10 +1,12 @@
-﻿using DataServices.Interfaces;
+﻿using DataServices.Common.Attributes;
+using DataServices.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DataServices.SqlServerRepository.Models.CrfModels
 {
+    [SanitizeInput]
     public class CrfEntry : IPersistentEntity
     {
         [Key]

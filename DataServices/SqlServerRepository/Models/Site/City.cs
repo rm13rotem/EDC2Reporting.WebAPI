@@ -1,9 +1,11 @@
-﻿using DataServices.Interfaces;
+﻿using DataServices.Common.Attributes;
+using DataServices.Interfaces;
 using Newtonsoft.Json;
 using System.Linq;
 
 namespace DataServices.SqlServerRepository.Models.Site
 {
+    [SanitizeInput]
     public class City : IPersistentEntity
     {
         public int Id { get; set; }
