@@ -54,3 +54,83 @@
 2026-01-04 09:56:01.4010 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\Users\rm13r\source\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
 2026-01-04 09:56:01.4695 Info Configuration initialized.
 2026-01-04 09:56:26.0909 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\Users\rm13r\source\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-08 15:17:10.6358 Info Loading assembly name: NLog.Web.AspNetCore
+2026-01-08 15:17:11.6630 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.873. Product version: 5.3.0+278a0ced4ad8dafb275f8d8c4312275f6dc5df95. GlobalAssemblyCache: False
+2026-01-08 15:17:12.8343 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-08 15:17:12.8368 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-08 15:17:12.8368 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-08 15:17:13.0915 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-08 15:17:13.1106 Info Configuration initialized.
+2026-01-08 15:17:37.5373 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-31 12:13:28.3423 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 12:13:28.3534 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 12:13:28.3604 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 12:13:28.3604 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:13:28.3744 Info Configuration initialized.
+2026-01-31 12:13:28.3744 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:17:05.0063 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 12:17:05.0136 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 12:17:05.0189 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 12:17:05.0189 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:17:05.0189 Info Configuration initialized.
+2026-01-31 12:17:05.0189 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:17:37.9077 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 12:17:37.9077 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 12:17:37.9077 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 12:17:37.9252 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:17:37.9395 Info Configuration initialized.
+2026-01-31 12:17:37.9395 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:25:51.3960 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 12:25:51.4036 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 12:25:51.4036 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 12:25:51.4151 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:25:51.4225 Info Configuration initialized.
+2026-01-31 12:25:51.4225 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:28:04.4811 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 12:28:04.4811 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 12:28:04.4920 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 12:28:04.4920 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:28:04.5053 Info Configuration initialized.
+2026-01-31 12:28:04.5053 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:34:56.9077 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 12:34:56.9151 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 12:34:56.9151 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 12:34:56.9256 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:34:56.9256 Info Configuration initialized.
+2026-01-31 12:34:56.9256 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:39:59.9190 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 12:39:59.9276 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 12:39:59.9276 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 12:39:59.9392 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 12:39:59.9392 Info Configuration initialized.
+2026-01-31 12:39:59.9392 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 13:43:10.8886 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 13:43:10.8984 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 13:43:10.9056 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 13:43:10.9056 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 13:43:10.9056 Info Configuration initialized.
+2026-01-31 13:43:10.9056 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\NLog.config
+2026-01-31 18:23:51.8347 Info Loading assembly name: NLog.Web.AspNetCore
+2026-01-31 18:23:51.8588 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.873. Product version: 5.3.0+278a0ced4ad8dafb275f8d8c4312275f6dc5df95. GlobalAssemblyCache: False
+2026-01-31 18:23:51.9607 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 18:23:51.9607 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 18:23:51.9710 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 18:23:52.0058 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-31 18:23:52.0153 Info Configuration initialized.
+2026-01-31 18:23:53.3812 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-31 18:36:36.9643 Info Loading assembly name: NLog.Web.AspNetCore
+2026-01-31 18:36:36.9923 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.873. Product version: 5.3.0+278a0ced4ad8dafb275f8d8c4312275f6dc5df95. GlobalAssemblyCache: False
+2026-01-31 18:36:37.1256 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 18:36:37.1256 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 18:36:37.1542 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 18:36:37.1928 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-31 18:36:37.2073 Info Configuration initialized.
+2026-01-31 18:36:38.3117 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-31 18:39:59.3511 Info Loading assembly name: NLog.Web.AspNetCore
+2026-01-31 18:39:59.3754 Info NLog.Web.AspNetCore, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.873. Product version: 5.3.0+278a0ced4ad8dafb275f8d8c4312275f6dc5df95. GlobalAssemblyCache: False
+2026-01-31 18:39:59.4796 Info Registered target NLog.Targets.FileTarget(Name=alldata)
+2026-01-31 18:39:59.4837 Info Registered target NLog.Targets.FileTarget(Name=otherFile-web)
+2026-01-31 18:39:59.4837 Info NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 5.3.0.2517. Product version: 5.3.0+c11b862db40f5345803c3100351c87b1095f8156. GlobalAssemblyCache: False
+2026-01-31 18:39:59.5311 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config
+2026-01-31 18:39:59.5535 Info Configuration initialized.
+2026-01-31 18:40:00.4677 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\repos\EDC2Reporting.WebAPI\EDC2Reporting.WebAPI\bin\Debug\net8.0\nlog.config

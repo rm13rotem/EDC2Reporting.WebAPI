@@ -1,46 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <UserSecretsId>aspnet-Edc2Reporting.AuthenticationStartup-E832FD9D-B9FB-45C4-849B-04A9E3CEE9B3</UserSecretsId>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<UserSecretsId>aspnet-Edc2Reporting.AuthenticationStartup-E832FD9D-B9FB-45C4-849B-04A9E3CEE9B3</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.1" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Areas\Authorization\Controllers\" />
-    <Folder Include="Areas\Authorization\Data\" />
-    <Folder Include="Areas\Authorization\Models\" />
-    <Folder Include="Areas\Authorization\Views\" />
-    <Folder Include="Areas\ClinicalTrialLeaders\Controllers\" />
-    <Folder Include="Areas\ClinicalTrialLeaders\Data\" />
-    <Folder Include="Areas\ClinicalTrialLeaders\Models\" />
-    <Folder Include="Areas\ClinicalTrialLeaders\Views\" />
-    <Folder Include="Areas\PersistentEntities\Controllers\" />
-    <Folder Include="Areas\PersistentEntities\Data\" />
-    <Folder Include="Areas\PersistentEntities\Views\" />
-    <Folder Include="Areas\StudyManagement\Controllers\" />
-    <Folder Include="Areas\StudyManagement\Data\" />
-    <Folder Include="Areas\StudyManagement\Models\" />
-    <Folder Include="Areas\StudyManagement\Views\" />
-    <Folder Include="Areas\SubjectManagement\Controllers\" />
-    <Folder Include="Areas\SubjectManagement\Data\" />
-    <Folder Include="Areas\SubjectManagement\Models\" />
-    <Folder Include="Areas\SubjectManagement\Views\" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.8">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.1" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DataServices\DataServices.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="Areas\Authorization\Controllers\" />
+		<Folder Include="Areas\Authorization\Data\" />
+		<Folder Include="Areas\Authorization\Models\" />
+		<Folder Include="Areas\Authorization\Views\" />
+		<Folder Include="Areas\ClinicalTrialLeaders\Controllers\" />
+		<Folder Include="Areas\ClinicalTrialLeaders\Data\" />
+		<Folder Include="Areas\ClinicalTrialLeaders\Models\" />
+		<Folder Include="Areas\ClinicalTrialLeaders\Views\" />
+		<Folder Include="Areas\PersistentEntities\Controllers\" />
+		<Folder Include="Areas\PersistentEntities\Data\" />
+		<Folder Include="Areas\PersistentEntities\Views\" />
+		<Folder Include="Areas\StudyManagement\Controllers\" />
+		<Folder Include="Areas\StudyManagement\Data\" />
+		<Folder Include="Areas\StudyManagement\Models\" />
+		<Folder Include="Areas\StudyManagement\Views\" />
+		<Folder Include="Areas\SubjectManagement\Controllers\" />
+		<Folder Include="Areas\SubjectManagement\Data\" />
+		<Folder Include="Areas\SubjectManagement\Models\" />
+		<Folder Include="Areas\SubjectManagement\Views\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\DataServices\DataServices.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+		<Content Remove="wwwroot\**" />
+	</ItemGroup>
 
 </Project>

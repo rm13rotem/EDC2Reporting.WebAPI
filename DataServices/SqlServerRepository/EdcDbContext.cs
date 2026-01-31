@@ -40,7 +40,10 @@ namespace DataServices.SqlServerRepository
                 if (!string.IsNullOrWhiteSpace(ConnectionString))
                     optionsBuilder.UseSqlServer(ConnectionString);
                 else
-                    optionsBuilder.UseSqlServer("Server=LAPTOP-6ORP7UKE\\SQLEXPRESS;Initial Catalog=EDC_Dev;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                    optionsBuilder.UseSqlServer(
+                        "Server=.\\SQLEXPRESS01;Initial Catalog=Edc_DEV;Integrated Security=True;" +
+                        "Connect Timeout=30;Encrypt=true;TrustServerCertificate=True;" +
+                        "ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
 
         }
