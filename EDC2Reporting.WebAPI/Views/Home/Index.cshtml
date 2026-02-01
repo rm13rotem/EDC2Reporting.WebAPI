@@ -32,6 +32,9 @@
     {
         var investigator = await UserManager.GetUserAsync(User);
 
+        var isAdmin = await UserManager.IsInRoleAsync(investigator, "Admin");
+        var isLeader = await UserManager.IsInRoleAsync(investigator, "ClinicalTrialLeader");
+
         var patientId = SessionWrapper.SelectedPatientId;
         var visitId = SessionWrapper.SelectedVisitId;
         var visitIndex = SessionWrapper.SelectedVisitIndex;
@@ -50,15 +53,63 @@
 
             <div class="mt-2">
                 <strong>Selected patient:</strong>
-                @(patient != null ? $"{patient.Name} (Id: {patient.Id})" : (patientId > 0 ? $"Id: {patientId} (not found)" : "None selected"))
+                @{
+                    if (patient != null)
+                    {
+                        <text>@($"{patient.Name} (Id: {patient.Id})")</text>;
+                    }
+                    else
+                    {
+                        <text>None selected</text>;
+                        <text> &nbsp;</text>
+                        <a asp-controller="Patients" asp-action="Select" class="btn btn-sm btn-primary">Select Patient</a>
+
+                        if (isAdmin)
+                        {
+                            <span class="text-muted ms-2">(Admin can select any patient)</span>
+                        }
+                        else if (isLeader)
+                        {
+                            <span class="text-muted ms-2">(You can select patients in your assigned experiment)</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted ms-2">(You can select patients for your experiment only)</span>
+                        }
+                    }
+                }
             </div>
 
-            <div>
-                <strong>Experiment / Visit group:</strong>
-                @(visitGroup != null ? visitGroup.Name : (visitGroupId > 0 ? $"Id: {visitGroupId} (not found)" : "None selected"))
+            <div class="mt-2">
+                <strong>Selected experiment / visit group:</strong>
+                @{
+                    if (visitGroup != null)
+                    {
+                        <text>@visitGroup.Name</text>;
+                    }
+                    else
+                    {
+                        <text>None selected</text>;
+                        <text> &nbsp;</text>
+                        <a asp-controller="Experiments" asp-action="Select" class="btn btn-sm btn-secondary">Select Experiment</a>
+
+                        if (isAdmin)
+                        {
+                            <span class="text-muted ms-2">(Admin can select any experiment)</span>
+                        }
+                        else if (isLeader)
+                        {
+                            <span class="text-muted ms-2">(You are limited to your assigned experiment)</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted ms-2">(You can select experiments only if assigned)</span>
+                        }
+                    }
+                }
             </div>
 
-            <div>
+            <div class="mt-2">
                 <strong>Visit number (index):</strong> @(visitIndex > 0 ? visitIndex.ToString() : "None selected")
                 &nbsp;&nbsp;
                 <strong>Visit id:</strong> @(visitId > 0 ? visitId.ToString() : "None selected")
