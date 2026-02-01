@@ -6,6 +6,26 @@
 
 <h1>CRF Pages</h1>
 
+<form asp-action="GetFromExternal" method="get" class="mb-3 row g-2 align-items-center">
+    <div class="col-auto">
+        <label for="externalId" class="col-form-label">Import from somee site</label>
+    </div>
+    <div class="col-auto">
+        <input type="number"
+               id="externalId"
+               name="id"
+               class="form-control"
+               min="1"
+               max="99999"
+               required
+               pattern="\d{1,5}"
+               title="Enter up to 5 digits" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-success">Add to CrfPages</button>
+    </div>
+</form>
+
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>

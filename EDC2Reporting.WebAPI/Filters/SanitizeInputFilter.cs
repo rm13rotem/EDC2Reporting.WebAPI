@@ -44,6 +44,12 @@ namespace EDC2Reporting.WebAPI.Filters
 
             foreach (var prop in properties)
             {
+
+                if (prop.Name == "Html")
+                    continue;
+                if (prop.Name == "Item")
+                    continue;
+                
                 if (prop.PropertyType == typeof(string))
                 {
                     var value = prop.GetValue(obj) as string;

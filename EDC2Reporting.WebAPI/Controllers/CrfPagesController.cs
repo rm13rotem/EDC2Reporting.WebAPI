@@ -1,22 +1,25 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using DataServices.SqlServerRepository;
+using DataServices.SqlServerRepository.Models.CrfModels;
+using EDC2Reporting.WebAPI.Filters;
+using EDC2Reporting.WebAPI.Models;
+using EDC2Reporting.WebAPI.Models.Managers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DataServices.SqlServerRepository.Models.CrfModels;
-using DataServices.SqlServerRepository;
-using EDC2Reporting.WebAPI.Models.Managers;
-using EDC2Reporting.WebAPI.Filters;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EDC2Reporting.WebAPI.Controllers
 {
     public class CrfPagesController : Controller
     {
         private readonly ICrfPageManager _manager;
+        private readonly EdcDbContext _db;
 
         public CrfPagesController(EdcDbContext db)
         {
             _manager = new CrfPageManager(db);
+            _db = db;
         }
 
         // GET: CrfPages
@@ -103,5 +106,33 @@ namespace EDC2Reporting.WebAPI.Controllers
             await _manager.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        // NEW: GET: CrfPages/GetFromExternal/5
+        public async Task<IActionResult> GetFromExternal(int id)
+        {
+            if (id <= 0) return BadRequest("Invalid remote id.");
+
+            var importer = new CrfImporter(_db);
+            var baseUrl = "https://www.crfdesign.somee.com/RenderCrfComponent/Index";
+
+            string html;
+            try
+            {
+                html = await importer.GetHtmlFromRemote(baseUrl, id);
+            }
+            catch (Exception ex)
+            {
+                // In production consider logging the exception with ILogger
+                return BadRequest($"Failed to fetch remote HTML: {ex.Message}");
+            }
+
+            var newPage = importer.ParseNewCrfPage(html);
+            if (newPage == null) return BadRequest("Failed to parse remote CRF HTML.");
+
+            await importer.SaveAsyncToDb(newPage);
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
