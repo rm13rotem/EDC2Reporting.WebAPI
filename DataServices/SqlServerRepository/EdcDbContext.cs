@@ -107,36 +107,6 @@ namespace DataServices.SqlServerRepository
                     .HasMaxLength(100);
             });
 
-            // NEW: CrfPage
-            modelBuilder.Entity<CrfPage>(entity =>
-            {
-                entity.ToTable("CrfPages");
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(200);
-                entity.Property(e => e.Html).IsRequired();
-            });
-
-            // NEW: CrfEntry
-            modelBuilder.Entity<CrfEntry>(entity =>
-            {
-                entity.ToTable("CrfEntries");
-                entity.Property(e => e.CrfPageId).IsRequired();
-                entity.Property(e => e.GuidId).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.FormDataJson).IsRequired(); ;
-                entity.Property(e => e.StudyId).IsRequired();
-                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-                entity.Property(e => e.IsDeleted).IsRequired();
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("GETDATE()");
-                entity.Property(e => e.LastUpdator).HasDefaultValueSql("Auto generated")
-                .IsRequired()
-                .HasMaxLength(200);
-
-                entity.HasOne(d => d.CrfPage)
-                       .WithMany(p => p.Entries)
-                      .HasForeignKey(d => d.CrfPageId)
-                      .OnDelete(DeleteBehavior.NoAction);
-            });
-
-            // NEW: AuditLog
             modelBuilder.Entity<AuditLog>(entity =>
             {
                 entity.ToTable("AuditLogs");

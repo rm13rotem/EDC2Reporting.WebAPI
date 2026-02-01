@@ -1,45 +1,74 @@
-﻿@{
+﻿@using DataServices.SqlServerRepository.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<Investigator> SignInManager
+@inject UserManager<Investigator> UserManager
+@inject SessionLayer.ISessionWrapper SessionWrapper
+@inject DataServices.SqlServerRepository.EdcDbContext Db
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <div>
-        <ul>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Experiments" asp-action="Index">Experiment</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="VisitGroup" asp-action="Index">Visit Groups</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Visit" asp-action="Index">Visits</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Module" asp-action="Index">Module</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Component" asp-action="Index">Component</a>
-            </li>
-            <li>================</li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="ModuleInfo" asp-action="Index">Main Entities Data</a>
-            </li>
-            <li>================</li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="PersistentEntity" asp-action="Index">Static Entities (all)</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Site" asp-action="Index">Sites (Medical Research Centers)</a>
-            </li>
+    <p>
+        <a asp-action="DesignExperiment" class="btn btn-outline-primary">Design Experiment</a>
+    </p>
+    <p>
+        <a asp-controller="Investigator" asp-action="Index" class="btn btn-outline-primary">Manage Users</a>
+    </p>
+    <p>
+        <a asp-controller="Site" asp-action="Index" class="btn btn-outline-primary">
+            Manage Sites (Medical Research Centers)</a>
+    </p>
+    <p>
+        <a asp-controller="Experiments" asp-action="Create" class="btn btn-outline-primary">New Experiment (Study)</a>
+    </p>
+</div>
 
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Investigator" asp-action="Index">Doctors</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Patients" asp-action="Index">Patients</a>
-            </li>
+@* Bottom status panel: shows logged-in user + session selection (patient / experiment / visit) *@
+<div class="container mt-4">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var investigator = await UserManager.GetUserAsync(User);
 
-        </ul>
-    </div>
+        var patientId = SessionWrapper.SelectedPatientId;
+        var visitId = SessionWrapper.SelectedVisitId;
+        var visitIndex = SessionWrapper.SelectedVisitIndex;
+        var visitGroupId = SessionWrapper.SelectedVisitGroupId;
+
+        var patient = patientId > 0 ? await Db.Patients.FindAsync(patientId) : null;
+        var visit = visitId > 0 ? await Db.Visits.FindAsync(visitId) : null;
+        var visitGroup = visitGroupId > 0 ? await Db.VisitGroups.FindAsync(visitGroupId) : null;
+
+        <div class="alert alert-secondary small">
+            <div><strong>Currently logged in:</strong> @investigator.FirstName @investigator.LastName</div>
+            <div><strong>Phone:</strong> @(string.IsNullOrWhiteSpace(investigator.PhoneNumber) ? "n/a" : investigator.PhoneNumber)
+                 &nbsp;&nbsp;
+                 <strong>Email:</strong> @(string.IsNullOrWhiteSpace(investigator.Email) ? "n/a" : investigator.Email)
+            </div>
+
+            <div class="mt-2">
+                <strong>Selected patient:</strong>
+                @(patient != null ? $"{patient.Name} (Id: {patient.Id})" : (patientId > 0 ? $"Id: {patientId} (not found)" : "None selected"))
+            </div>
+
+            <div>
+                <strong>Experiment / Visit group:</strong>
+                @(visitGroup != null ? visitGroup.Name : (visitGroupId > 0 ? $"Id: {visitGroupId} (not found)" : "None selected"))
+            </div>
+
+            <div>
+                <strong>Visit number (index):</strong> @(visitIndex > 0 ? visitIndex.ToString() : "None selected")
+                &nbsp;&nbsp;
+                <strong>Visit id:</strong> @(visitId > 0 ? visitId.ToString() : "None selected")
+                &nbsp;&nbsp;
+                <strong>Visit name:</strong> @(visit != null ? visit.Name : "None selected")
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-secondary small">No user signed in.</div>
+    }
 </div>

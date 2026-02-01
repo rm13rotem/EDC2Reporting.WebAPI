@@ -4,6 +4,7 @@ using DataServices.SqlServerRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataServices.Migrations
 {
     [DbContext(typeof(EdcDbContext))]
-    partial class EdcDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260201065302_AuditTrailTable")]
+    partial class AuditTrailTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,7 +88,9 @@ namespace DataServices.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("CrfPageId")
                         .HasColumnType("int");
@@ -95,6 +100,7 @@ namespace DataServices.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GuidId")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -108,13 +114,16 @@ namespace DataServices.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LastUpdator")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(200)")
+                        .HasDefaultValueSql("Auto generated");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
@@ -135,7 +144,7 @@ namespace DataServices.Migrations
 
                     b.HasIndex("CrfPageId");
 
-                    b.ToTable("CrfEntries");
+                    b.ToTable("CrfEntries", (string)null);
                 });
 
             modelBuilder.Entity("DataServices.SqlServerRepository.Models.CrfModels.CrfPage", b =>
@@ -180,7 +189,7 @@ namespace DataServices.Migrations
 
                     b.HasIndex("VisitId");
 
-                    b.ToTable("CrfPages");
+                    b.ToTable("CrfPages", (string)null);
                 });
 
             modelBuilder.Entity("DataServices.SqlServerRepository.Models.EmailModel", b =>
@@ -446,7 +455,7 @@ namespace DataServices.Migrations
                     b.HasOne("DataServices.SqlServerRepository.Models.CrfModels.CrfPage", "CrfPage")
                         .WithMany("Entries")
                         .HasForeignKey("CrfPageId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("CrfPage");

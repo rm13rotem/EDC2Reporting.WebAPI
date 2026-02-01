@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Design my Experiment";
+}
+
+<div class="container">
+    <h1>Design my Experiment</h1>
+
+    <p class="lead">Quick links to design entities used in an experiment.</p>
+
+    <div class="list-group">
+        <a class="list-group-item list-group-item-action" asp-controller="VisitGroup" asp-action="Index">
+            Manage Visit Groups
+        </a>
+        <a class="list-group-item list-group-item-action" asp-controller="Visit" asp-action="Index">
+            Manage Visits
+        </a>
+        <a class="list-group-item list-group-item-action" asp-controller="Patients" asp-action="Index">
+            Manage Patients
+        </a>
+        <a class="list-group-item list-group-item-action" asp-controller="CrfPages" asp-action="Index">
+            Manage CRF Pages
+        </a>
+    </div>
+
+    <hr />
+
+    <p class="text-muted small mt-3">
+        This action is only accessable for Clinical Trial Leaders (or System Administrators).
+    </p>
+</div>

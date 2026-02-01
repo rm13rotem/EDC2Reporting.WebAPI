@@ -25,6 +25,12 @@ namespace EDC2Reporting.WebAPI.Controllers
             return View();
         }
 
+        [Authorize]
+        public IActionResult DesignExperiment()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -35,7 +41,6 @@ namespace EDC2Reporting.WebAPI.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
 
         [Authorize(Roles = "Admin")]
         public IActionResult AdminOnly()
